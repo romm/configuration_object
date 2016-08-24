@@ -8,12 +8,12 @@
 What is it?
 ===========
 
+Introduction
+------------
+
     .. only:: html
 
         Transform any configuration plain array into a dynamic and configurable object structure, and pull apart configuration handling from the main logic of your script. Use provided services to add more functionality to your objects: cache, parents, persistence and much more.
-
-Introduction
-------------
 
 .. only:: latex
 
