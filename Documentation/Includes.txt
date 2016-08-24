@@ -1,0 +1,34 @@
+.. ==================================================
+.. FOR YOUR INFORMATION
+.. --------------------------------------------------
+.. -*- coding: utf-8 -*- with BOM.
+
+.. This is 'Includes.txt'. It is included at the very top of each and
+   every ReST source file in this documentation project (= manual).
+
+
+.. ==================================================
+.. DEFINE SOME TEXT ROLES
+.. --------------------------------------------------
+
+.. role::   typoscript(code)
+
+.. role::   ts(typoscript)
+   :class:  typoscript
+
+.. role::   php(code)
+
+.. highlight:: php
+
+.. |newpage| raw:: latex
+
+    \newpage
+
+.. |hug| image:: /Images/smiley-hug.gif
+    :alt: Hug!
+
+.. |ext-icon-medium| image:: /Images/configuration-object-icon@medium.png
+    :alt: Configuration Object
+
+.. |ext-icon-small| image:: /Images/configuration-object-icon@small.png
+    :alt: Configuration Object

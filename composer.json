@@ -1,0 +1,55 @@
+{
+  "name": "romm/configuration-object",
+  "type": "typo3-cms-extension",
+  "description": "Transform any configuration plain array into a dynamic and configurable object structure, and pull apart configuration handling from the main logic of your script. Use provided services to add more functionality to your objects: cache, parents, persistence and much more.",
+  "keywords": [
+    "typo3", "configuration", "object", "model"
+  ],
+  "license": "GPL-3.0+",
+  "authors": [
+    {
+      "name": "Romain Canon",
+      "email": "romain.hydrocanon@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.5"
+  },
+  "require-dev": {
+    "mikey179/vfsStream": "1.4.*@dev",
+    "phpunit/phpunit": "~4.8.0",
+    "satooshi/php-coveralls": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "Romm\\ConfigurationObject\\": "Classes/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Romm\\ConfigurationObject\\Tests\\": "Tests",
+      "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
+      "TYPO3\\CMS\\Fluid\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/fluid/Tests/"
+    }
+  },
+  "replace": {
+    "configuration_object": "self.version",
+    "typo3-ter/configuration-object": "self.version"
+  },
+  "config": {
+    "vendor-dir": ".Build/vendor",
+    "bin-dir": ".Build/bin"
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "mkdir -p .Build/Web/typo3conf/ext/",
+      "[ -L .Build/Web/typo3conf/ext/configuration_object ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/configuration_object"
+    ]
+  },
+  "extra": {
+    "typo3/cms": {
+      "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "web-dir": ".Build/Web"
+    }
+  }
+}
