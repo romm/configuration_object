@@ -29,5 +29,5 @@ Github
     https://github.com/romm/configuration_object
 
 Slack
-    | https://typo3.slack.com/messages/ext-configuration-object
+    | https://typo3.slack.com/messages/ext-config-object
     | → get your Slack invitation on https://forger.typo3.org/slack
