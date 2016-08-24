@@ -32,7 +32,7 @@ Example
 
 .. code-block:: php
     :linenos:
-    :emphasize-lines: 30-31,41-48
+    :emphasize-lines: 8,31,41-52
 
     use Romm\ConfObj\ConfigurationObjectInterface;
     use Romm\ConfObj\Service\ServiceFactory;
@@ -74,14 +74,16 @@ Example
          *
          * @var array $data
          */
-        public static function dataPreProcessor(DataPreProcessor $data)
+        public static function dataPreProcessor(DataPreProcessor $processor)
         {
+            $data = $processor->getData();
+
             if (self::AUTO_CITY === $data['city']) {
                 $zipCode = $data['zipCode'];
 
                 $data['city'] = GeographicUtility::fetchCityFromZipCode($zipCode);
-            }
 
-            return $data;
+                $processor->setData($data);
+            }
         }
     }

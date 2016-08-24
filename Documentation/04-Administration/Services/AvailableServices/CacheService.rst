@@ -49,7 +49,7 @@ Example
 
 .. code-block:: php
     :linenos:
-    :emphasize-lines: 2,25-28
+    :emphasize-lines: 29-32
 
     use Romm\ConfObj\Service\ServiceInterface;
     use Romm\ConfObj\Service\ServiceFactory;

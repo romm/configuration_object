@@ -19,7 +19,7 @@ Create your model classes
 
 First of all, you have to create the skeleton of your configuration object. It means creating the several classes representing your configuration, add their properties, and indicate their types.
 
-Please note that a configuration object root class (first level of the tree) needs to implement the interface :php:`ConfigurationObjectInterface`. To implement directly the functions needed by the interface, you may (*should*) use the trait :php:`DefaultConfigurationObjectTrait`.
+Please note that a configuration object root class (first level of the tree) needs to implement the interface :php:`ConfigurationObjectInterface`. To implement directly the functions needed by the interface, you may use the trait :php:`DefaultConfigurationObjectTrait`.
 
 **Example:**
 

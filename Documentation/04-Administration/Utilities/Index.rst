@@ -37,7 +37,7 @@ The trait :php:`ArrayConversionTrait` provides the function ``toArray()`` which 
 
 .. code-block:: php
     :linenos:
-    :emphasize-lines: 4,9,18
+    :emphasize-lines: 9,21
 
     use Romm\ConfObj\ConfigurationObjectInterface;
     use Romm\ConfObj\ConfigurationObjectFactory;
@@ -74,7 +74,7 @@ In some cases, a sub-object of a configuration object can be stored in an array,
 
 .. code-block:: php
     :linenos:
-    :emphasize-lines: 4,26,44
+    :emphasize-lines: 26,47
 
     use Romm\ConfObj\ConfigurationObjectInterface;
     use Romm\ConfObj\ConfigurationObjectFactory;
@@ -140,7 +140,7 @@ Because objects can have a lot of properties, you may want not to be forced to w
 
 .. code-block:: php
     :linenos:
-    :emphasize-lines: 3,8,25,26,27
+    :emphasize-lines: 8,28-30
 
     use Romm\ConfObj\ConfigurationObjectInterface;
     use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;

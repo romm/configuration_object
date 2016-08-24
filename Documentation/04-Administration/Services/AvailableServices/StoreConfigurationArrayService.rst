@@ -26,7 +26,7 @@ Example
 
 .. code-block:: php
     :linenos:
-    :emphasize-lines: 2,28,40
+    :emphasize-lines: 23,29,44
 
     use Romm\ConfObj\Service\ServiceInterface;
     use Romm\ConfObj\Service\ServiceFactory;
@@ -69,7 +69,7 @@ Example
         $someConfigurationArray
     );
 
-    foreach($myConfigurationObject->getSubObjects as $subObject) {
+    foreach($myConfigurationObject->getSubObjects() as $subObject) {
         // Getting the array used to create the sub-object.
         $configurationArray = $subObject->getConfigurationArray();
     }
