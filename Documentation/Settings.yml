@@ -20,5 +20,4 @@ conf.py:
     preamble: \usepackage{typo3}
   latex_use_parts: True
   latex_show_pagerefs: True
-  latex_logo: ../Images/configuration-object-icon@large.png
 ...
