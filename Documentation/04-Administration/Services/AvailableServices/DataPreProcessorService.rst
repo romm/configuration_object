@@ -5,8 +5,6 @@
 
 .. include:: ../../../Includes.txt
 
-|newpage|
-
 .. _administration-service-dataPreProcessorService:
 
 Data pre-processor service

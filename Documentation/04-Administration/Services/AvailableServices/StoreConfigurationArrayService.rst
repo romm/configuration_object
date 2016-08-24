@@ -5,8 +5,6 @@
 
 .. include:: ../../../Includes.txt
 
-|newpage|
-
 .. _administration-service-storeConfigurationArrayService:
 
 Store configuration array service

@@ -77,8 +77,6 @@ Function                                                    Description
 
 -----
 
-|newpage|
-
 Services list
 -------------
 
@@ -120,8 +118,6 @@ Below is the list of all the services provided by this API:
     AvailableServices/StoreConfigurationArrayService
 
 -----
-
-|newpage|
 
 Creating your own service
 -------------------------

@@ -5,8 +5,6 @@
 
 .. include:: ../../../Includes.txt
 
-|newpage|
-
 .. _administration-service-mixedTypesService:
 
 Mixed types service

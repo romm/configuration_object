@@ -47,8 +47,6 @@ Please note that a configuration object root class (first level of the tree) nee
         protected $employees;
     }
 
-|newpage|
-
 .. code-block:: php
 
     // my_extension/Classes/Configuration/Employee.php
@@ -69,8 +67,6 @@ Please note that a configuration object root class (first level of the tree) nee
     }
 
 -----
-
-|newpage|
 
 Get your configuration object
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -133,8 +129,6 @@ You should now be able to get your configuration object. The basic workflow of t
        }
 
 -----
-
-|newpage|
 
 Properties and validation
 ^^^^^^^^^^^^^^^^^^^^^^^^^

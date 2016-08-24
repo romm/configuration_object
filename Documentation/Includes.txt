@@ -20,10 +20,6 @@
 
 .. highlight:: php
 
-.. |newpage| raw:: latex
-
-    \newpage
-
 .. |hug| image:: /Images/smiley-hug.gif
     :alt: Hug!
 

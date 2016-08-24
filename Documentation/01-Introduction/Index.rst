@@ -37,8 +37,6 @@ Use **Configuration Object** to export the handling of your configuration: let t
 
 It is **simple, fast and reliable**.
 
-|newpage|
-
 Example
 ^^^^^^^
 
@@ -97,8 +95,6 @@ Let's see what our previous example would look like with a configuration object:
          */
         protected $employees;
     }
-
-|newpage|
 
 .. code-block:: php
 
