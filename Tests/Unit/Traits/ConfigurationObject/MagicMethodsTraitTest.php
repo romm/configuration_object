@@ -7,6 +7,7 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
 
 class MagicMethodsTraitTest extends UnitTestCase
 {
+
     /**
      * Checks that the magic getters and setters work properly for an object
      * which uses the trait `MagicMethodTrait`: methods do not need to be

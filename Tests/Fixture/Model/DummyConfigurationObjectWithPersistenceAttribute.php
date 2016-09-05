@@ -36,7 +36,6 @@ class DummyConfigurationObjectWithPersistenceAttribute implements ConfigurationO
         return $this->user;
     }
 
-
     /**
      * @param int[]|BackendUser[] $subUsers
      */

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" product-name="configuration_object">
-		<header />
-		<body>
+    <file source-language="en" datatype="plaintext" original="messages" product-name="configuration_object">
+        <header/>
+        <body>
 
-			<trans-unit id="validator.has_values.not_valid">
-				<source>Must be filled with one of the following values: %s.</source>
-			</trans-unit>
-			<trans-unit id="validator.class_exists.not_valid">
-				<source>The value "%s" is not an existing class.</source>
-			</trans-unit>
+            <trans-unit id="validator.has_values.not_valid">
+                <source>Must be filled with one of the following values: %s.</source>
+            </trans-unit>
+            <trans-unit id="validator.class_exists.not_valid">
+                <source>The value "%s" is not an existing class.</source>
+            </trans-unit>
 
-		</body>
-	</file>
+        </body>
+    </file>
 </xliff>

@@ -184,7 +184,7 @@ abstract class AbstractService implements ServiceInterface
     /**
      * Will run every delayed callback which was registered during an event.
      *
-     * @see \Romm\ConfigurationObject\Service\AbstractService::delay()
+     * @see      \Romm\ConfigurationObject\Service\AbstractService::delay()
      *
      * @param AbstractServiceDTO $dto The data transfer object sent to the services.
      * @internal This function is reserved for internal usage only, you should not use it in third party applications!

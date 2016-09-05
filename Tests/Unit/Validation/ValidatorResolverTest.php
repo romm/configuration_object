@@ -20,7 +20,6 @@ class ValidatorResolverTest extends UnitTestCase
     public function setUp()
     {
         $this->injectMockedObjectManagerInCore();
-
     }
 
     /**

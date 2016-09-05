@@ -32,7 +32,6 @@ trait ArrayConversionTrait
     public function toArray()
     {
         return $this->toArrayInternal($this->getObjectPropertiesValues($this));
-
     }
 
     /**

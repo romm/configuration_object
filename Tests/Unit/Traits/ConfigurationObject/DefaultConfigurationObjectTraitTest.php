@@ -7,6 +7,7 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
 
 class DefaultConfigurationObjectTraitTest extends UnitTestCase
 {
+
     /**
      * Will test the default `ServiceFactory` instance returned by the default
      * configuration object trait.

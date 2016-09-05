@@ -44,7 +44,7 @@ class MixedTypesService extends AbstractService
     }
 
     /**
-     * @param mixed $data
+     * @param mixed  $data
      * @param string $className Valid class name.
      * @return MixedTypesResolver
      */

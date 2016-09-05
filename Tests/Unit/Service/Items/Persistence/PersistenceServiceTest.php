@@ -34,7 +34,7 @@ class PersistenceServiceTest extends UnitTestCase
         $dummyConfigurationObject->setUser(1);
         $dummyConfigurationObject->setSubUsers(
             [
-                0 => 2,
+                0      => 2,
                 'list' => [0 => 3]
             ]
         );

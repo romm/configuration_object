@@ -11,6 +11,7 @@ use Romm\ConfigurationObject\Traits\ConfigurationObject\MagicMethodsTrait;
  */
 class DummyConfigurationObjectWithAttributeContainingError implements ConfigurationObjectInterface
 {
+
     use DefaultConfigurationObjectTrait;
     use MagicMethodsTrait;
 

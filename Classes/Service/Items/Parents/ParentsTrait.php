@@ -31,7 +31,7 @@ trait ParentsTrait
      *
      * @var object[]
      */
-        private $_parents = [];
+    private $_parents = [];
 
     /**
      * @param object[] $parents

@@ -58,7 +58,6 @@ class AbstractServiceDTOTest extends UnitTestCase
     {
         $this->setExpectedException(WrongInheritanceException::class);
         $this->getMockForAbstractClass(AbstractServiceDTO::class, [\stdClass::class, $this->serviceFactory]);
-
     }
 
     /**

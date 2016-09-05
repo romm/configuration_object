@@ -27,6 +27,7 @@ namespace Romm\ConfigurationObject\Service\Items\DataPreProcessor;
  */
 interface DataPreProcessorInterface
 {
+
     /**
      * This function is called when a configuration object implements this
      * interface.

@@ -3,7 +3,10 @@
   "type": "typo3-cms-extension",
   "description": "Transform any configuration plain array into a dynamic and configurable object structure, and pull apart configuration handling from the main logic of your script. Use provided services to add more functionality to your objects: cache, parents, persistence and much more.",
   "keywords": [
-    "typo3", "configuration", "object", "model"
+    "typo3",
+    "configuration",
+    "object",
+    "model"
   ],
   "license": "GPL-3.0+",
   "authors": [

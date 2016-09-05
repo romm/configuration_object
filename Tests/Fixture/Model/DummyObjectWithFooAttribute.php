@@ -3,6 +3,7 @@ namespace Romm\ConfigurationObject\Tests\Fixture\Model;
 
 class DummyObjectWithFooAttribute
 {
+
     /**
      * @var string
      */

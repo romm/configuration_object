@@ -40,7 +40,7 @@ class ParentsTraitTest extends UnitTestCase
         // The parent should be found, so the value of `$foo` should change.
         $object->withFirstParent(
             \stdClass::class,
-            function() use (&$foo) {
+            function () use (&$foo) {
                 $foo = 'bar';
             }
         );
@@ -54,10 +54,10 @@ class ParentsTraitTest extends UnitTestCase
         $foo = 'foo';
         $object->withFirstParent(
             self::class,
-            function() use (&$foo) {
+            function () use (&$foo) {
                 $foo = 'bar';
             },
-            function() use (&$foo) {
+            function () use (&$foo) {
                 $foo = '42';
             }
         );

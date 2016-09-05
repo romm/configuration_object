@@ -24,6 +24,5 @@ class StoreArrayIndexTraitTest extends UnitTestCase
 
     public function aze()
     {
-
     }
 }
