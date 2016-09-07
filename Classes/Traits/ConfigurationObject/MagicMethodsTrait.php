@@ -14,6 +14,7 @@
 namespace Romm\ConfigurationObject\Traits\ConfigurationObject;
 
 use Romm\ConfigurationObject\Exceptions\MethodNotFoundException;
+use Romm\ConfigurationObject\Exceptions\PropertyNotAccessibleException;
 
 /**
  * This trait will implement magic setters and getters for accessible properties
@@ -51,25 +52,32 @@ trait MagicMethodsTrait
      * See class description.
      *
      * @param string $name      Name of the called function.
-     * @param array  $arguments Arguments passed to the function
+     * @param array  $arguments Arguments passed to the function.
      * @return mixed
      * @throws MethodNotFoundException
      */
-    public function handleMagicMethods($name, $arguments)
+    public function handleMagicMethods($name, array $arguments)
     {
         $flag = false;
+        $result = null;
 
         if (in_array($type = substr($name, 0, 3), ['set', 'get'])) {
-            $property = lcfirst(substr($name, 3));
+            /*
+             * We will first try to access the property written with
+             * lowerCamelCase, which is the convention for many people. If this
+             * property is not found, we try the real name of the property given
+             * in the magic method.
+             */
+            $propertyLowerCase = lcfirst(substr($name, 3));
+            $property = substr($name, 3);
 
-            if ($this->isPropertyAccessible($property)) {
-                switch ($type) {
-                    case 'set':
-                        $this->{$property} = current($arguments);
-                        $flag = true;
-                        break;
-                    case 'get':
-                        return $this->{$property};
+            foreach ([$propertyLowerCase, $property] as $prop) {
+                try {
+                    $result = $this->handlePropertyMagicMethod($prop, $type, $arguments);
+                    $flag = true;
+                    break;
+                } catch (PropertyNotAccessibleException $e) {
+                    continue;
                 }
             }
         }
@@ -81,7 +89,36 @@ trait MagicMethodsTrait
             );
         }
 
-        return null;
+        return $result;
+    }
+
+    /**
+     * Will try to set/get the wanted property.
+     *
+     * @param string $property Name of the property to be set/get.
+     * @param string $type     Must be `set` or `get`.
+     * @param array  $arguments
+     * @return mixed
+     * @throws PropertyNotAccessibleException
+     */
+    protected function handlePropertyMagicMethod($property, $type, array $arguments)
+    {
+        if ($this->isPropertyAccessible($property)) {
+            switch ($type) {
+                case 'set':
+                    $this->{$property} = current($arguments);
+                    return null;
+                    break;
+                case 'get':
+                    return $this->{$property};
+                    break;
+            }
+        }
+
+        throw new PropertyNotAccessibleException(
+            'The property "' . $property . '" is not accessible in the class "' . get_class($this) . '".',
+            1473260999
+        );
     }
 
     /**

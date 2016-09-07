@@ -2,7 +2,7 @@
 namespace Romm\ConfigurationObject\Tests\Unit\Traits\ConfigurationObject;
 
 use Romm\ConfigurationObject\Exceptions\MethodNotFoundException;
-use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObject;
+use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithUpperCaseProperty;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
 
 class MagicMethodsTraitTest extends UnitTestCase
@@ -23,12 +23,14 @@ class MagicMethodsTraitTest extends UnitTestCase
             'bar2' => 'bar'
         ];
 
-        $dummyConfigurationObject = new DummyConfigurationObject();
+        $dummyConfigurationObject = new DummyConfigurationObjectWithUpperCaseProperty();
         $dummyConfigurationObject->setFoo($foo);
         $dummyConfigurationObject->setBar($bar);
+        $dummyConfigurationObject->setUpperCaseProperty($foo);
 
         $this->assertEquals($foo, $dummyConfigurationObject->getFoo());
         $this->assertEquals($bar, $dummyConfigurationObject->getBar());
+        $this->assertEquals($foo, $dummyConfigurationObject->getUpperCaseProperty());
 
         // Trying to call a not existing getter should throw an exception.
         $this->setExpectedException(MethodNotFoundException::class);
