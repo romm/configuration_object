@@ -18,7 +18,7 @@ use TYPO3\CMS\Extbase\Property\TypeConverterInterface;
  * Data transfer object used when the configuration object mapper tries to
  * retrieve a type converter.
  *
- * @see Romm\ConfigurationObject\ConfigurationObjectMapper::getTypeConverter()
+ * @see \Romm\ConfigurationObject\ConfigurationObjectMapper::getTypeConverter()
  */
 class GetTypeConverterDTO extends AbstractServiceDTO
 {

@@ -138,7 +138,6 @@ class CacheService extends AbstractService implements ConfigurationObjectBeforeS
      * object is already stored in the cache (if true, returns it).
      *
      * @param  GetConfigurationObjectDTO $serviceDataTransferObject
-     * @return array
      */
     public function configurationObjectBefore(GetConfigurationObjectDTO $serviceDataTransferObject)
     {
@@ -164,7 +163,6 @@ class CacheService extends AbstractService implements ConfigurationObjectBeforeS
      * After a configuration object has been built, it is stored in the cache.
      *
      * @param   GetConfigurationObjectDTO $serviceDataTransferObject
-     * @return array
      */
     public function configurationObjectAfter(GetConfigurationObjectDTO $serviceDataTransferObject)
     {

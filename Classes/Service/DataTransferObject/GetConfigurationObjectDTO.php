@@ -18,7 +18,7 @@ use Romm\ConfigurationObject\ConfigurationObjectInstance;
 /**
  * Data transfer object used when a script wants to get a configuration object.
  *
- * @see Romm\ConfigurationObject\ConfigurationObjectFactory::get()
+ * @see \Romm\ConfigurationObject\ConfigurationObjectFactory::get()
  */
 class GetConfigurationObjectDTO extends AbstractServiceDTO
 {

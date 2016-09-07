@@ -14,7 +14,7 @@
 namespace Romm\ConfigurationObject\Service\Items\StoreConfigurationArray;
 
 /**
- * @see \Romm\ConfigurationObject\Service\Items\ConfigurationArray\ConfigurationArrayService
+ * @see \Romm\ConfigurationObject\Service\Items\StoreConfigurationArray\StoreConfigurationArrayService
  */
 trait StoreConfigurationArrayTrait
 {

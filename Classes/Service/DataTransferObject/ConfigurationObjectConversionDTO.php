@@ -16,7 +16,7 @@ namespace Romm\ConfigurationObject\Service\DataTransferObject;
 /**
  * Data transfer object used when a configuration object is being converted.
  *
- * @see Romm\ConfigurationObject\ConfigurationObjectMapper::doMapping()
+ * @see \Romm\ConfigurationObject\ConfigurationObjectMapper::doMapping()
  */
 class ConfigurationObjectConversionDTO extends AbstractServiceDTO
 {
