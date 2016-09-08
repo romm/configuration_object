@@ -21,8 +21,4 @@ class StoreArrayIndexTraitTest extends UnitTestCase
 
         $this->assertEquals('foo', $mockedStoreArrayIndexTrait->getArrayIndex());
     }
-
-    public function aze()
-    {
-    }
 }
