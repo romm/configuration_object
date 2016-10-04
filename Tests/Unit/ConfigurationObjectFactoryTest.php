@@ -3,8 +3,6 @@ namespace Romm\ConfigurationObject\Tests\Unit;
 
 use Romm\ConfigurationObject\ConfigurationObjectFactory;
 use Romm\ConfigurationObject\ConfigurationObjectInstance;
-use Romm\ConfigurationObject\ConfigurationObjectMapper;
-use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Exceptions\ClassNotFoundException;
 use Romm\ConfigurationObject\Exceptions\EntryNotFoundException;
 use Romm\ConfigurationObject\Exceptions\Exception;
@@ -15,19 +13,12 @@ use Romm\ConfigurationObject\Tests\Fixture\Company\Company;
 use Romm\ConfigurationObject\Tests\Fixture\Company\Employee;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithWrongServiceFactory;
 use Romm\ConfigurationObject\Tests\Fixture\Validator\WrongValueValidator;
-use Romm\ConfigurationObject\TypeConverter\ConfigurationObjectConverter;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
-use TYPO3\CMS\Extbase\Object\Container\Container;
-use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationBuilder;
-use TYPO3\CMS\Extbase\Property\TypeConverter\ArrayConverter;
-use TYPO3\CMS\Extbase\Property\TypeConverter\ObjectConverter;
-use TYPO3\CMS\Extbase\Property\TypeConverter\StringConverter;
-use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 class ConfigurationObjectFactoryTest extends UnitTestCase
 {
 
-    use UnitTestUtility;
+    use ConfigurationObjectUnitTestUtility;
 
     /**
      * @var Company
@@ -55,60 +46,7 @@ class ConfigurationObjectFactoryTest extends UnitTestCase
 
     protected function setUp()
     {
-        // We need to register the type converters used in these examples.
-        ExtensionUtility::registerTypeConverter(ArrayConverter::class);
-        ExtensionUtility::registerTypeConverter(ObjectConverter::class);
-        ExtensionUtility::registerTypeConverter(StringConverter::class);
-
-        $this->injectMockedObjectManagerInCore();
-        $this->injectMockedValidatorResolverInCore();
-        $this->setMockedConfigurationObjectFactory();
-    }
-
-    /**
-     * This function will handle the whole creation of a mocked instance of
-     * `ConfigurationObjectFactory`.
-     *
-     * @return ConfigurationObjectFactory
-     */
-    protected function setMockedConfigurationObjectFactory()
-    {
-        /** @var ConfigurationObjectMapper|\PHPUnit_Framework_MockObject_MockObject $mockedConfigurationObjectMapper */
-        $mockedConfigurationObjectMapper = $this->getMock(ConfigurationObjectMapper::class, ['getObjectConverter']);
-
-        $configurationObjectConverter = new ConfigurationObjectConverter();
-        $objectContainer = new Container();
-        /** @var ConfigurationObjectConverter $configurationObjectConverter */
-        $configurationObjectConverter->injectObjectContainer($objectContainer);
-        $configurationObjectConverter->injectObjectManager(Core::getObjectManager());
-        $configurationObjectConverter->injectReflectionService(Core::getReflectionService());
-
-        $mockedConfigurationObjectMapper->expects($this->any())
-            ->method('getObjectConverter')
-            ->will($this->returnValue($configurationObjectConverter));
-
-        $propertyMappingConfigurationBuilder = Core::getObjectManager()->get(PropertyMappingConfigurationBuilder::class);
-        $mockedConfigurationObjectMapper->injectConfigurationBuilder($propertyMappingConfigurationBuilder);
-        $mockedConfigurationObjectMapper->injectObjectManager(Core::getObjectManager());
-
-        $reflectionService = Core::getReflectionService();
-        $reflectionService->injectObjectManager(Core::getObjectManager());
-        $mockedConfigurationObjectMapper->injectReflectionService($reflectionService);
-
-        $mockedConfigurationObjectMapper->initializeObject();
-
-        $mockedConfigurationObjectFactory = $this->getMock(ConfigurationObjectFactory::class, ['getConfigurationObjectMapper']);
-
-        $mockedConfigurationObjectFactory->expects($this->any())
-            ->method('getConfigurationObjectMapper')
-            ->will($this->returnValue($mockedConfigurationObjectMapper));
-
-        $reflectedCore = new \ReflectionClass(ConfigurationObjectFactory::class);
-        $objectManagerProperty = $reflectedCore->getProperty('instance');
-        $objectManagerProperty->setAccessible(true);
-        $objectManagerProperty->setValue($mockedConfigurationObjectFactory);
-
-        return $mockedConfigurationObjectFactory;
+        $this->initializeConfigurationObjectTestServices();
     }
 
     /**
@@ -235,7 +173,7 @@ class ConfigurationObjectFactoryTest extends UnitTestCase
     }
 
     /**
-     * Checks that the mixed-types resolver is called and workd correctly.
+     * Checks that the mixed-types resolver is called and word correctly.
      *
      * @test
      */

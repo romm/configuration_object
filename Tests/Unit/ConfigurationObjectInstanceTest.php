@@ -12,7 +12,7 @@ use TYPO3\CMS\Extbase\Error\Result;
 class ConfigurationObjectInstanceTest extends UnitTestCase
 {
 
-    use UnitTestUtility;
+    use ConfigurationObjectUnitTestUtility;
 
     public function setUp()
     {

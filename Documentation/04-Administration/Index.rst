@@ -41,3 +41,4 @@ Administration
     Services/Index
     Utilities/Index
     Validators/Index
+    UnitTests/Index

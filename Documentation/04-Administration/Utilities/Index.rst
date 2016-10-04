@@ -183,13 +183,13 @@ Because objects can have a lot of properties, you may want not to be forced to w
         :linenos:
         :emphasize-lines: 2-5
 
-            /**
-             * @method setFoo(string $foo)
-             * @method string getFoo()
-             * @method setBar(string $bar)
-             * @method string getBar()
-             */
-            class MyObject implements ConfigurationObjectInterface
-            {
-                // ...
-            }
+        /**
+         * @method setFoo(string $foo)
+         * @method string getFoo()
+         * @method setBar(string $bar)
+         * @method string getBar()
+         */
+        class MyObject implements ConfigurationObjectInterface
+        {
+            // ...
+        }

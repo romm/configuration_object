@@ -12,14 +12,14 @@ use Romm\ConfigurationObject\Service\Items\Parents\ParentsService;
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObject;
 use Romm\ConfigurationObject\Tests\Unit\Service\Fixture\DummyService;
-use Romm\ConfigurationObject\Tests\Unit\UnitTestUtility;
+use Romm\ConfigurationObject\Tests\Unit\ConfigurationObjectUnitTestUtility;
 use TYPO3\CMS\Core\Tests\AccessibleObjectInterface;
 use TYPO3\CMS\Core\Tests\UnitTestCase;
 
 class ServiceFactoryTest extends UnitTestCase
 {
 
-    use UnitTestUtility;
+    use ConfigurationObjectUnitTestUtility;
 
     protected function setUp()
     {

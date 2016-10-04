@@ -3,7 +3,7 @@ namespace Romm\ConfigurationObject\Tests\Unit\Validation;
 
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithMixedTypes;
-use Romm\ConfigurationObject\Tests\Unit\UnitTestUtility;
+use Romm\ConfigurationObject\Tests\Unit\ConfigurationObjectUnitTestUtility;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeCollectionValidator;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeObjectValidator;
 use Romm\ConfigurationObject\Validation\ValidatorResolver;
@@ -15,7 +15,7 @@ use TYPO3\CMS\Extbase\Validation\Validator\CollectionValidator;
 class ValidatorResolverTest extends UnitTestCase
 {
 
-    use UnitTestUtility;
+    use ConfigurationObjectUnitTestUtility;
 
     public function setUp()
     {
