@@ -16,6 +16,7 @@ namespace Romm\ConfigurationObject\Core;
 use Romm\ConfigurationObject\Exceptions\MethodNotFoundException;
 use Romm\ConfigurationObject\Service\Items\Parents\ParentsUtility;
 use Romm\ConfigurationObject\Validation\ValidatorResolver;
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -42,6 +43,11 @@ class Core implements SingletonInterface
      * @var ValidatorResolver
      */
     protected static $validatorResolver;
+
+    /**
+     * @var CacheManager
+     */
+    protected static $cacheManager;
 
     /**
      * @var ParentsUtility
@@ -92,6 +98,18 @@ class Core implements SingletonInterface
         }
 
         return self::$validatorResolver;
+    }
+
+    /**
+     * @return CacheManager
+     */
+    public static function getCacheManager()
+    {
+        if (null === self::$cacheManager) {
+            self::$cacheManager = self::getObjectManager()->get(CacheManager::class);
+        }
+
+        return self::$cacheManager;
     }
 
     /**

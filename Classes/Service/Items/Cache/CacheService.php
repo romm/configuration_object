@@ -14,6 +14,7 @@
 namespace Romm\ConfigurationObject\Service\Items\Cache;
 
 use Romm\ConfigurationObject\ConfigurationObjectInstance;
+use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDTO;
 use Romm\ConfigurationObject\Service\AbstractService;
 use Romm\ConfigurationObject\Service\Event\ConfigurationObjectAfterServiceEventInterface;
@@ -233,18 +234,6 @@ class CacheService extends AbstractService implements ConfigurationObjectBeforeS
     }
 
     /**
-     * @return CacheManager
-     */
-    protected function getCacheManager()
-    {
-        if (null === self::$cacheManager) {
-            self::$cacheManager = $this->objectManager->get(CacheManager::class);
-        }
-
-        return self::$cacheManager;
-    }
-
-    /**
      * Returns the cache instance of this service.
      *
      * @return FrontendInterface
@@ -253,5 +242,13 @@ class CacheService extends AbstractService implements ConfigurationObjectBeforeS
     {
         return $this->getCacheManager()
             ->getCache($this->cacheIdentifier);
+    }
+
+    /**
+     * @return CacheManager
+     */
+    public function getCacheManager()
+    {
+        return Core::getCacheManager();
     }
 }

@@ -6,6 +6,8 @@ use Romm\ConfigurationObject\ConfigurationObjectMapper;
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\TypeConverter\ConfigurationObjectConverter;
 use Romm\ConfigurationObject\Validation\ValidatorResolver;
+use TYPO3\CMS\Core\Cache\CacheFactory;
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Extbase\Object\Container\Container;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationBuilder;
@@ -32,6 +34,7 @@ trait ConfigurationObjectUnitTestUtility
         $this->injectMockedObjectManagerInCore();
         $this->injectMockedValidatorResolverInCore();
         $this->injectMockedConfigurationObjectFactory();
+        $this->injectCacheManagerInCore();
     }
 
     /**
@@ -61,6 +64,22 @@ trait ConfigurationObjectUnitTestUtility
         $objectManagerProperty = $reflectedCore->getProperty('validatorResolver');
         $objectManagerProperty->setAccessible(true);
         $objectManagerProperty->setValue($validatorResolver);
+    }
+
+    /**
+     * Will inject an instance of `CacheManager` in the core, which will be used
+     * later on by objects like the `CacheService`.
+     */
+    public function injectCacheManagerInCore()
+    {
+        $cacheManager = new CacheManager;
+        $cacheFactory = new CacheFactory('foo', $cacheManager);
+        $cacheManager->injectCacheFactory($cacheFactory);
+
+        $reflectedCore = new \ReflectionClass(Core::class);
+        $objectManagerProperty = $reflectedCore->getProperty('cacheManager');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue($cacheManager);
     }
 
     /**
