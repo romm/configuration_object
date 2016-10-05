@@ -25,7 +25,7 @@ trait ConfigurationObjectUnitTestUtility
     /**
      * @var Core|\PHPUnit_Framework_MockObject_MockObject
      */
-    private $configurationObjectCoreMock;
+    protected $configurationObjectCoreMock;
 
     /**
      * Use this function if you need to create a configuration object in your
