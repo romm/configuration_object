@@ -3,24 +3,16 @@ namespace Romm\ConfigurationObject\Tests\Unit\Validation;
 
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithMixedTypes;
-use Romm\ConfigurationObject\Tests\Unit\ConfigurationObjectUnitTestUtility;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeCollectionValidator;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeObjectValidator;
 use Romm\ConfigurationObject\Validation\ValidatorResolver;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use TYPO3\CMS\Extbase\Validation\ValidatorResolver as ExtbaseValidatorResolver;
 use TYPO3\CMS\Extbase\Validation\Validator\BooleanValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\CollectionValidator;
 
-class ValidatorResolverTest extends UnitTestCase
+class ValidatorResolverTest extends AbstractUnitTest
 {
-
-    use ConfigurationObjectUnitTestUtility;
-
-    public function setUp()
-    {
-        $this->injectMockedObjectManagerInCore();
-    }
 
     /**
      * Will check if the resolver checks the type of the validator before its
@@ -32,15 +24,15 @@ class ValidatorResolverTest extends UnitTestCase
      */
     public function createValidatorChecksCollectionType()
     {
-        $reflectionService = Core::getReflectionService();
-        $reflectionService->injectObjectManager(Core::getObjectManager());
+        $reflectionService = Core::get()->getReflectionService();
+        $reflectionService->injectObjectManager(Core::get()->getObjectManager());
 
         $validatorResolver = new ValidatorResolver();
-        $validatorResolver->injectObjectManager(Core::getObjectManager());
+        $validatorResolver->injectObjectManager(Core::get()->getObjectManager());
         $validatorResolver->injectReflectionService($reflectionService);
 
         $extbaseValidatorResolver = new ExtbaseValidatorResolver();
-        $extbaseValidatorResolver->injectObjectManager(Core::getObjectManager());
+        $extbaseValidatorResolver->injectObjectManager(Core::get()->getObjectManager());
         $extbaseValidatorResolver->injectReflectionService($reflectionService);
 
         $validator = $validatorResolver->createValidator(CollectionValidator::class);
@@ -70,12 +62,12 @@ class ValidatorResolverTest extends UnitTestCase
      */
     public function getBaseValidatorConjunctionCheckMixedTypes()
     {
-        $reflectionService = Core::getReflectionService();
-        $reflectionService->injectObjectManager(Core::getObjectManager());
+        $reflectionService = Core::get()->getReflectionService();
+        $reflectionService->injectObjectManager(Core::get()->getObjectManager());
 
         /** @var ValidatorResolver|\PHPUnit_Framework_MockObject_MockObject $validatorResolver */
         $validatorResolver = $this->getMock(ValidatorResolver::class, ['getBaseValidatorConjunction']);
-        $validatorResolver->injectObjectManager(Core::getObjectManager());
+        $validatorResolver->injectObjectManager(Core::get()->getObjectManager());
         $validatorResolver->injectReflectionService($reflectionService);
 
         $validatorResolver->expects($this->never())
@@ -98,7 +90,7 @@ class ValidatorResolverTest extends UnitTestCase
          */
         /** @var ValidatorResolver|\PHPUnit_Framework_MockObject_MockObject $validatorResolver */
         $validatorResolver = $this->getMock(ValidatorResolver::class, ['getBaseValidatorConjunction']);
-        $validatorResolver->injectObjectManager(Core::getObjectManager());
+        $validatorResolver->injectObjectManager(Core::get()->getObjectManager());
         $validatorResolver->injectReflectionService($reflectionService);
 
         $validatorResolver->expects($this->once())

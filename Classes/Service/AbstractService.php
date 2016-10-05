@@ -70,7 +70,7 @@ abstract class AbstractService implements ServiceInterface
      */
     final public function initializeObject(array $options = [])
     {
-        $this->objectManager = Core::getObjectManager();
+        $this->objectManager = Core::get()->getObjectManager();
         $this->checkUnknownOptions($options);
         $this->checkRequiredOptions($options);
         $this->options = $this->fillOptionsWithValues($options);

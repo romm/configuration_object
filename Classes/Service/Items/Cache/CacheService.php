@@ -249,6 +249,6 @@ class CacheService extends AbstractService implements ConfigurationObjectBeforeS
      */
     public function getCacheManager()
     {
-        return Core::getCacheManager();
+        return Core::get()->getCacheManager();
     }
 }

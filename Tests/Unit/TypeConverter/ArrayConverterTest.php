@@ -3,9 +3,9 @@ namespace Romm\ConfigurationObject\Tests\Unit\TypeConverter;
 
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithStoreArrayIndexTrait;
 use Romm\ConfigurationObject\TypeConverter\ArrayConverter;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
-class ArrayConverterTest extends UnitTestCase
+class ArrayConverterTest extends AbstractUnitTest
 {
 
     /**

@@ -27,7 +27,7 @@ class ClassExistsValidator extends AbstractValidator implements SingletonInterfa
      */
     public function isValid($value)
     {
-        if (false === Core::classExists($value)) {
+        if (false === Core::get()->classExists($value)) {
             $errorMessage = $this->translateErrorMessage('validator.class_exists.not_valid', 'configuration_object', [$value]);
             $this->addError($errorMessage, 1457610460);
         }

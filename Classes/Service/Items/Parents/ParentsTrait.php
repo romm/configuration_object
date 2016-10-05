@@ -66,7 +66,7 @@ trait ParentsTrait
 
         // Then, we check each parent's parents.
         foreach ($this->_parents as $parent) {
-            if (Core::getParentsUtility()->classUsesParentsTrait($parent)) {
+            if (Core::get()->getParentsUtility()->classUsesParentsTrait($parent)) {
                 /** @var ParentsTrait $parent */
                 return $parent->withFirstParent($parentClassName, $callBack, $notFoundCallBack);
             }

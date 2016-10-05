@@ -3,9 +3,9 @@ namespace Romm\ConfigurationObject\Tests\Unit\Traits\ConfigurationObject;
 
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObject;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
-class DefaultConfigurationObjectTraitTest extends UnitTestCase
+class DefaultConfigurationObjectTraitTest extends AbstractUnitTest
 {
 
     /**

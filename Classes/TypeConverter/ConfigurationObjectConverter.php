@@ -33,7 +33,7 @@ class ConfigurationObjectConverter extends ObjectConverter
     {
         $specificTargetType = $this->objectContainer->getImplementationClassName($targetType);
 
-        if (Core::classExists($specificTargetType)) {
+        if (Core::get()->classExists($specificTargetType)) {
             $propertyTags = $this->reflectionService->getPropertyTagValues($specificTargetType, $propertyName, 'var');
 
             if (!empty($propertyTags)) {

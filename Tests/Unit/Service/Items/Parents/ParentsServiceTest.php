@@ -7,10 +7,10 @@ use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDT
 use Romm\ConfigurationObject\Service\Items\Parents\ParentsService;
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithParentsTrait;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use TYPO3\CMS\Extbase\Error\Result;
 
-class ParentsServiceTest extends UnitTestCase
+class ParentsServiceTest extends AbstractUnitTest
 {
 
     /**

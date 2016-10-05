@@ -3,10 +3,10 @@ namespace Romm\ConfigurationObject\Tests\Unit\Traits\ConfigurationObject;
 
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObject;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyObjectWithFooAttribute;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use TYPO3\CMS\Extbase\Persistence\ObjectStorage;
 
-class ArrayConversionTraitTest extends UnitTestCase
+class ArrayConversionTraitTest extends AbstractUnitTest
 {
 
     /**

@@ -81,7 +81,7 @@ class PersistenceService extends AbstractService implements ObjectConversionBefo
      */
     public function objectConversionBefore(ConfigurationObjectConversionDTO $serviceDataTransferObject)
     {
-        if (Core::classExists($serviceDataTransferObject->getTargetType())
+        if (Core::get()->classExists($serviceDataTransferObject->getTargetType())
             && in_array(DomainObjectInterface::class, class_implements($serviceDataTransferObject->getTargetType()))
         ) {
             $serviceDataTransferObject->setResult($serviceDataTransferObject->getSource());

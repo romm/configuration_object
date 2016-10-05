@@ -259,9 +259,9 @@ class ServiceFactory
         $flag = false;
         $serviceInstance = null;
 
-        if (Core::classExists($className)) {
+        if (Core::get()->classExists($className)) {
             /** @var AbstractService $serviceInstance */
-            $serviceInstance = Core::getObjectManager()->get($className);
+            $serviceInstance = Core::get()->getObjectManager()->get($className);
 
             if ($serviceInstance instanceof AbstractService) {
                 $serviceInstance->initializeObject($options);

@@ -4,10 +4,10 @@ namespace Romm\ConfigurationObject\Tests\Unit\Service\DataTransferObject;
 use Romm\ConfigurationObject\ConfigurationObjectInstance;
 use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDTO;
 use Romm\ConfigurationObject\Service\ServiceFactory;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use TYPO3\CMS\Extbase\Error\Result;
 
-class GetConfigurationObjectDTOTest extends UnitTestCase
+class GetConfigurationObjectDTOTest extends AbstractUnitTest
 {
 
     /**
@@ -17,6 +17,8 @@ class GetConfigurationObjectDTOTest extends UnitTestCase
 
     protected function setUp()
     {
+        parent::setUp();
+
         $this->getConfigurationObjectDTO = new GetConfigurationObjectDTO(
             AbstractServiceDTOTest::CONFIGURATION_OBJECT_TEST_CLASS,
             ServiceFactory::getInstance()

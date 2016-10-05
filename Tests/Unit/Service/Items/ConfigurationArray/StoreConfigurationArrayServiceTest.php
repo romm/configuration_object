@@ -7,9 +7,9 @@ use Romm\ConfigurationObject\Service\Items\StoreConfigurationArray\StoreConfigur
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObject;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithConfigurationArrayTrait;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
-class StoreConfigurationArrayServiceTest extends UnitTestCase
+class StoreConfigurationArrayServiceTest extends AbstractUnitTest
 {
 
     /**

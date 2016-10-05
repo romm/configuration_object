@@ -2,11 +2,11 @@
 namespace Romm\ConfigurationObject\Tests\Unit\Service\Items\DataPreProcessor;
 
 use Romm\ConfigurationObject\Service\Items\DataPreProcessor\DataPreProcessor;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use TYPO3\CMS\Extbase\Error\Error;
 use TYPO3\CMS\Extbase\Error\Result;
 
-class DataPreProcessorTest extends UnitTestCase
+class DataPreProcessorTest extends AbstractUnitTest
 {
 
     /**

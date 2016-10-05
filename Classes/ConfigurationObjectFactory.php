@@ -126,7 +126,7 @@ class ConfigurationObjectFactory implements SingletonInterface
     protected function register($className)
     {
         if (false === isset($this->configurationObjectServiceFactory[$className])) {
-            if (false === Core::classExists($className)) {
+            if (false === Core::get()->classExists($className)) {
                 throw new ClassNotFoundException(
                     'Trying to get a non-existing configuration object: "' . $className . '".',
                     1448886437
@@ -164,7 +164,7 @@ class ConfigurationObjectFactory implements SingletonInterface
      */
     protected function getConfigurationObjectMapper()
     {
-        return Core::getObjectManager()->get(ConfigurationObjectMapper::class);
+        return Core::get()->getObjectManager()->get(ConfigurationObjectMapper::class);
     }
 
     /**

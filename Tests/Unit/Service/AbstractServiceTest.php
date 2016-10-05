@@ -8,9 +8,9 @@ use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDT
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Tests\Unit\Service\DataTransferObject\AbstractServiceDTOTest;
 use TYPO3\CMS\Core\Tests\AccessibleObjectInterface;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
-class AbstractServiceTest extends UnitTestCase
+class AbstractServiceTest extends AbstractUnitTest
 {
 
     /**
@@ -20,6 +20,8 @@ class AbstractServiceTest extends UnitTestCase
 
     protected function setUp()
     {
+        parent::setUp();
+
         $this->abstractService = $this->getAccessibleMock(AbstractService::class, ['dummy']);
     }
 

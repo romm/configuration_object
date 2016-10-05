@@ -5,18 +5,16 @@ use Romm\ConfigurationObject\ConfigurationObjectInstance;
 use Romm\ConfigurationObject\Exceptions\Exception;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithAttributeContainingError;
 use Romm\ConfigurationObject\Tests\Fixture\Validator\WrongValueValidator;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
 use TYPO3\CMS\Extbase\Error\Error;
 use TYPO3\CMS\Extbase\Error\Result;
 
-class ConfigurationObjectInstanceTest extends UnitTestCase
+class ConfigurationObjectInstanceTest extends AbstractUnitTest
 {
-
-    use ConfigurationObjectUnitTestUtility;
 
     public function setUp()
     {
-        $this->injectMockedObjectManagerInCore();
+        parent::setUp();
+
         $this->injectMockedValidatorResolverInCore();
     }
 

@@ -20,6 +20,7 @@ use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 use TYPO3\CMS\Extbase\Reflection\ReflectionService;
 
@@ -30,98 +31,58 @@ class Core implements SingletonInterface
 {
 
     /**
-     * @var ObjectManager
+     * @var Core
      */
-    protected static $objectManager;
+    protected static $instance;
+
+    /**
+     * @var ObjectManagerInterface
+     */
+    protected $objectManager;
 
     /**
      * @var ReflectionService
      */
-    protected static $reflectionService;
+    protected $reflectionService;
 
     /**
      * @var ValidatorResolver
      */
-    protected static $validatorResolver;
+    protected $validatorResolver;
 
     /**
      * @var CacheManager
      */
-    protected static $cacheManager;
+    protected $cacheManager;
 
     /**
      * @var ParentsUtility
      */
-    protected static $parentsUtility;
+    protected $parentsUtility;
 
     /**
      * @var array
      */
-    protected static $existingClassList = [];
+    protected $existingClassList = [];
 
     /**
      * @var array[]
      */
-    protected static $gettablePropertiesOfObjects = [];
+    protected $gettablePropertiesOfObjects = [];
 
     /**
-     * @return ObjectManager
+     * @return Core
      */
-    public static function getObjectManager()
+    public static function get()
     {
-        if (null === self::$objectManager) {
-            self::$objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        if (null === self::$instance) {
+            /** @var ObjectManager $objectManager */
+            $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+
+            self::$instance = $objectManager->get(self::class);
         }
 
-        return self::$objectManager;
-    }
-
-    /**
-     * @return ReflectionService
-     */
-    public static function getReflectionService()
-    {
-        if (null === self::$reflectionService) {
-            self::$reflectionService = GeneralUtility::makeInstance(ReflectionService::class);
-        }
-
-        return self::$reflectionService;
-    }
-
-    /**
-     * @return ValidatorResolver
-     */
-    public static function getValidatorResolver()
-    {
-        if (null === self::$validatorResolver) {
-            self::$validatorResolver = self::getObjectManager()->get(ValidatorResolver::class);
-        }
-
-        return self::$validatorResolver;
-    }
-
-    /**
-     * @return CacheManager
-     */
-    public static function getCacheManager()
-    {
-        if (null === self::$cacheManager) {
-            self::$cacheManager = self::getObjectManager()->get(CacheManager::class);
-        }
-
-        return self::$cacheManager;
-    }
-
-    /**
-     * @return ParentsUtility
-     */
-    public static function getParentsUtility()
-    {
-        if (null === self::$parentsUtility) {
-            self::$parentsUtility = GeneralUtility::makeInstance(ParentsUtility::class);
-        }
-
-        return self::$parentsUtility;
+        return self::$instance;
     }
 
     /**
@@ -135,13 +96,13 @@ class Core implements SingletonInterface
      * @param string $className
      * @return bool
      */
-    public static function classExists($className)
+    public function classExists($className)
     {
-        if (false === isset(self::$existingClassList[$className])) {
-            self::$existingClassList[$className] = class_exists($className);
+        if (false === isset($this->existingClassList[$className])) {
+            $this->existingClassList[$className] = class_exists($className);
         }
 
-        return self::$existingClassList[$className];
+        return $this->existingClassList[$className];
     }
 
     /**
@@ -153,22 +114,22 @@ class Core implements SingletonInterface
      * @param object $object
      * @return array
      */
-    public static function getGettablePropertiesOfObject($object)
+    public function getGettablePropertiesOfObject($object)
     {
         $className = get_class($object);
 
-        if (false === isset(self::$gettablePropertiesOfObjects[$className])) {
-            self::$gettablePropertiesOfObjects[$className] = [];
-            $properties = self::getReflectionService()->getClassPropertyNames($className);
+        if (false === isset($this->gettablePropertiesOfObjects[$className])) {
+            $this->gettablePropertiesOfObjects[$className] = [];
+            $properties = $this->getReflectionService()->getClassPropertyNames($className);
 
             foreach ($properties as $propertyName) {
-                if (true === self::isPropertyGettable($object, $propertyName)) {
-                    self::$gettablePropertiesOfObjects[$className][] = $propertyName;
+                if (true === $this->isPropertyGettable($object, $propertyName)) {
+                    $this->gettablePropertiesOfObjects[$className][] = $propertyName;
                 }
             }
         }
 
-        return self::$gettablePropertiesOfObjects[$className];
+        return $this->gettablePropertiesOfObjects[$className];
     }
 
     /**
@@ -182,7 +143,7 @@ class Core implements SingletonInterface
      * @param string $propertyName
      * @return bool
      */
-    protected static function isPropertyGettable($object, $propertyName)
+    protected function isPropertyGettable($object, $propertyName)
     {
         $flag = false;
 
@@ -202,5 +163,85 @@ class Core implements SingletonInterface
         }
 
         return $flag;
+    }
+
+    /**
+     * @return ObjectManagerInterface
+     */
+    public function getObjectManager()
+    {
+        return $this->objectManager;
+    }
+
+    /**
+     * @param ObjectManagerInterface $objectManager
+     */
+    public function injectObjectManager(ObjectManagerInterface $objectManager)
+    {
+        $this->objectManager = $objectManager;
+    }
+
+    /**
+     * @return ReflectionService
+     */
+    public function getReflectionService()
+    {
+        return $this->reflectionService;
+    }
+
+    /**
+     * @param ReflectionService $reflectionService
+     */
+    public function injectReflectionService(ReflectionService $reflectionService)
+    {
+        $this->reflectionService = $reflectionService;
+    }
+
+    /**
+     * @return ValidatorResolver
+     */
+    public function getValidatorResolver()
+    {
+        return $this->validatorResolver;
+    }
+
+    /**
+     * @param ValidatorResolver $validatorResolver
+     */
+    public function injectValidatorResolver(ValidatorResolver $validatorResolver)
+    {
+        $this->validatorResolver = $validatorResolver;
+    }
+
+    /**
+     * @return CacheManager
+     */
+    public function getCacheManager()
+    {
+        return $this->cacheManager;
+    }
+
+    /**
+     * @param CacheManager $cacheManager
+     */
+    public function injectCacheManager(CacheManager $cacheManager)
+    {
+        $this->cacheManager = $cacheManager;
+    }
+
+    /**
+     * @return ParentsUtility
+     */
+    public function getParentsUtility()
+    {
+        return $this->parentsUtility;
+    }
+
+    /**
+     * @param ParentsUtility $parentsUtility
+     */
+    public function injectParentsUtility(ParentsUtility $parentsUtility)
+    {
+        $this->parentsUtility = $parentsUtility;
     }
 }

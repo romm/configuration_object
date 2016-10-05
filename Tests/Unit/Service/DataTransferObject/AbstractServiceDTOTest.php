@@ -6,9 +6,9 @@ use Romm\ConfigurationObject\Exceptions\ClassNotFoundException;
 use Romm\ConfigurationObject\Exceptions\WrongInheritanceException;
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Tests\Fixture\Company\Company;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
-class AbstractServiceDTOTest extends UnitTestCase
+class AbstractServiceDTOTest extends AbstractUnitTest
 {
 
     const CONFIGURATION_OBJECT_TEST_CLASS = Company::class;
@@ -25,6 +25,8 @@ class AbstractServiceDTOTest extends UnitTestCase
 
     protected function setUp()
     {
+        parent::setUp();
+
         /*
          * We instantiate a service factory and a mocked abstract service DTO,
          * which can then be used in the several test cases all along the class.
