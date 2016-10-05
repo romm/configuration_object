@@ -45,7 +45,7 @@ class ValidatorResolverTest extends UnitTestCase
 
         $validator = $validatorResolver->createValidator(CollectionValidator::class);
 
-        $this->assertEquals(MixedTypeCollectionValidator::class, get_class($validator));
+        $this->assertTrue($validator instanceof MixedTypeCollectionValidator);
 
         /*
          * If we try to create something different than the validator
@@ -55,10 +55,8 @@ class ValidatorResolverTest extends UnitTestCase
         $validator = $validatorResolver->createValidator(BooleanValidator::class);
         $validatorWithExtbase = $extbaseValidatorResolver->createValidator(BooleanValidator::class);
 
-        $this->assertEquals(
-            serialize($validator),
-            serialize($validatorWithExtbase)
-        );
+        $this->assertTrue($validator instanceof BooleanValidator);
+        $this->assertTrue($validatorWithExtbase instanceof BooleanValidator);
 
         unset($validatorResolver);
         unset($extbaseValidatorResolver);

@@ -13,6 +13,7 @@ use TYPO3\CMS\Extbase\Property\TypeConverter\ArrayConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ObjectConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\StringConverter;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
+use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
 trait ConfigurationObjectUnitTestUtility
 {
@@ -121,12 +122,26 @@ trait ConfigurationObjectUnitTestUtility
             ->will(
                 $this->returnCallback(
                     function () {
-                        $args = func_get_args();
-                        $reflectionClass = new \ReflectionClass(array_shift($args));
-                        if (empty($args)) {
-                            $instance = $reflectionClass->newInstance();
+                        $arguments = func_get_args();
+                        $className = array_shift($arguments);
+
+                        if (in_array(AbstractValidator::class, class_parents($className))) {
+                            /** @var  AbstractValidator|\PHPUnit_Framework_MockObject_MockObject $instance */
+                            $instance = $this->getMock($className, ['translateErrorMessage'], $arguments);
+                            $instance->expects($this->any())
+                                ->method('translateErrorMessage')
+                                ->will(
+                                    $this->returnCallback(function($key, $extension) {
+                                        return 'LLL:' . $extension . ':' . $key;
+                                    })
+                                );
                         } else {
-                            $instance = $reflectionClass->newInstanceArgs($args);
+                            $reflectionClass = new \ReflectionClass($className);
+                            if (empty($arguments)) {
+                                $instance = $reflectionClass->newInstance();
+                            } else {
+                                $instance = $reflectionClass->newInstanceArgs($arguments);
+                            }
                         }
 
                         return $instance;
