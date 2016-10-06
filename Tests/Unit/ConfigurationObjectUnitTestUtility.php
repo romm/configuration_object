@@ -52,7 +52,6 @@ trait ConfigurationObjectUnitTestUtility
      */
     private function setUpConfigurationObjectCore()
     {
-        /** @var Core|\PHPUnit_Framework_MockObject_MockObject $coreMock */
         $this->configurationObjectCoreMock = $this->getMock(Core::class, ['getServiceFactoryInstance']);
         $this->configurationObjectCoreMock->injectObjectManager($this->getConfigurationObjectObjectManagerMock());
         $this->configurationObjectCoreMock->injectReflectionService(new ReflectionService);
