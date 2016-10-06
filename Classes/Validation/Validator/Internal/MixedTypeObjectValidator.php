@@ -32,7 +32,7 @@ class MixedTypeObjectValidator extends AbstractValidator
      */
     protected function isValid($value)
     {
-        $validatorResolver = Core::getValidatorResolver();
+        $validatorResolver = Core::get()->getValidatorResolver();
         $genericObjectValidator = $validatorResolver->getBaseValidatorConjunction(get_class($value));
 
         $this->result->merge($genericObjectValidator->validate($value));

@@ -58,7 +58,7 @@ class ParentsService extends AbstractService implements ObjectConversionAfterSer
         $result = $serviceDataTransferObject->getResult();
 
         if (is_object($result)) {
-            foreach (Core::getGettablePropertiesOfObject($result) as $propertyName) {
+            foreach (Core::get()->getGettablePropertiesOfObject($result) as $propertyName) {
                 $property = ObjectAccess::getProperty($result, $propertyName);
 
                 $this->checkProperty($serviceDataTransferObject, $property, $propertyName);
@@ -102,7 +102,7 @@ class ParentsService extends AbstractService implements ObjectConversionAfterSer
                 : '';
             $path .= $pathSuffix;
 
-            if (true === Core::getParentsUtility()->classUsesParentsTrait($property)) {
+            if (true === Core::get()->getParentsUtility()->classUsesParentsTrait($property)) {
                 $this->objectsWithParentsPaths[$path] = $path;
             }
         }
@@ -163,7 +163,7 @@ class ParentsService extends AbstractService implements ObjectConversionAfterSer
 
         if (1 === count($path)) {
             if (is_object($propertyValue)
-                && Core::getParentsUtility()->classUsesParentsTrait($propertyValue)
+                && Core::get()->getParentsUtility()->classUsesParentsTrait($propertyValue)
             ) {
                 /** @var ParentsTrait $propertyValue */
                 $propertyValue->setParents($parents);

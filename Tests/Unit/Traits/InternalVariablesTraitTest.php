@@ -2,9 +2,9 @@
 namespace Romm\ConfigurationObject\Tests\Unit\Traits;
 
 use Romm\ConfigurationObject\Traits\InternalVariablesTrait;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
-class InternalVariablesTraitTest extends UnitTestCase
+class InternalVariablesTraitTest extends AbstractUnitTest
 {
 
     /**

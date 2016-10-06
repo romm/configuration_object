@@ -3,9 +3,9 @@ namespace Romm\ConfigurationObject\Tests\Unit\Service\Items\DataPreProcessor;
 
 use Romm\ConfigurationObject\Service\Items\DataPreProcessor\DataPreProcessorService;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithDataPreProcessor;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
-class DataPreProcessorServiceTest extends UnitTestCase
+class DataPreProcessorServiceTest extends AbstractUnitTest
 {
 
     /**

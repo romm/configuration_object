@@ -3,9 +3,9 @@ namespace Romm\ConfigurationObject\Tests\Unit\Service\Items\Parents;
 
 use Romm\ConfigurationObject\Service\Items\Parents\ParentsUtility;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithParentsTrait;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
-class ParentsUtilityTest extends UnitTestCase
+class ParentsUtilityTest extends AbstractUnitTest
 {
 
     /**

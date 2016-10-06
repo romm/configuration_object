@@ -8,11 +8,11 @@ use Romm\ConfigurationObject\Service\Items\Persistence\PersistenceService;
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithPersistenceAttribute;
 use TYPO3\CMS\Beuser\Domain\Model\BackendUser;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use TYPO3\CMS\Extbase\Error\Result;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 
-class PersistenceServiceTest extends UnitTestCase
+class PersistenceServiceTest extends AbstractUnitTest
 {
 
     /**

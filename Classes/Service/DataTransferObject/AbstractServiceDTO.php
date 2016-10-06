@@ -63,7 +63,7 @@ abstract class AbstractServiceDTO
      */
     protected function setConfigurationObjectClassName($className)
     {
-        if (false === Core::classExists($className)) {
+        if (false === Core::get()->classExists($className)) {
             throw new ClassNotFoundException('The class "' . $className . '" does not exist.', 1456002532);
         }
         if (false === is_subclass_of($className, ConfigurationObjectInterface::class)) {

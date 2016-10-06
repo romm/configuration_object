@@ -1,10 +1,10 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\Validation\Validator;
 
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use TYPO3\CMS\Extbase\Validation\Validator\ValidatorInterface;
 
-abstract class AbstractValidatorTest extends UnitTestCase
+abstract class AbstractValidatorTest extends AbstractUnitTest
 {
 
     /**

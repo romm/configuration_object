@@ -4,14 +4,21 @@ namespace Romm\ConfigurationObject\Tests\Unit;
 use Romm\ConfigurationObject\ConfigurationObjectFactory;
 use Romm\ConfigurationObject\ConfigurationObjectMapper;
 use Romm\ConfigurationObject\Core\Core;
+use Romm\ConfigurationObject\Service\Items\Cache\CacheService;
+use Romm\ConfigurationObject\Service\Items\Parents\ParentsUtility;
+use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\TypeConverter\ConfigurationObjectConverter;
 use Romm\ConfigurationObject\Validation\ValidatorResolver;
+use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
+use TYPO3\CMS\Core\Cache\CacheFactory;
+use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Extbase\Object\Container\Container;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationBuilder;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ArrayConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ObjectConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\StringConverter;
+use TYPO3\CMS\Extbase\Reflection\ReflectionService;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
@@ -19,48 +26,89 @@ trait ConfigurationObjectUnitTestUtility
 {
 
     /**
+     * @var Core|\PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $configurationObjectCoreMock;
+
+    /**
      * Use this function if you need to create a configuration object in your
      * unit tests. Just call it from you function `setUp()`.
      */
-    public function initializeConfigurationObjectTestServices()
+    protected function initializeConfigurationObjectTestServices()
     {
         // We need to register the type converters used in these examples.
         ExtensionUtility::registerTypeConverter(ArrayConverter::class);
         ExtensionUtility::registerTypeConverter(ObjectConverter::class);
         ExtensionUtility::registerTypeConverter(StringConverter::class);
 
-        $this->injectMockedObjectManagerInCore();
+        $this->setUpConfigurationObjectCore();
         $this->injectMockedValidatorResolverInCore();
         $this->injectMockedConfigurationObjectFactory();
     }
 
     /**
-     * Will force the Extbase `ObjectManager` getter of the core to return a
-     * mocked instance of the class.
+     * Initializes correctly this extension `Core` class to be able to work
+     * correctly in unit tests.
      */
-    public function injectMockedObjectManagerInCore()
+    private function setUpConfigurationObjectCore()
     {
+        /** @var Core|\PHPUnit_Framework_MockObject_MockObject $coreMock */
+        $this->configurationObjectCoreMock = $this->getMock(Core::class, ['getServiceFactoryInstance']);
+        $this->configurationObjectCoreMock->injectObjectManager($this->getConfigurationObjectObjectManagerMock());
+        $this->configurationObjectCoreMock->injectReflectionService(new ReflectionService);
+        $this->configurationObjectCoreMock->injectValidatorResolver(new ValidatorResolver);
+        $this->configurationObjectCoreMock->injectParentsUtility(new ParentsUtility);
+
+        $this->configurationObjectCoreMock->method('getServiceFactoryInstance')
+            ->will(
+                $this->returnCallback(
+                    function () {
+                        /** @var ServiceFactory|\PHPUnit_Framework_MockObject_MockObject $serviceFactoryMock */
+                        $serviceFactoryMock = $this->getMock(ServiceFactory::class, ['manageServiceData']);
+                        $serviceFactoryMock->method('manageServiceData')
+                            ->will(
+                                $this->returnCallback(
+                                    function(array $service) {
+                                        $className = $service['className'];
+                                        $options = $service['options'];
+
+                                        if (CacheService::class === $className) {
+                                            $options[CacheService::OPTION_CACHE_BACKEND] = TransientMemoryBackend::class;
+                                        }
+
+                                        return [$className, $options];
+                                    }
+                                )
+                            );
+
+                        return $serviceFactoryMock;
+                    }
+                )
+            );
+
+        $cacheManager = new CacheManager;
+        $cacheFactory = new CacheFactory('foo', $cacheManager);
+        $cacheManager->injectCacheFactory($cacheFactory);
+        $this->configurationObjectCoreMock->injectCacheManager($cacheManager);
+
         $reflectedCore = new \ReflectionClass(Core::class);
-        $objectManagerProperty = $reflectedCore->getProperty('objectManager');
+        $objectManagerProperty = $reflectedCore->getProperty('instance');
         $objectManagerProperty->setAccessible(true);
-        $objectManagerProperty->setValue($this->getObjectManagerMock());
+        $objectManagerProperty->setValue($this->configurationObjectCoreMock);
     }
 
     /**
      * Will force the Extbase `ValidatorResolver` getter of the core to return a
      * mocked instance of the class.
      */
-    public function injectMockedValidatorResolverInCore()
+    protected function injectMockedValidatorResolverInCore()
     {
-        $validatorResolver = $this->getObjectManagerMock()->get(ValidatorResolver::class);
+        $validatorResolver = $this->getConfigurationObjectObjectManagerMock()->get(ValidatorResolver::class);
 
-        $validatorResolver->injectObjectManager(Core::getObjectManager());
-        $validatorResolver->injectReflectionService(Core::getReflectionService());
+        $validatorResolver->injectObjectManager(Core::get()->getObjectManager());
+        $validatorResolver->injectReflectionService(Core::get()->getReflectionService());
 
-        $reflectedCore = new \ReflectionClass(Core::class);
-        $objectManagerProperty = $reflectedCore->getProperty('validatorResolver');
-        $objectManagerProperty->setAccessible(true);
-        $objectManagerProperty->setValue($validatorResolver);
+        $this->configurationObjectCoreMock->injectValidatorResolver($validatorResolver);
     }
 
     /**
@@ -68,7 +116,7 @@ trait ConfigurationObjectUnitTestUtility
      * `ConfigurationObjectFactory`, and inject it in the property `$instance`
      * of the class.
      */
-    public function injectMockedConfigurationObjectFactory()
+    protected function injectMockedConfigurationObjectFactory()
     {
         /** @var ConfigurationObjectMapper|\PHPUnit_Framework_MockObject_MockObject $mockedConfigurationObjectMapper */
         $mockedConfigurationObjectMapper = $this->getMock(ConfigurationObjectMapper::class, ['getObjectConverter']);
@@ -77,19 +125,19 @@ trait ConfigurationObjectUnitTestUtility
         $objectContainer = new Container();
         /** @var ConfigurationObjectConverter $configurationObjectConverter */
         $configurationObjectConverter->injectObjectContainer($objectContainer);
-        $configurationObjectConverter->injectObjectManager(Core::getObjectManager());
-        $configurationObjectConverter->injectReflectionService(Core::getReflectionService());
+        $configurationObjectConverter->injectObjectManager(Core::get()->getObjectManager());
+        $configurationObjectConverter->injectReflectionService(Core::get()->getReflectionService());
 
         $mockedConfigurationObjectMapper->expects($this->any())
             ->method('getObjectConverter')
             ->will($this->returnValue($configurationObjectConverter));
 
-        $propertyMappingConfigurationBuilder = Core::getObjectManager()->get(PropertyMappingConfigurationBuilder::class);
+        $propertyMappingConfigurationBuilder = Core::get()->getObjectManager()->get(PropertyMappingConfigurationBuilder::class);
         $mockedConfigurationObjectMapper->injectConfigurationBuilder($propertyMappingConfigurationBuilder);
-        $mockedConfigurationObjectMapper->injectObjectManager(Core::getObjectManager());
+        $mockedConfigurationObjectMapper->injectObjectManager(Core::get()->getObjectManager());
 
-        $reflectionService = Core::getReflectionService();
-        $reflectionService->injectObjectManager(Core::getObjectManager());
+        $reflectionService = Core::get()->getReflectionService();
+        $reflectionService->injectObjectManager(Core::get()->getObjectManager());
         $mockedConfigurationObjectMapper->injectReflectionService($reflectionService);
 
         $mockedConfigurationObjectMapper->initializeObject();
@@ -101,8 +149,8 @@ trait ConfigurationObjectUnitTestUtility
             ->method('getConfigurationObjectMapper')
             ->will($this->returnValue($mockedConfigurationObjectMapper));
 
-        $reflectedCore = new \ReflectionClass(ConfigurationObjectFactory::class);
-        $objectManagerProperty = $reflectedCore->getProperty('instance');
+        $reflectedClass = new \ReflectionClass(ConfigurationObjectFactory::class);
+        $objectManagerProperty = $reflectedClass->getProperty('instance');
         $objectManagerProperty->setAccessible(true);
         $objectManagerProperty->setValue($mockedConfigurationObjectFactory);
     }
@@ -113,7 +161,7 @@ trait ConfigurationObjectUnitTestUtility
      *
      * @return ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
-    public function getObjectManagerMock()
+    private function getConfigurationObjectObjectManagerMock()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject $mockObjectManager */
         $mockObjectManager = $this->getMock(ObjectManagerInterface::class);
@@ -131,9 +179,11 @@ trait ConfigurationObjectUnitTestUtility
                             $instance->expects($this->any())
                                 ->method('translateErrorMessage')
                                 ->will(
-                                    $this->returnCallback(function($key, $extension) {
-                                        return 'LLL:' . $extension . ':' . $key;
-                                    })
+                                    $this->returnCallback(
+                                        function ($key, $extension) {
+                                            return 'LLL:' . $extension . ':' . $key;
+                                        }
+                                    )
                                 );
                         } else {
                             $reflectionClass = new \ReflectionClass($className);

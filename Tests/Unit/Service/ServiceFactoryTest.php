@@ -12,19 +12,11 @@ use Romm\ConfigurationObject\Service\Items\Parents\ParentsService;
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObject;
 use Romm\ConfigurationObject\Tests\Unit\Service\Fixture\DummyService;
-use Romm\ConfigurationObject\Tests\Unit\ConfigurationObjectUnitTestUtility;
 use TYPO3\CMS\Core\Tests\AccessibleObjectInterface;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
-class ServiceFactoryTest extends UnitTestCase
+class ServiceFactoryTest extends AbstractUnitTest
 {
-
-    use ConfigurationObjectUnitTestUtility;
-
-    protected function setUp()
-    {
-        $this->injectMockedObjectManagerInCore();
-    }
 
     /**
      * Checks if the static getter of the service factory class returns a
@@ -35,7 +27,7 @@ class ServiceFactoryTest extends UnitTestCase
     public function classGetterWorks()
     {
         $serviceFactory = ServiceFactory::getInstance();
-        $this->assertEquals(get_class($serviceFactory), ServiceFactory::class);
+        $this->assertInstanceOf(ServiceFactory::class, $serviceFactory);
 
         unset($serviceFactory);
     }

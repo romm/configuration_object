@@ -6,19 +6,14 @@ use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDT
 use Romm\ConfigurationObject\Service\Items\Cache\CacheService;
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObject;
-use Romm\ConfigurationObject\Tests\Unit\ConfigurationObjectUnitTestUtility;
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
-use TYPO3\CMS\Core\Cache\CacheFactory;
-use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Tests\AccessibleObjectInterface;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use TYPO3\CMS\Extbase\Error\Error;
 use TYPO3\CMS\Extbase\Error\Result;
 
-class CacheServiceTest extends UnitTestCase
+class CacheServiceTest extends AbstractUnitTest
 {
-
-    use ConfigurationObjectUnitTestUtility;
 
     /**
      * Will initialize an instance of a cache service, and check that the cache
@@ -30,9 +25,7 @@ class CacheServiceTest extends UnitTestCase
     {
         /** @var CacheService|AccessibleObjectInterface|\PHPUnit_Framework_MockObject_MockObject $mockedCacheService */
         $mockedCacheService = $this->getAccessibleMock(CacheService::class, ['dummy']);
-        $mockedCacheService->injectObjectManager($this->getObjectManagerMock());
-        /** @var CacheManager $cacheManager */
-        $cacheManager = $mockedCacheService->_call('getCacheManager');
+        $cacheManager = $mockedCacheService->getCacheManager();
 
         $this->assertFalse($cacheManager->hasCache('test'));
 
@@ -70,7 +63,6 @@ class CacheServiceTest extends UnitTestCase
         // Mocking the cache service so we can inject a custom mocked cache instance.
         /** @var CacheService|AccessibleObjectInterface|\PHPUnit_Framework_MockObject_MockObject $mockedCacheService */
         $mockedCacheService = $this->getAccessibleMock(CacheService::class, ['getCacheInstance']);
-        $mockedCacheService->injectObjectManager($this->getObjectManagerMock());
 
         $options = [
             CacheService::OPTION_CACHE_NAME    => $cacheName,
@@ -78,15 +70,9 @@ class CacheServiceTest extends UnitTestCase
         ];
         $mockedCacheService->_set('options', $options);
 
-        // Setting up the cache manager, to initialize the cache service correctly.
-        /** @var CacheManager $cacheManager */
-        $cacheManager = $mockedCacheService->_call('getCacheManager');
-        $cacheFactory = new CacheFactory('test', $cacheManager);
-        $cacheManager->injectCacheFactory($cacheFactory);
-
         $mockedCacheService->initialize();
 
-        $transientMemoryBackendCache = $cacheManager->getCache($cacheName);
+        $transientMemoryBackendCache = $mockedCacheService->getCacheManager()->getCache($cacheName);
 
         $mockedCacheService->method('getCacheInstance')
             ->will($this->returnValue($transientMemoryBackendCache));
@@ -137,7 +123,6 @@ class CacheServiceTest extends UnitTestCase
         // Mocking the cache service so we can inject a custom mocked cache instance.
         /** @var CacheService|AccessibleObjectInterface|\PHPUnit_Framework_MockObject_MockObject $mockedCacheService */
         $mockedCacheService = $this->getAccessibleMock(CacheService::class, ['getCacheInstance']);
-        $mockedCacheService->injectObjectManager($this->getObjectManagerMock());
 
         $options = [
             CacheService::OPTION_CACHE_NAME    => $cacheName,
@@ -145,15 +130,9 @@ class CacheServiceTest extends UnitTestCase
         ];
         $mockedCacheService->_set('options', $options);
 
-        // Setting up the cache manager, to initialize the cache service correctly.
-        /** @var CacheManager $cacheManager */
-        $cacheManager = $mockedCacheService->_call('getCacheManager');
-        $cacheFactory = new CacheFactory('test', $cacheManager);
-        $cacheManager->injectCacheFactory($cacheFactory);
-
         $mockedCacheService->initialize();
 
-        $transientMemoryBackendCache = $cacheManager->getCache($cacheName);
+        $transientMemoryBackendCache = $mockedCacheService->getCacheManager()->getCache($cacheName);
 
         $mockedCacheService->method('getCacheInstance')
             ->will($this->returnValue($transientMemoryBackendCache));
@@ -215,7 +194,6 @@ class CacheServiceTest extends UnitTestCase
         // Mocking the cache service so we can inject a custom mocked cache instance.
         /** @var CacheService|AccessibleObjectInterface|\PHPUnit_Framework_MockObject_MockObject $mockedCacheService */
         $mockedCacheService = $this->getAccessibleMock(CacheService::class, ['getCacheInstance']);
-        $mockedCacheService->injectObjectManager($this->getObjectManagerMock());
 
         $options = [
             CacheService::OPTION_CACHE_NAME    => $cacheName,
@@ -223,15 +201,9 @@ class CacheServiceTest extends UnitTestCase
         ];
         $mockedCacheService->_set('options', $options);
 
-        // Setting up the cache manager, to initialize the cache service correctly.
-        /** @var CacheManager $cacheManager */
-        $cacheManager = $mockedCacheService->_call('getCacheManager');
-        $cacheFactory = new CacheFactory('test', $cacheManager);
-        $cacheManager->injectCacheFactory($cacheFactory);
-
         $mockedCacheService->initialize();
 
-        $transientMemoryBackendCache = $cacheManager->getCache($cacheName);
+        $transientMemoryBackendCache = $mockedCacheService->getCacheManager()->getCache($cacheName);
 
         $mockedCacheService->method('getCacheInstance')
             ->will($this->returnValue($transientMemoryBackendCache));

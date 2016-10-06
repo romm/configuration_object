@@ -3,9 +3,9 @@ namespace Romm\ConfigurationObject\Tests\Unit\Traits\ConfigurationObject;
 
 use Romm\ConfigurationObject\Exceptions\MethodNotFoundException;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithUpperCaseProperty;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
-class MagicMethodsTraitTest extends UnitTestCase
+class MagicMethodsTraitTest extends AbstractUnitTest
 {
 
     /**

@@ -3,10 +3,10 @@ namespace Romm\ConfigurationObject\Tests\Unit\Service\DataTransferObject;
 
 use Romm\ConfigurationObject\Service\DataTransferObject\GetTypeConverterDTO;
 use Romm\ConfigurationObject\Service\ServiceFactory;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use TYPO3\CMS\Extbase\Property\TypeConverterInterface;
 
-class GetTypeConverterDTOTest extends UnitTestCase
+class GetTypeConverterDTOTest extends AbstractUnitTest
 {
 
     /**
@@ -16,6 +16,8 @@ class GetTypeConverterDTOTest extends UnitTestCase
 
     protected function setUp()
     {
+        parent::setUp();
+
         $this->getTypeConverterDataTransferObject = new GetTypeConverterDTO(
             AbstractServiceDTOTest::CONFIGURATION_OBJECT_TEST_CLASS,
             ServiceFactory::getInstance()

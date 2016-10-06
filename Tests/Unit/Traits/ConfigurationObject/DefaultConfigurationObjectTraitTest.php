@@ -3,9 +3,9 @@ namespace Romm\ConfigurationObject\Tests\Unit\Traits\ConfigurationObject;
 
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObject;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
-class DefaultConfigurationObjectTraitTest extends UnitTestCase
+class DefaultConfigurationObjectTraitTest extends AbstractUnitTest
 {
 
     /**
@@ -19,10 +19,7 @@ class DefaultConfigurationObjectTraitTest extends UnitTestCase
         $serviceFactory = DummyConfigurationObject::getConfigurationObjectServices();
 
         // Checking the returned instance is a `ServiceFactory` instance.
-        $this->assertEquals(ServiceFactory::class, get_class($serviceFactory));
-
-        // The default service factory must be a basic instance.
-        $this->assertEquals(serialize(ServiceFactory::getInstance()), serialize($serviceFactory));
+        $this->assertInstanceOf(ServiceFactory::class, $serviceFactory);
 
         unset($serviceFactory);
     }

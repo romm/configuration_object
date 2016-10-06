@@ -76,7 +76,7 @@ trait ArrayConversionTrait
      */
     private function getObjectPropertiesValues($object)
     {
-        $properties = Core::getGettablePropertiesOfObject($object);
+        $properties = Core::get()->getGettablePropertiesOfObject($object);
         $finalProperties = [];
 
         foreach ($properties as $property) {

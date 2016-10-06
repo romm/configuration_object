@@ -2,11 +2,11 @@
 namespace Romm\ConfigurationObject\Tests\Unit\Service\Items\MixedTypes;
 
 use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesResolver;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use TYPO3\CMS\Extbase\Error\Error;
 use TYPO3\CMS\Extbase\Error\Result;
 
-class MixedTypesResolverTest extends UnitTestCase
+class MixedTypesResolverTest extends AbstractUnitTest
 {
 
     /**

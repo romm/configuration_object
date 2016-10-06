@@ -13,12 +13,9 @@ use Romm\ConfigurationObject\Tests\Fixture\Company\Company;
 use Romm\ConfigurationObject\Tests\Fixture\Company\Employee;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithWrongServiceFactory;
 use Romm\ConfigurationObject\Tests\Fixture\Validator\WrongValueValidator;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
 
-class ConfigurationObjectFactoryTest extends UnitTestCase
+class ConfigurationObjectFactoryTest extends AbstractUnitTest
 {
-
-    use ConfigurationObjectUnitTestUtility;
 
     /**
      * @var Company
@@ -46,6 +43,8 @@ class ConfigurationObjectFactoryTest extends UnitTestCase
 
     protected function setUp()
     {
+        parent::setUp();
+
         $this->initializeConfigurationObjectTestServices();
     }
 
@@ -112,7 +111,7 @@ class ConfigurationObjectFactoryTest extends UnitTestCase
         $companyObject = ConfigurationObjectFactory::getInstance()
             ->get(Company::class, $this->defaultCompanyValues);
 
-        $this->assertTrue($companyObject instanceof ConfigurationObjectInstance);
+        $this->assertInstanceOf(ConfigurationObjectInstance::class, $companyObject);
         $this->assertFalse($companyObject->getValidationResult()->hasErrors());
 
         /** @var Company $company */

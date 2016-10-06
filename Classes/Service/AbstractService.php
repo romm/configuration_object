@@ -13,6 +13,7 @@
 
 namespace Romm\ConfigurationObject\Service;
 
+use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Exceptions\InvalidServiceOptionsException;
 use Romm\ConfigurationObject\Exceptions\InvalidTypeException;
 use Romm\ConfigurationObject\Service\DataTransferObject\AbstractServiceDTO;
@@ -69,6 +70,7 @@ abstract class AbstractService implements ServiceInterface
      */
     final public function initializeObject(array $options = [])
     {
+        $this->objectManager = Core::get()->getObjectManager();
         $this->checkUnknownOptions($options);
         $this->checkRequiredOptions($options);
         $this->options = $this->fillOptionsWithValues($options);
@@ -200,13 +202,5 @@ abstract class AbstractService implements ServiceInterface
         }
 
         static::$delayedCallbacks = [];
-    }
-
-    /**
-     * @param ObjectManagerInterface $objectManager
-     */
-    public function injectObjectManager(ObjectManagerInterface $objectManager)
-    {
-        $this->objectManager = $objectManager;
     }
 }

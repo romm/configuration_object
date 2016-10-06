@@ -3,9 +3,9 @@ namespace Romm\ConfigurationObject\Tests\Unit\Service\Items\Parents;
 
 use Romm\ConfigurationObject\Exceptions\EntryNotFoundException;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithParentsTrait;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
-class ParentsTraitTest extends UnitTestCase
+class ParentsTraitTest extends AbstractUnitTest
 {
 
     /**

@@ -3,9 +3,9 @@ namespace Romm\ConfigurationObject\Tests\Unit\Service\Items\DataPreProcessor;
 
 use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesService;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithMixedTypes;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
-class MixedTypesServiceTest extends UnitTestCase
+class MixedTypesServiceTest extends AbstractUnitTest
 {
 
     /**
