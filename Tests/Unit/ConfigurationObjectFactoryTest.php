@@ -111,7 +111,7 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
         $companyObject = ConfigurationObjectFactory::getInstance()
             ->get(Company::class, $this->defaultCompanyValues);
 
-        $this->assertTrue($companyObject instanceof ConfigurationObjectInstance);
+        $this->assertInstanceOf(ConfigurationObjectInstance::class, $companyObject);
         $this->assertFalse($companyObject->getValidationResult()->hasErrors());
 
         /** @var Company $company */

@@ -15,6 +15,7 @@ namespace Romm\ConfigurationObject\Core;
 
 use Romm\ConfigurationObject\Exceptions\MethodNotFoundException;
 use Romm\ConfigurationObject\Service\Items\Parents\ParentsUtility;
+use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Validation\ValidatorResolver;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\SingletonInterface;
@@ -26,6 +27,8 @@ use TYPO3\CMS\Extbase\Reflection\ReflectionService;
 
 /**
  * General functions.
+ *
+ * The structure is here to help unit tests to mock correctly what is needed.
  */
 class Core implements SingletonInterface
 {
@@ -163,6 +166,14 @@ class Core implements SingletonInterface
         }
 
         return $flag;
+    }
+
+    /**
+     * @return ServiceFactory
+     */
+    public function getServiceFactoryInstance()
+    {
+        return GeneralUtility::makeInstance(ServiceFactory::class);
     }
 
     /**

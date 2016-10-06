@@ -19,10 +19,7 @@ class DefaultConfigurationObjectTraitTest extends AbstractUnitTest
         $serviceFactory = DummyConfigurationObject::getConfigurationObjectServices();
 
         // Checking the returned instance is a `ServiceFactory` instance.
-        $this->assertEquals(ServiceFactory::class, get_class($serviceFactory));
-
-        // The default service factory must be a basic instance.
-        $this->assertEquals(serialize(ServiceFactory::getInstance()), serialize($serviceFactory));
+        $this->assertInstanceOf(ServiceFactory::class, $serviceFactory);
 
         unset($serviceFactory);
     }

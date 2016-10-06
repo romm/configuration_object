@@ -27,7 +27,7 @@ class ServiceFactoryTest extends AbstractUnitTest
     public function classGetterWorks()
     {
         $serviceFactory = ServiceFactory::getInstance();
-        $this->assertEquals(get_class($serviceFactory), ServiceFactory::class);
+        $this->assertInstanceOf(ServiceFactory::class, $serviceFactory);
 
         unset($serviceFactory);
     }

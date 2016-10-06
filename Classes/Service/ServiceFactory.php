@@ -97,7 +97,7 @@ class ServiceFactory
      */
     public static function getInstance()
     {
-        return GeneralUtility::makeInstance(self::class);
+        return Core::get()->getServiceFactoryInstance();
     }
 
     /**
@@ -241,10 +241,9 @@ class ServiceFactory
         $this->hasBeenInitialized = true;
 
         foreach ($this->service as $service) {
-            $serviceClassName = $service['className'];
-            $serviceOptions = $service['options'];
+            list($serviceClassName,  $serviceOptions) = $this->manageServiceData($service);
 
-            $this->serviceInstances[$serviceClassName] = $this->createServiceInstance($serviceClassName, $serviceOptions);
+            $this->serviceInstances[$serviceClassName] = $this->getServiceInstance($serviceClassName, $serviceOptions);
         }
     }
 
@@ -254,7 +253,7 @@ class ServiceFactory
      * @return AbstractService
      * @throws WrongInheritanceException
      */
-    protected function createServiceInstance($className, array $options)
+    protected function getServiceInstance($className, array $options)
     {
         $flag = false;
         $serviceInstance = null;
@@ -377,6 +376,18 @@ class ServiceFactory
         }
 
         return $this->servicesEvents[$serviceEvent];
+    }
+
+    /**
+     * This function is here to allow unit tests to override data.
+     *
+     * @param array $service
+     * @return array
+     * @internal
+     */
+    protected function manageServiceData(array $service)
+    {
+        return [$service['className'], $service['options']];
     }
 
     /**

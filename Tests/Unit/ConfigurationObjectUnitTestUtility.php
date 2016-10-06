@@ -4,9 +4,12 @@ namespace Romm\ConfigurationObject\Tests\Unit;
 use Romm\ConfigurationObject\ConfigurationObjectFactory;
 use Romm\ConfigurationObject\ConfigurationObjectMapper;
 use Romm\ConfigurationObject\Core\Core;
+use Romm\ConfigurationObject\Service\Items\Cache\CacheService;
 use Romm\ConfigurationObject\Service\Items\Parents\ParentsUtility;
+use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\TypeConverter\ConfigurationObjectConverter;
 use Romm\ConfigurationObject\Validation\ValidatorResolver;
+use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\Cache\CacheFactory;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Extbase\Object\Container\Container;
@@ -50,11 +53,38 @@ trait ConfigurationObjectUnitTestUtility
     private function setUpConfigurationObjectCore()
     {
         /** @var Core|\PHPUnit_Framework_MockObject_MockObject $coreMock */
-        $this->configurationObjectCoreMock = $this->getMock(Core::class, ['dummy']);
+        $this->configurationObjectCoreMock = $this->getMock(Core::class, ['getServiceFactoryInstance']);
         $this->configurationObjectCoreMock->injectObjectManager($this->getConfigurationObjectObjectManagerMock());
         $this->configurationObjectCoreMock->injectReflectionService(new ReflectionService);
         $this->configurationObjectCoreMock->injectValidatorResolver(new ValidatorResolver);
         $this->configurationObjectCoreMock->injectParentsUtility(new ParentsUtility);
+
+        $this->configurationObjectCoreMock->method('getServiceFactoryInstance')
+            ->will(
+                $this->returnCallback(
+                    function () {
+                        /** @var ServiceFactory|\PHPUnit_Framework_MockObject_MockObject $serviceFactoryMock */
+                        $serviceFactoryMock = $this->getMock(ServiceFactory::class, ['manageServiceData']);
+                        $serviceFactoryMock->method('manageServiceData')
+                            ->will(
+                                $this->returnCallback(
+                                    function(array $service) {
+                                        $className = $service['className'];
+                                        $options = $service['options'];
+
+                                        if (CacheService::class === $className) {
+                                            $options[CacheService::OPTION_CACHE_BACKEND] = TransientMemoryBackend::class;
+                                        }
+
+                                        return [$className, $options];
+                                    }
+                                )
+                            );
+
+                        return $serviceFactoryMock;
+                    }
+                )
+            );
 
         $cacheManager = new CacheManager;
         $cacheFactory = new CacheFactory('foo', $cacheManager);
@@ -149,9 +179,11 @@ trait ConfigurationObjectUnitTestUtility
                             $instance->expects($this->any())
                                 ->method('translateErrorMessage')
                                 ->will(
-                                    $this->returnCallback(function($key, $extension) {
-                                        return 'LLL:' . $extension . ':' . $key;
-                                    })
+                                    $this->returnCallback(
+                                        function ($key, $extension) {
+                                            return 'LLL:' . $extension . ':' . $key;
+                                        }
+                                    )
                                 );
                         } else {
                             $reflectionClass = new \ReflectionClass($className);

@@ -37,7 +37,7 @@ class ValidatorResolverTest extends AbstractUnitTest
 
         $validator = $validatorResolver->createValidator(CollectionValidator::class);
 
-        $this->assertTrue($validator instanceof MixedTypeCollectionValidator);
+        $this->assertInstanceOf(MixedTypeCollectionValidator::class, $validator);
 
         /*
          * If we try to create something different than the validator
@@ -47,8 +47,8 @@ class ValidatorResolverTest extends AbstractUnitTest
         $validator = $validatorResolver->createValidator(BooleanValidator::class);
         $validatorWithExtbase = $extbaseValidatorResolver->createValidator(BooleanValidator::class);
 
-        $this->assertTrue($validator instanceof BooleanValidator);
-        $this->assertTrue($validatorWithExtbase instanceof BooleanValidator);
+        $this->assertInstanceOf(BooleanValidator::class, $validator);
+        $this->assertInstanceOf(BooleanValidator::class, $validatorWithExtbase);
 
         unset($validatorResolver);
         unset($extbaseValidatorResolver);
