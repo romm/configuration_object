@@ -240,7 +240,7 @@ class ServiceFactory
         $this->hasBeenInitialized = true;
 
         foreach ($this->service as $service) {
-            list($serviceClassName,  $serviceOptions) = $this->manageServiceData($service);
+            list($serviceClassName, $serviceOptions) = $this->manageServiceData($service);
 
             $this->serviceInstances[$serviceClassName] = $this->getServiceInstance($serviceClassName, $serviceOptions);
         }
