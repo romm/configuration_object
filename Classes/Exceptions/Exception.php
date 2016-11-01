@@ -18,5 +18,4 @@ namespace Romm\ConfigurationObject\Exceptions;
  */
 class Exception extends \Exception
 {
-
 }

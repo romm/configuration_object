@@ -5,7 +5,6 @@ use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
 class WrongValueValidator extends AbstractValidator
 {
-
     const WRONG_VALUE = 'wrong value';
     const ERROR_MESSAGE = 'Wrong value!';
 

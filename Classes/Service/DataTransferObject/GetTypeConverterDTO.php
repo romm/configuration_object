@@ -94,5 +94,4 @@ class GetTypeConverterDTO extends AbstractServiceDTO
 
         return $this;
     }
-
 }

@@ -20,8 +20,8 @@ use Romm\ConfigurationObject\Exceptions\Exception;
 use Romm\ConfigurationObject\Exceptions\InitializationNotSetException;
 use Romm\ConfigurationObject\Exceptions\InvalidTypeException;
 use Romm\ConfigurationObject\Exceptions\MethodNotFoundException;
-use Romm\ConfigurationObject\Service\DataTransferObject\AbstractServiceDTO;
 use Romm\ConfigurationObject\Exceptions\WrongInheritanceException;
+use Romm\ConfigurationObject\Service\DataTransferObject\AbstractServiceDTO;
 use Romm\ConfigurationObject\Service\Event\ServiceEventInterface;
 use Romm\ConfigurationObject\Traits\InternalVariablesTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -47,7 +47,6 @@ use TYPO3\CMS\Extbase\Reflection\ClassReflection;
  */
 class ServiceFactory
 {
-
     use InternalVariablesTrait;
 
     /**
@@ -137,7 +136,7 @@ class ServiceFactory
      */
     public function has($serviceClassName)
     {
-        return (true === isset($this->service[$serviceClassName]));
+        return true === isset($this->service[$serviceClassName]);
     }
 
     /**

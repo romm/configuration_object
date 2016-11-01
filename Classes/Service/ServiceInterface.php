@@ -13,12 +13,12 @@
 
 namespace Romm\ConfigurationObject\Service;
 
+use Romm\ConfigurationObject\Service\Items\Cache\CacheService;
 use Romm\ConfigurationObject\Service\Items\DataPreProcessor\DataPreProcessorService;
 use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesService;
-use Romm\ConfigurationObject\Service\Items\StoreConfigurationArray\StoreConfigurationArrayService;
 use Romm\ConfigurationObject\Service\Items\Parents\ParentsService;
 use Romm\ConfigurationObject\Service\Items\Persistence\PersistenceService;
-use Romm\ConfigurationObject\Service\Items\Cache\CacheService;
+use Romm\ConfigurationObject\Service\Items\StoreConfigurationArray\StoreConfigurationArrayService;
 
 /**
  * Interface for any configuration object service.

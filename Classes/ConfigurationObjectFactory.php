@@ -14,14 +14,14 @@
 namespace Romm\ConfigurationObject;
 
 use Romm\ConfigurationObject\Core\Core;
-use Romm\ConfigurationObject\Exceptions\EntryNotFoundException;
-use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDTO;
 use Romm\ConfigurationObject\Exceptions\ClassNotFoundException;
+use Romm\ConfigurationObject\Exceptions\EntryNotFoundException;
 use Romm\ConfigurationObject\Exceptions\WrongInheritanceException;
-use Romm\ConfigurationObject\Service\Event\ConfigurationObjectBeforeValidationServiceEventInterface;
-use Romm\ConfigurationObject\Service\ServiceFactory;
+use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDTO;
 use Romm\ConfigurationObject\Service\Event\ConfigurationObjectAfterServiceEventInterface;
 use Romm\ConfigurationObject\Service\Event\ConfigurationObjectBeforeServiceEventInterface;
+use Romm\ConfigurationObject\Service\Event\ConfigurationObjectBeforeValidationServiceEventInterface;
+use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Service\WrongServiceException;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

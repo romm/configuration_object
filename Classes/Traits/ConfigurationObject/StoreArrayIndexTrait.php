@@ -34,7 +34,6 @@ namespace Romm\ConfigurationObject\Traits\ConfigurationObject;
  * When converted, the keys `tweety` and `sylvester` will be accessible in the
  * converted objects with the function `getArrayIndex()`.
  *
- * @package Romm\ConfigurationObject
  */
 trait StoreArrayIndexTrait
 {

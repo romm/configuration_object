@@ -63,5 +63,4 @@ class GetTypeConverterDTOTest extends AbstractUnitTest
             $this->getTypeConverterDataTransferObject->getTargetType()
         );
     }
-
 }

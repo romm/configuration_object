@@ -1,16 +1,15 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\Service\DataTransferObject;
 
-use Romm\ConfigurationObject\Service\DataTransferObject\AbstractServiceDTO;
 use Romm\ConfigurationObject\Exceptions\ClassNotFoundException;
 use Romm\ConfigurationObject\Exceptions\WrongInheritanceException;
+use Romm\ConfigurationObject\Service\DataTransferObject\AbstractServiceDTO;
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Tests\Fixture\Company\Company;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
 class AbstractServiceDTOTest extends AbstractUnitTest
 {
-
     const CONFIGURATION_OBJECT_TEST_CLASS = Company::class;
 
     /**
@@ -87,5 +86,4 @@ class AbstractServiceDTOTest extends AbstractUnitTest
             $this->abstractServiceDTO->getServiceFactory()
         );
     }
-
 }

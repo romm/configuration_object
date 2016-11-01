@@ -28,5 +28,4 @@ namespace Romm\ConfigurationObject\Service\Event;
  */
 interface ServiceEventInterface
 {
-
 }

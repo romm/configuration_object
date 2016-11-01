@@ -7,7 +7,6 @@ use Romm\ConfigurationObject\Traits\ConfigurationObject\StoreArrayIndexTrait;
 
 class DummyConfigurationObjectWithStoreArrayIndexTrait implements ConfigurationObjectInterface
 {
-
     use DefaultConfigurationObjectTrait;
     use StoreArrayIndexTrait;
 }

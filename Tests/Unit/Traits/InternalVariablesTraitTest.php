@@ -1,8 +1,8 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\Traits;
 
-use Romm\ConfigurationObject\Traits\InternalVariablesTrait;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
+use Romm\ConfigurationObject\Traits\InternalVariablesTrait;
 
 class InternalVariablesTraitTest extends AbstractUnitTest
 {

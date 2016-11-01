@@ -144,6 +144,6 @@ trait MagicMethodsTrait
             }
         }
 
-        return (isset(self::$_accessibleProperties[get_class($this)][$propertyName]));
+        return isset(self::$_accessibleProperties[get_class($this)][$propertyName]);
     }
 }

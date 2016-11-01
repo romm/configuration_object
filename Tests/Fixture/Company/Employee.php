@@ -25,7 +25,6 @@ use Romm\ConfigurationObject\Traits\ConfigurationObject\MagicMethodsTrait;
  */
 class Employee implements DataPreProcessorInterface, MixedTypesInterface
 {
-
     use MagicMethodsTrait;
 
     const NAME_FOO = 'foo';

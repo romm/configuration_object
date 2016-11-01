@@ -7,7 +7,6 @@ use TYPO3\CMS\Beuser\Domain\Model\BackendUser;
 
 class DummyConfigurationObjectWithPersistenceAttribute implements ConfigurationObjectInterface
 {
-
     use DefaultConfigurationObjectTrait;
 
     /**

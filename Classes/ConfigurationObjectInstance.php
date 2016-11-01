@@ -30,7 +30,6 @@ use TYPO3\CMS\Extbase\Error\Result;
  */
 class ConfigurationObjectInstance
 {
-
     use InternalVariablesTrait;
 
     /**
@@ -123,7 +122,7 @@ class ConfigurationObjectInstance
      */
     public function hasValidationResult()
     {
-        return (true === $this->validationResult instanceof Result);
+        return true === $this->validationResult instanceof Result;
     }
 
     /**

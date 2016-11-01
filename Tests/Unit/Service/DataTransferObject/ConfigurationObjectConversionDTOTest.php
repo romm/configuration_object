@@ -87,5 +87,4 @@ class ConfigurationObjectConversionDTOTest extends AbstractUnitTest
             $this->configurationObjectConversionDataTransferObject->getResult()
         );
     }
-
 }

@@ -67,7 +67,7 @@ trait ConfigurationObjectUnitTestUtility
                         $serviceFactoryMock->method('manageServiceData')
                             ->will(
                                 $this->returnCallback(
-                                    function(array $service) {
+                                    function (array $service) {
                                         $className = $service['className'];
                                         $options = $service['options'];
 
