@@ -15,8 +15,8 @@ namespace Romm\ConfigurationObject\Service\Items\Cache;
 
 use Romm\ConfigurationObject\ConfigurationObjectInstance;
 use Romm\ConfigurationObject\Core\Core;
-use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDTO;
 use Romm\ConfigurationObject\Service\AbstractService;
+use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDTO;
 use Romm\ConfigurationObject\Service\Event\ConfigurationObjectAfterServiceEventInterface;
 use Romm\ConfigurationObject\Service\Event\ConfigurationObjectBeforeServiceEventInterface;
 use Romm\ConfigurationObject\Service\Event\ConfigurationObjectBeforeValidationServiceEventInterface;
@@ -42,7 +42,6 @@ use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
  */
 class CacheService extends AbstractService implements ConfigurationObjectBeforeServiceEventInterface, ConfigurationObjectAfterServiceEventInterface, ConfigurationObjectBeforeValidationServiceEventInterface
 {
-
     use InternalVariablesTrait;
 
     const OPTION_CACHE_NAME = 'cacheName';

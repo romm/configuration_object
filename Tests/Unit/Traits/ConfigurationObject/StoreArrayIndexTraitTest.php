@@ -1,8 +1,8 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\Traits\ConfigurationObject;
 
-use Romm\ConfigurationObject\Traits\ConfigurationObject\StoreArrayIndexTrait;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
+use Romm\ConfigurationObject\Traits\ConfigurationObject\StoreArrayIndexTrait;
 
 class StoreArrayIndexTraitTest extends AbstractUnitTest
 {

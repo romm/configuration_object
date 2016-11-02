@@ -24,7 +24,6 @@ use Romm\ConfigurationObject\Traits\ConfigurationObject\MagicMethodsTrait;
  */
 class Company implements ConfigurationObjectInterface
 {
-
     use MagicMethodsTrait;
 
     /**

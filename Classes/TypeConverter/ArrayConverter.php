@@ -22,7 +22,6 @@ use TYPO3\CMS\Extbase\Utility\TypeHandlingUtility;
  * An internal array converter, used to keep the keys when the conversion is
  * done (the one from Extbase forgets them).
  *
- * @package Romm\ConfigurationObject
  */
 class ArrayConverter extends AbstractTypeConverter
 {
@@ -38,7 +37,7 @@ class ArrayConverter extends AbstractTypeConverter
     protected $targetType = '\\ArrayObject';
 
     /**
-     * @var    integer
+     * @var    int
      */
     protected $priority = 0;
 

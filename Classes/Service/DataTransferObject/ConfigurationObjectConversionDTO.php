@@ -140,5 +140,4 @@ class ConfigurationObjectConversionDTO extends AbstractServiceDTO
 
         return $this;
     }
-
 }

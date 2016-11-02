@@ -51,7 +51,7 @@ trait ArrayConversionTrait
             $cleanValue = $entity;
 
             if (is_object($entity)) {
-                if (in_array(ArrayConversionTrait::class, class_uses($entity))) {
+                if (in_array(self::class, class_uses($entity))) {
                     $cleanValue = $entity->toArray();
                 } elseif ($entity instanceof \Traversable) {
                     $cleanValue = iterator_to_array($entity, false);

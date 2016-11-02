@@ -6,9 +6,9 @@ use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDT
 use Romm\ConfigurationObject\Service\Items\Cache\CacheService;
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObject;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\Tests\AccessibleObjectInterface;
-use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use TYPO3\CMS\Extbase\Error\Error;
 use TYPO3\CMS\Extbase\Error\Result;
 

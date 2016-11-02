@@ -19,7 +19,6 @@ use Romm\ConfigurationObject\Service\Event\ConfigurationObjectBeforeServiceEvent
 
 class DummyService extends AbstractService implements ConfigurationObjectBeforeServiceEventInterface
 {
-
     const FOO_VALUE = 'bar';
 
     /**
@@ -42,5 +41,4 @@ class DummyService extends AbstractService implements ConfigurationObjectBeforeS
     {
         return self::$foo;
     }
-
 }

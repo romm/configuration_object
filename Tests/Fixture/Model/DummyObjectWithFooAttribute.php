@@ -24,5 +24,4 @@ class DummyObjectWithFooAttribute
     {
         $this->foo = $foo;
     }
-
 }

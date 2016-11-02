@@ -16,7 +16,6 @@ use Romm\ConfigurationObject\Traits\ConfigurationObject\MagicMethodsTrait;
  */
 class DummyConfigurationObject implements ConfigurationObjectInterface
 {
-
     use DefaultConfigurationObjectTrait;
     use MagicMethodsTrait;
     use ArrayConversionTrait;

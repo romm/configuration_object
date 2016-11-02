@@ -6,9 +6,9 @@ use Romm\ConfigurationObject\Exceptions\InvalidTypeException;
 use Romm\ConfigurationObject\Service\AbstractService;
 use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDTO;
 use Romm\ConfigurationObject\Service\ServiceFactory;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use Romm\ConfigurationObject\Tests\Unit\Service\DataTransferObject\AbstractServiceDTOTest;
 use TYPO3\CMS\Core\Tests\AccessibleObjectInterface;
-use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
 class AbstractServiceTest extends AbstractUnitTest
 {

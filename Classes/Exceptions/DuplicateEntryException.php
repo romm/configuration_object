@@ -15,5 +15,4 @@ namespace Romm\ConfigurationObject\Exceptions;
 
 class DuplicateEntryException extends Exception
 {
-
 }

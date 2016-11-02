@@ -17,5 +17,4 @@ use Romm\ConfigurationObject\Exceptions\Exception;
 
 class WrongServiceException extends Exception
 {
-
 }

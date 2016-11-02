@@ -23,5 +23,4 @@ class DefaultConfigurationObjectTraitTest extends AbstractUnitTest
 
         unset($serviceFactory);
     }
-
 }

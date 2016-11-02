@@ -13,8 +13,8 @@
 
 namespace Romm\ConfigurationObject\Service\Items\StoreConfigurationArray;
 
-use Romm\ConfigurationObject\Service\DataTransferObject\ConfigurationObjectConversionDTO;
 use Romm\ConfigurationObject\Service\AbstractService;
+use Romm\ConfigurationObject\Service\DataTransferObject\ConfigurationObjectConversionDTO;
 use Romm\ConfigurationObject\Service\Event\ObjectConversionAfterServiceEventInterface;
 use TYPO3\CMS\Core\SingletonInterface;
 

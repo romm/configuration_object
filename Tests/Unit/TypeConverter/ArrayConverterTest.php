@@ -2,8 +2,8 @@
 namespace Romm\ConfigurationObject\Tests\Unit\TypeConverter;
 
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithStoreArrayIndexTrait;
-use Romm\ConfigurationObject\TypeConverter\ArrayConverter;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
+use Romm\ConfigurationObject\TypeConverter\ArrayConverter;
 
 class ArrayConverterTest extends AbstractUnitTest
 {

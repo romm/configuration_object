@@ -15,5 +15,4 @@ namespace Romm\ConfigurationObject\Tests\Fixture\Company;
 
 class AnotherEmployee extends Employee
 {
-
 }

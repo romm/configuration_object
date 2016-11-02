@@ -11,9 +11,9 @@ use Romm\ConfigurationObject\Service\Items\Cache\CacheService;
 use Romm\ConfigurationObject\Service\Items\Parents\ParentsService;
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObject;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use Romm\ConfigurationObject\Tests\Unit\Service\Fixture\DummyService;
 use TYPO3\CMS\Core\Tests\AccessibleObjectInterface;
-use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
 class ServiceFactoryTest extends AbstractUnitTest
 {

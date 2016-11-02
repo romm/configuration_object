@@ -30,7 +30,6 @@ use TYPO3\CMS\Extbase\Error\Result;
  */
 class MixedTypesResolver
 {
-
     const OBJECT_TYPE_NONE = null;
 
     /**
@@ -68,7 +67,7 @@ class MixedTypesResolver
     public function addError(Error $error)
     {
         $this->result->addError($error);
-        $this->setObjectType(MixedTypesResolver::OBJECT_TYPE_NONE);
+        $this->setObjectType(self::OBJECT_TYPE_NONE);
     }
 
     /**

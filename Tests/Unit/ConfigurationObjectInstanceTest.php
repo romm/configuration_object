@@ -10,7 +10,6 @@ use TYPO3\CMS\Extbase\Error\Result;
 
 class ConfigurationObjectInstanceTest extends AbstractUnitTest
 {
-
     public function setUp()
     {
         parent::setUp();

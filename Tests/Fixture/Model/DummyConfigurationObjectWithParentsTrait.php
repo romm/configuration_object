@@ -14,7 +14,6 @@ use Romm\ConfigurationObject\Traits\ConfigurationObject\MagicMethodsTrait;
  */
 class DummyConfigurationObjectWithParentsTrait implements ConfigurationObjectInterface
 {
-
     use DefaultConfigurationObjectTrait;
     use MagicMethodsTrait;
     use ParentsTrait;

@@ -3,13 +3,13 @@ namespace Romm\ConfigurationObject\Tests\Unit\Validation;
 
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithMixedTypes;
+use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeCollectionValidator;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeObjectValidator;
 use Romm\ConfigurationObject\Validation\ValidatorResolver;
-use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
-use TYPO3\CMS\Extbase\Validation\ValidatorResolver as ExtbaseValidatorResolver;
 use TYPO3\CMS\Extbase\Validation\Validator\BooleanValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\CollectionValidator;
+use TYPO3\CMS\Extbase\Validation\ValidatorResolver as ExtbaseValidatorResolver;
 
 class ValidatorResolverTest extends AbstractUnitTest
 {

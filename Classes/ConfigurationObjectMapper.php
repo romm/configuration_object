@@ -14,14 +14,14 @@
 namespace Romm\ConfigurationObject;
 
 use Romm\ConfigurationObject\Core\Core;
-use Romm\ConfigurationObject\Service\Items\DataPreProcessor\DataPreProcessorService;
 use Romm\ConfigurationObject\Service\DataTransferObject\ConfigurationObjectConversionDTO;
 use Romm\ConfigurationObject\Service\DataTransferObject\GetTypeConverterDTO;
+use Romm\ConfigurationObject\Service\Event\ObjectConversionAfterServiceEventInterface;
+use Romm\ConfigurationObject\Service\Event\ObjectConversionBeforeServiceEventInterface;
+use Romm\ConfigurationObject\Service\Items\DataPreProcessor\DataPreProcessorService;
 use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesResolver;
 use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesService;
 use Romm\ConfigurationObject\Service\ServiceFactory;
-use Romm\ConfigurationObject\Service\Event\ObjectConversionAfterServiceEventInterface;
-use Romm\ConfigurationObject\Service\Event\ObjectConversionBeforeServiceEventInterface;
 use Romm\ConfigurationObject\Service\ServiceInterface;
 use Romm\ConfigurationObject\TypeConverter\ArrayConverter;
 use Romm\ConfigurationObject\TypeConverter\ConfigurationObjectConverter;
@@ -29,9 +29,9 @@ use TYPO3\CMS\Extbase\Error\Error;
 use TYPO3\CMS\Extbase\Property\Exception\TypeConverterException;
 use TYPO3\CMS\Extbase\Property\PropertyMapper;
 use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface;
+use TYPO3\CMS\Extbase\Property\TypeConverter\ArrayConverter as ExtbaseArrayConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ObjectConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverterInterface;
-use TYPO3\CMS\Extbase\Property\TypeConverter\ArrayConverter as ExtbaseArrayConverter;
 use TYPO3\CMS\Extbase\Reflection\ReflectionService;
 
 /**

@@ -15,5 +15,4 @@ namespace Romm\ConfigurationObject\Exceptions;
 
 class InvalidServiceOptionsException extends Exception
 {
-
 }

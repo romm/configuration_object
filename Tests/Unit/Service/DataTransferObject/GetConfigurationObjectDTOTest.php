@@ -61,5 +61,4 @@ class GetConfigurationObjectDTOTest extends AbstractUnitTest
             $this->getConfigurationObjectDTO->getResult()
         );
     }
-
 }
