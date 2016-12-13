@@ -14,6 +14,8 @@
 namespace Romm\ConfigurationObject\Validation\Validator\Internal;
 
 use Romm\ConfigurationObject\Core\Core;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use TYPO3\CMS\Extbase\Error\Result;
 use TYPO3\CMS\Extbase\Validation\Validator\CollectionValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\ObjectValidatorInterface;
 
@@ -28,6 +30,12 @@ class MixedTypeCollectionValidator extends CollectionValidator
      */
     public function isValid($value)
     {
+        if (null === $this->result
+            && version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')
+        ) {
+            $this->result = new Result;
+        }
+
         foreach ($value as $index => $collectionElement) {
             $collectionElementValidator = Core::get()->getValidatorResolver()
                 ->getBaseValidatorConjunctionWithMixedTypesCheck(get_class($collectionElement));
@@ -35,6 +43,12 @@ class MixedTypeCollectionValidator extends CollectionValidator
             $this->result->forProperty($index)->merge($collectionElementValidator->validate($collectionElement));
 
             if ($collectionElementValidator instanceof ObjectValidatorInterface) {
+                if (null === $this->validatedInstancesContainer
+                    && version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')
+                ) {
+                    $this->validatedInstancesContainer = new \SplObjectStorage();
+                }
+
                 $collectionElementValidator->setValidatedInstancesContainer($this->validatedInstancesContainer);
             }
         }
