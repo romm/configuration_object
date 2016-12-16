@@ -6,8 +6,15 @@ php:
   - 7.0
 
 env:
-  matrix:
-    - TYPO3_VERSION=7.6.9
+  - TYPO3_VERSION=^6.2 COVERAGE=0
+  - TYPO3_VERSION=^7.6 COVERAGE=0
+
+matrix:
+  include:
+      - env: TYPO3_VERSION=^6.2 COVERAGE=0
+        php: 5.5
+      - env: TYPO3_VERSION=^7.6 COVERAGE=1
+        php: 7.0
 
 sudo: false
 
@@ -28,13 +35,25 @@ before_script:
   - composer require typo3/cms=$TYPO3_VERSION
   - git checkout composer.json
   - export TYPO3_PATH_WEB=$PWD/.Build/Web
+  - export "UNIT_XML"=`find . -name 'UnitTests.xml' -type f`
   - mkdir -p build/logs
 
 script:
   - >
-    echo;
-    echo "Running unit tests";
-    .Build/bin/phpunit --colors --coverage-text --coverage-clover build/logs/clover.xml Tests/Unit/
+    if [[ "$COVERAGE" == "0" ]]; then
+      echo;
+      echo "Running unit tests";
+      .Build/bin/phpunit --colors -c $UNIT_XML Tests/Unit
+    fi
+  - >
+    if [[ "$COVERAGE" == "1" ]]; then
+      echo;
+      echo "Running unit tests";
+      .Build/bin/phpunit --colors -c $UNIT_XML --coverage-text --coverage-clover build/logs/clover.xml Tests/Unit/
+    fi
 
 after_script:
-  - travis_retry php .Build/bin/coveralls -v
+  - >
+    if [[ "$COVERAGE" == "1" ]]; then
+      travis_retry php .Build/bin/coveralls -v
+    fi
