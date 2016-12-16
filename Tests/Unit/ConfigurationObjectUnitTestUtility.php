@@ -73,7 +73,7 @@ trait ConfigurationObjectUnitTestUtility
                         $serviceFactoryMock->method('manageServiceData')
                             ->will(
                                 $this->returnCallback(
-                                    function (array $service) {
+                                    function(array $service) {
                                         $className = $service['className'];
                                         $options = $service['options'];
 
@@ -242,7 +242,10 @@ trait ConfigurationObjectUnitTestUtility
                                     || in_array(GenericObjectValidator::class, class_parents($className))
                                 )
                             ) {
-                                $configurationManager = new ConfigurationManager;
+                                /** @var ConfigurationManager|\PHPUnit_Framework_MockObject_MockObject $configurationManager */
+                                $configurationManager = $this->getMock(ConfigurationManager::class, ['isFeatureEnabled']);
+                                $configurationManager->method('isFeatureEnabled')
+                                    ->willReturn(true);
 
                                 $reflectedProperty = new \ReflectionProperty($configurationManager, 'objectManager');
                                 $reflectedProperty->setAccessible(true);

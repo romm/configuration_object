@@ -7,12 +7,19 @@ use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeCollectionValidator;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeObjectValidator;
 use Romm\ConfigurationObject\Validation\ValidatorResolver;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Validation\Validator\BooleanValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\CollectionValidator;
 use TYPO3\CMS\Extbase\Validation\ValidatorResolver as ExtbaseValidatorResolver;
 
 class ValidatorResolverTest extends AbstractUnitTest
 {
+    public function setUp()
+    {
+        parent::setUp();
+
+        $this->injectMockedValidatorResolverInCore();
+    }
 
     /**
      * Will check if the resolver checks the type of the validator before its
@@ -24,16 +31,21 @@ class ValidatorResolverTest extends AbstractUnitTest
      */
     public function createValidatorChecksCollectionType()
     {
-        $reflectionService = Core::get()->getReflectionService();
-        $reflectionService->injectObjectManager(Core::get()->getObjectManager());
-
-        $validatorResolver = new ValidatorResolver();
-        $validatorResolver->injectObjectManager(Core::get()->getObjectManager());
-        $validatorResolver->injectReflectionService($reflectionService);
+        $validatorResolver = Core::get()->getValidatorResolver();
 
         $extbaseValidatorResolver = new ExtbaseValidatorResolver();
-        $extbaseValidatorResolver->injectObjectManager(Core::get()->getObjectManager());
-        $extbaseValidatorResolver->injectReflectionService($reflectionService);
+        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
+            $reflectedProperty = new \ReflectionProperty($extbaseValidatorResolver, 'objectManager');
+            $reflectedProperty->setAccessible(true);
+            $reflectedProperty->setValue($extbaseValidatorResolver, Core::get()->getObjectManager());
+
+            $reflectedProperty = new \ReflectionProperty($extbaseValidatorResolver, 'reflectionService');
+            $reflectedProperty->setAccessible(true);
+            $reflectedProperty->setValue($extbaseValidatorResolver, Core::get()->getReflectionService());
+        } else {
+            $extbaseValidatorResolver->injectObjectManager(Core::get()->getObjectManager());
+            $extbaseValidatorResolver->injectReflectionService(Core::get()->getReflectionService());
+        }
 
         $validator = $validatorResolver->createValidator(CollectionValidator::class);
 
@@ -62,13 +74,20 @@ class ValidatorResolverTest extends AbstractUnitTest
      */
     public function getBaseValidatorConjunctionCheckMixedTypes()
     {
-        $reflectionService = Core::get()->getReflectionService();
-        $reflectionService->injectObjectManager(Core::get()->getObjectManager());
-
         /** @var ValidatorResolver|\PHPUnit_Framework_MockObject_MockObject $validatorResolver */
         $validatorResolver = $this->getMock(ValidatorResolver::class, ['getBaseValidatorConjunction']);
-        $validatorResolver->injectObjectManager(Core::get()->getObjectManager());
-        $validatorResolver->injectReflectionService($reflectionService);
+        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
+            $reflectedProperty = new \ReflectionProperty($validatorResolver, 'objectManager');
+            $reflectedProperty->setAccessible(true);
+            $reflectedProperty->setValue($validatorResolver, Core::get()->getObjectManager());
+
+            $reflectedProperty = new \ReflectionProperty($validatorResolver, 'reflectionService');
+            $reflectedProperty->setAccessible(true);
+            $reflectedProperty->setValue($validatorResolver, Core::get()->getReflectionService());
+        } else {
+            $validatorResolver->injectObjectManager(Core::get()->getObjectManager());
+            $validatorResolver->injectReflectionService(Core::get()->getReflectionService());
+        }
 
         $validatorResolver->expects($this->never())
             ->method('getBaseValidatorConjunction');
@@ -90,8 +109,18 @@ class ValidatorResolverTest extends AbstractUnitTest
          */
         /** @var ValidatorResolver|\PHPUnit_Framework_MockObject_MockObject $validatorResolver */
         $validatorResolver = $this->getMock(ValidatorResolver::class, ['getBaseValidatorConjunction']);
-        $validatorResolver->injectObjectManager(Core::get()->getObjectManager());
-        $validatorResolver->injectReflectionService($reflectionService);
+        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
+            $reflectedProperty = new \ReflectionProperty($validatorResolver, 'objectManager');
+            $reflectedProperty->setAccessible(true);
+            $reflectedProperty->setValue($validatorResolver, Core::get()->getObjectManager());
+
+            $reflectedProperty = new \ReflectionProperty($validatorResolver, 'reflectionService');
+            $reflectedProperty->setAccessible(true);
+            $reflectedProperty->setValue($validatorResolver, Core::get()->getReflectionService());
+        } else {
+            $validatorResolver->injectObjectManager(Core::get()->getObjectManager());
+            $validatorResolver->injectReflectionService(Core::get()->getReflectionService());
+        }
 
         $validatorResolver->expects($this->once())
             ->method('getBaseValidatorConjunction');
