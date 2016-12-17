@@ -1,5 +1,16 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.2.2 - 2016-12-17
+------------------
+
+This release introduces some code related features ([PHP Coding Standards Fixer](http://cs.sensiolabs.org/) and [StyleCI](https://styleci.io/)), as well as compatibility for unit tests running on a TYPO3 v6.2+.
+
+- **[[#3](https://github.com/romm/configuration_object/pull/3)] [TASK] Make tests available for TYPO3 6.2**
+
+- **[[f0e3ae5](https://github.com/romm/configuration_object/commit/f0e3ae55a3427e2b85e87da6c1c130c08f2263c8)] [TASK] Add Style-CI badge in README file**
+
+- **[[#2](https://github.com/romm/configuration_object/pull/2)] [CLEANUP] Activate PHP Coding Standards Fixer**
+
 1.2.1 - 2016-10-06
 ------------------
 
