@@ -3,7 +3,7 @@
 $EM_CONF[$_EXTKEY] = [
     'title'       => 'Configuration Object',
     'description' => 'Transform any configuration plain array into a dynamic and configurable object structure, and pull apart configuration handling from the main logic of your script. Use provided services to add more functionality to your objects: cache, parents, persistence and much more.',
-    'version'     => '1.2.1',
+    'version'     => '1.2.2',
     'state'       => 'stable',
     'category'    => 'backend',
 
