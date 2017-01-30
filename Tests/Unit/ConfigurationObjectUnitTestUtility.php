@@ -24,6 +24,7 @@ use TYPO3\CMS\Extbase\Reflection\ClassSchema;
 use TYPO3\CMS\Extbase\Reflection\ReflectionService;
 use TYPO3\CMS\Extbase\Service\EnvironmentService;
 use TYPO3\CMS\Extbase\Service\TypeHandlingService;
+use TYPO3\CMS\Extbase\Utility\ArrayUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\GenericObjectValidator;
@@ -37,15 +38,28 @@ trait ConfigurationObjectUnitTestUtility
     protected $configurationObjectCoreMock;
 
     /**
+     * @var array
+     */
+    protected static $defaultTypeConverters = [
+        ArrayConverter::class,
+        ObjectConverter::class,
+        StringConverter::class
+    ];
+
+    /**
      * Use this function if you need to create a configuration object in your
      * unit tests. Just call it from you function `setUp()`.
      */
     protected function initializeConfigurationObjectTestServices()
     {
         // We need to register the type converters used in these examples.
-        ExtensionUtility::registerTypeConverter(ArrayConverter::class);
-        ExtensionUtility::registerTypeConverter(ObjectConverter::class);
-        ExtensionUtility::registerTypeConverter(StringConverter::class);
+        $list = ArrayUtility::getValueByPath($GLOBALS, 'TYPO3_CONF_VARS.EXTCONF.extbase.typeConverters') ?: [];
+
+        foreach (self::$defaultTypeConverters as $converter) {
+            if (false === in_array($converter, $list)) {
+                ExtensionUtility::registerTypeConverter($converter);
+            }
+        }
 
         $this->setUpConfigurationObjectCore();
         $this->injectMockedValidatorResolverInCore();
