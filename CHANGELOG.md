@@ -1,5 +1,8 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.2.3 - 2017-01-30
+------------------
+
 1.2.2 - 2016-12-17
 ------------------
 
