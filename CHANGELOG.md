@@ -3,6 +3,10 @@
 1.2.3 - 2017-01-30
 ------------------
 
+This release fixes one possible bug for external unit testing by libraries using this API.
+
+- **[[0daa837](https://github.com/romm/configuration_object/commit/0daa8370c27f0d180688b7b0140ddd209029b789)] [BUGFIX] Fix possible multiple type converter registration**
+
 1.2.2 - 2016-12-17
 ------------------
 
