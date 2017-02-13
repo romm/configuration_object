@@ -19,7 +19,10 @@ abstract class AbstractValidatorTest extends AbstractUnitTest
     protected function getMockedValidatorInstance($className, array $arguments = [])
     {
         /** @var ValidatorInterface|\PHPUnit_Framework_MockObject_MockObject $mockedClassExistsValidator */
-        $mockedClassExistsValidator = $this->getMock($className, ['translateErrorMessage'], [$arguments]);
+        $mockedClassExistsValidator = $this->getMockBuilder($className)
+            ->setMethods(['translateErrorMessage'])
+            ->setConstructorArgs([$arguments])
+            ->getMock();
 
         $mockedClassExistsValidator->expects($this->any())
             ->method('translateErrorMessage')

@@ -28,7 +28,8 @@ class ParentsUtilityTest extends AbstractUnitTest
         $this->assertTrue($parentsUtility->classUsesParentsTrait($dummyConfigurationObject));
         unset($dummyConfigurationObject);
 
-        $mockedDummyConfigurationObjectWithParentsTrait = $this->getMock(DummyConfigurationObjectWithParentsTrait::class);
+        $mockedDummyConfigurationObjectWithParentsTrait = $this->getMockBuilder(DummyConfigurationObjectWithParentsTrait::class)
+            ->getMock();
         $this->assertTrue($parentsUtility->classUsesParentsTrait($mockedDummyConfigurationObjectWithParentsTrait));
         unset($mockedDummyConfigurationObjectWithParentsTrait);
 
@@ -44,7 +45,9 @@ class ParentsUtilityTest extends AbstractUnitTest
     public function checkClassesUsingParentsTraitAreStoredInLocalCache()
     {
         /** @var ParentsUtility|\PHPUnit_Framework_MockObject_MockObject $parentsUtility */
-        $parentsUtility = $this->getMock(ParentsUtility::class, ['checkClassUsesParentsTrait']);
+        $parentsUtility = $this->getMockBuilder(ParentsUtility::class)
+            ->setMethods(['checkClassUsesParentsTrait'])
+            ->getMock();
         $parentsUtility->expects($this->once())
             ->method('checkClassUsesParentsTrait')
             ->will($this->returnValue(false));

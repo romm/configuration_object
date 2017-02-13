@@ -43,16 +43,13 @@ class GetConfigurationObjectDTOTest extends AbstractUnitTest
      */
     public function resultCanBeSet()
     {
-
         /** @var ConfigurationObjectInstance $configurationObject */
-        $configurationObject = $this->getMock(
-            ConfigurationObjectInstance::class,
-            [],
-            [
-                $this->getMock(AbstractServiceDTOTest::CONFIGURATION_OBJECT_TEST_CLASS),
+        $configurationObject = $this->getMockBuilder(ConfigurationObjectInstance::class)
+            ->setConstructorArgs([
+                $this->getMockBuilder(AbstractServiceDTOTest::CONFIGURATION_OBJECT_TEST_CLASS)->getMock(),
                 new Result
-            ]
-        );
+            ])
+            ->getMock();
 
         $this->getConfigurationObjectDTO->setResult($configurationObject);
 

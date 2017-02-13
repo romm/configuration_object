@@ -51,7 +51,9 @@ class PersistenceServiceTest extends AbstractUnitTest
             3 => $user3
         ];
 
-        $mockedPersistenceManager = $this->getMock(PersistenceManager::class, ['getObjectByIdentifier']);
+        $mockedPersistenceManager = $this->getMockBuilder(PersistenceManager::class)
+            ->setMethods(['getObjectByIdentifier'])
+            ->getMock();
         $mockedPersistenceManager->expects($this->any())
             ->method('getObjectByIdentifier')
             ->willReturnCallback(
