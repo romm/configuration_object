@@ -106,8 +106,12 @@ trait ConfigurationObjectUnitTestUtility
             );
 
         $cacheManager = new CacheManager;
-        $cacheFactory = new CacheFactory('foo', $cacheManager);
-        $cacheManager->injectCacheFactory($cacheFactory);
+
+        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '8.2.0', '<')) {
+            $cacheFactory = new CacheFactory('foo', $cacheManager);
+            $cacheManager->injectCacheFactory($cacheFactory);
+        }
+
         $this->configurationObjectCoreMock->injectCacheManager($cacheManager);
 
         $reflectedCore = new \ReflectionClass(Core::class);
