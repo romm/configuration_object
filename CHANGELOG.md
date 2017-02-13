@@ -1,5 +1,12 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.3.0 - 2017-02-13
+------------------
+
+Configuration Object is now compatible with TYPO3 8.5+!
+
+- **[[#5](https://github.com/romm/configuration_object/pull/5)] [FEATURE] Make extension compatible with TYPO3 v8**
+
 1.2.3 - 2017-01-30
 ------------------
 
