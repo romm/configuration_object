@@ -79,7 +79,9 @@ class StoreConfigurationArrayServiceTest extends AbstractUnitTest
         $serviceDataTransferObject->setResult($object);
 
         /** @var StoreConfigurationArrayService|\PHPUnit_Framework_MockObject_MockObject $storeConfigurationArrayService */
-        $storeConfigurationArrayService = $this->getMock(StoreConfigurationArrayService::class, ['storeConfigurationArray']);
+        $storeConfigurationArrayService = $this->getMockBuilder(StoreConfigurationArrayService::class)
+            ->setMethods(['storeConfigurationArray'])
+            ->getMock();
 
         /*
          * The method `storeConfigurationArray()` should never be called because
