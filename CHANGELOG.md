@@ -1,5 +1,12 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.3.1 - 2017-02-14
+------------------
+
+Upgrade PHPUnit version requirement, and replace all `getMock()` calls with `getMockBuilder()`.
+
+- **[[#7](https://github.com/romm/configuration_object/pull/7)] [TASK] Use PHPUnit `MockBuilder`**
+
 1.3.0 - 2017-02-13
 ------------------
 
