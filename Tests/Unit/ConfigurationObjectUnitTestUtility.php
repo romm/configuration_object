@@ -72,7 +72,9 @@ trait ConfigurationObjectUnitTestUtility
      */
     private function setUpConfigurationObjectCore()
     {
-        $this->configurationObjectCoreMock = $this->getMock(Core::class, ['getServiceFactoryInstance']);
+        $this->configurationObjectCoreMock = $this->getMockBuilder(Core::class)
+            ->setMethods(['getServiceFactoryInstance'])
+            ->getMock();
         $this->configurationObjectCoreMock->injectObjectManager($this->getConfigurationObjectObjectManagerMock());
         $this->configurationObjectCoreMock->injectReflectionService(new ReflectionService);
         $this->configurationObjectCoreMock->injectValidatorResolver(new ValidatorResolver);
@@ -83,7 +85,9 @@ trait ConfigurationObjectUnitTestUtility
                 $this->returnCallback(
                     function () {
                         /** @var ServiceFactory|\PHPUnit_Framework_MockObject_MockObject $serviceFactoryMock */
-                        $serviceFactoryMock = $this->getMock(ServiceFactory::class, ['manageServiceData']);
+                        $serviceFactoryMock = $this->getMockBuilder(ServiceFactory::class)
+                            ->setMethods(['manageServiceData'])
+                            ->getMock();
                         $serviceFactoryMock->method('manageServiceData')
                             ->will(
                                 $this->returnCallback(
@@ -153,7 +157,9 @@ trait ConfigurationObjectUnitTestUtility
     protected function injectMockedConfigurationObjectFactory()
     {
         /** @var ConfigurationObjectMapper|\PHPUnit_Framework_MockObject_MockObject $mockedConfigurationObjectMapper */
-        $mockedConfigurationObjectMapper = $this->getMock(ConfigurationObjectMapper::class, ['getObjectConverter']);
+        $mockedConfigurationObjectMapper = $this->getMockBuilder(ConfigurationObjectMapper::class)
+            ->setMethods(['getObjectConverter'])
+            ->getMock();
 
         $objectContainer = new Container();
         $configurationObjectConverter = new ConfigurationObjectConverter();
@@ -211,7 +217,9 @@ trait ConfigurationObjectUnitTestUtility
         $mockedConfigurationObjectMapper->initializeObject();
 
         /** @var ConfigurationObjectFactory|\PHPUnit_Framework_MockObject_MockObject $mockedConfigurationObjectFactory */
-        $mockedConfigurationObjectFactory = $this->getMock(ConfigurationObjectFactory::class, ['getConfigurationObjectMapper']);
+        $mockedConfigurationObjectFactory = $this->getMockBuilder(ConfigurationObjectFactory::class)
+            ->setMethods(['getConfigurationObjectMapper'])
+            ->getMock();
 
         $mockedConfigurationObjectFactory->expects($this->any())
             ->method('getConfigurationObjectMapper')
@@ -232,7 +240,8 @@ trait ConfigurationObjectUnitTestUtility
     private function getConfigurationObjectObjectManagerMock()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject $mockObjectManager */
-        $mockObjectManager = $this->getMock(ObjectManagerInterface::class);
+        $mockObjectManager = $this->getMockBuilder(ObjectManagerInterface::class)
+            ->getMock();
         $mockObjectManager->expects($this->any())
             ->method('get')
             ->will(
@@ -243,7 +252,10 @@ trait ConfigurationObjectUnitTestUtility
 
                         if (in_array(AbstractValidator::class, class_parents($className))) {
                             /** @var  AbstractValidator|\PHPUnit_Framework_MockObject_MockObject $instance */
-                            $instance = $this->getMock($className, ['translateErrorMessage'], $arguments);
+                            $instance = $this->getMockBuilder($className)
+                                ->setMethods(['translateErrorMessage'])
+                                ->setConstructorArgs($arguments)
+                                ->getMock();
                             $instance->expects($this->any())
                                 ->method('translateErrorMessage')
                                 ->will(
@@ -261,7 +273,9 @@ trait ConfigurationObjectUnitTestUtility
                                 )
                             ) {
                                 /** @var ConfigurationManager|\PHPUnit_Framework_MockObject_MockObject $configurationManager */
-                                $configurationManager = $this->getMock(ConfigurationManager::class, ['isFeatureEnabled']);
+                                $configurationManager = $this->getMockBuilder(ConfigurationManager::class)
+                                    ->setMethods(['isFeatureEnabled'])
+                                    ->getMock();
                                 $configurationManager->method('isFeatureEnabled')
                                     ->willReturn(true);
 
@@ -270,7 +284,9 @@ trait ConfigurationObjectUnitTestUtility
                                 $reflectedProperty->setValue($configurationManager, Core::get()->getObjectManager());
 
                                 /** @var EnvironmentService|\PHPUnit_Framework_MockObject_MockObject $environmentServiceMock */
-                                $environmentServiceMock = $this->getMock(EnvironmentService::class, ['isEnvironmentInFrontendMode', 'isEnvironmentInBackendMode']);
+                                $environmentServiceMock = $this->getMockBuilder(EnvironmentService::class)
+                                    ->setMethods(['isEnvironmentInFrontendMode', 'isEnvironmentInBackendMode'])
+                                    ->getMock();
                                 $environmentServiceMock
                                     ->method('isEnvironmentInFrontendMode')
                                     ->willReturn(true);

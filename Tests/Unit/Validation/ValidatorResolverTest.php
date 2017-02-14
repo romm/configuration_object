@@ -75,7 +75,9 @@ class ValidatorResolverTest extends AbstractUnitTest
     public function getBaseValidatorConjunctionCheckMixedTypes()
     {
         /** @var ValidatorResolver|\PHPUnit_Framework_MockObject_MockObject $validatorResolver */
-        $validatorResolver = $this->getMock(ValidatorResolver::class, ['getBaseValidatorConjunction']);
+        $validatorResolver = $this->getMockBuilder(ValidatorResolver::class)
+            ->setMethods(['getBaseValidatorConjunction'])
+            ->getMock();
         if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
             $reflectedProperty = new \ReflectionProperty($validatorResolver, 'objectManager');
             $reflectedProperty->setAccessible(true);
@@ -108,7 +110,10 @@ class ValidatorResolverTest extends AbstractUnitTest
          * once thanks to the local storage.
          */
         /** @var ValidatorResolver|\PHPUnit_Framework_MockObject_MockObject $validatorResolver */
-        $validatorResolver = $this->getMock(ValidatorResolver::class, ['getBaseValidatorConjunction']);
+        $validatorResolver = $this->getMockBuilder(ValidatorResolver::class)
+            ->setMethods(['getBaseValidatorConjunction'])
+            ->getMock();
+
         if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
             $reflectedProperty = new \ReflectionProperty($validatorResolver, 'objectManager');
             $reflectedProperty->setAccessible(true);

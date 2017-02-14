@@ -30,7 +30,8 @@ class GetTypeConverterDTOTest extends AbstractUnitTest
     public function typeConverterCanBeSet()
     {
         /** @var TypeConverterInterface $typeConverter */
-        $typeConverter = $this->getMock(TypeConverterInterface::class);
+        $typeConverter = $this->getMockBuilder(TypeConverterInterface::class)
+            ->getMock();
         $this->getTypeConverterDataTransferObject->setTypeConverter($typeConverter);
         $this->assertEquals(
             $typeConverter,
