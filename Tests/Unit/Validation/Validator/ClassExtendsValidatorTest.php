@@ -2,7 +2,6 @@
 namespace Romm\ConfigurationObject\Tests\Unit\Validation\Validator;
 
 use Romm\ConfigurationObject\Validation\Validator\ClassExtendsValidator;
-use TYPO3\CMS\Core\SingletonInterface;
 
 class ClassExtendsValidatorTest extends AbstractValidatorTest
 {
@@ -18,7 +17,7 @@ class ClassExtendsValidatorTest extends AbstractValidatorTest
         $testClassProphecy->willExtend(\stdClass::class);
 
         /** @var ClassExtendsValidator $mockedClassExtendsValidator */
-        $mockedClassExtendsValidator = $this->getMockedValidatorInstance(ClassExtendsValidator::class, ['class' => SingletonInterface::class]);
+        $mockedClassExtendsValidator = $this->getMockedValidatorInstance(ClassExtendsValidator::class, ['class' => \stdClass::class]);
 
         $test = $mockedClassExtendsValidator->validate('WrongClassName1337');
         $this->assertTrue($test->hasErrors());
