@@ -1,5 +1,16 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.4.0 - 2017-02-21
+------------------
+
+One bug has been fixed, and two new (useful 😃) validators have been introduced.
+
+ - **[[f4d59fd](https://github.com/romm/configuration_object/commit/f4d59fd335943d16ef78095aceb45464db4e6de5)] [FEATURE] Introduce `ClassExtendsValidator`**
+
+ - **[[9b2208c](https://github.com/romm/configuration_object/commit/9b2208c2529d64271b7a339169dc7440128d81fe)] [FEATURE] Introduce `ClassImplementsValidator`**
+
+ - **[[150aabf](https://github.com/romm/configuration_object/commit/150aabfbf0b432acf0582f0f9f02fb3a3e62b925)] [BUGFIX] Remove `SingletonInterface` from validator**
+
 1.3.1 - 2017-02-14
 ------------------
 
