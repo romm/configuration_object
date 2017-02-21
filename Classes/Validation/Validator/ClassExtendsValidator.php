@@ -18,6 +18,8 @@ use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
 class ClassExtendsValidator extends AbstractValidator
 {
+    const ERROR_CODE_CLASS_NOT_FOUND = 1487711134;
+    const ERROR_CODE_CLASS_NOT_VALID = 1487711239;
 
     /**
      * @var array
@@ -45,7 +47,7 @@ class ClassExtendsValidator extends AbstractValidator
                 [$value]
             );
 
-            $this->addError($errorMessage, 1487711134);
+            $this->addError($errorMessage, self::ERROR_CODE_CLASS_NOT_FOUND);
         } elseif (false === in_array($this->options['class'], class_parents($value))) {
             $errorMessage = $this->translateErrorMessage(
                 'validator.class_extends_class.not_valid',
@@ -53,7 +55,7 @@ class ClassExtendsValidator extends AbstractValidator
                 [$value, $this->options['class']]
             );
 
-            $this->addError($errorMessage, 1487711239);
+            $this->addError($errorMessage, self::ERROR_CODE_CLASS_NOT_VALID);
         }
     }
 }
