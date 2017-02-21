@@ -32,6 +32,7 @@
   "autoload-dev": {
     "psr-4": {
       "Romm\\ConfigurationObject\\Tests\\": "Tests",
+      "TYPO3\\Components\\TestingFramework\\": ".Build/vendor/typo3/cms/components/testing_framework/Classes/",
       "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
       "TYPO3\\CMS\\Fluid\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/fluid/Tests/"
     }
@@ -42,7 +43,10 @@
   },
   "config": {
     "vendor-dir": ".Build/vendor",
-    "bin-dir": ".Build/bin"
+    "bin-dir": ".Build/bin",
+    "preferred-install": {
+      "typo3/cms": "prefer-source"
+    }
   },
   "scripts": {
     "post-autoload-dump": [

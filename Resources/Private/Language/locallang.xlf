@@ -10,6 +10,12 @@
             <trans-unit id="validator.class_exists.not_valid">
                 <source>The value "%s" is not an existing class.</source>
             </trans-unit>
+            <trans-unit id="validator.class_implements_interface.not_valid">
+                <source>The class "%s" does not implement the interface "%s".</source>
+            </trans-unit>
+            <trans-unit id="validator.class_extends_class.not_valid">
+                <source>The class "%s" does not extend the class "%s".</source>
+            </trans-unit>
 
         </body>
     </file>

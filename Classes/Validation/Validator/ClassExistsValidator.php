@@ -14,10 +14,9 @@
 namespace Romm\ConfigurationObject\Validation\Validator;
 
 use Romm\ConfigurationObject\Core\Core;
-use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
-class ClassExistsValidator extends AbstractValidator implements SingletonInterface
+class ClassExistsValidator extends AbstractValidator
 {
 
     /**
