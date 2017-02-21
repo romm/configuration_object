@@ -18,6 +18,8 @@ use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
 class ClassImplementsValidator extends AbstractValidator
 {
+    const ERROR_CODE_CLASS_NOT_FOUND = 1487710245;
+    const ERROR_CODE_CLASS_NOT_VALID = 1487710370;
 
     /**
      * @var array
@@ -45,7 +47,7 @@ class ClassImplementsValidator extends AbstractValidator
                 [$value]
             );
 
-            $this->addError($errorMessage, 1487710245);
+            $this->addError($errorMessage, self::ERROR_CODE_CLASS_NOT_FOUND);
         } elseif (false === in_array($this->options['interface'], class_implements($value))) {
             $errorMessage = $this->translateErrorMessage(
                 'validator.class_implements_interface.not_valid',
@@ -53,7 +55,7 @@ class ClassImplementsValidator extends AbstractValidator
                 [$value, $this->options['interface']]
             );
 
-            $this->addError($errorMessage, 1487710370);
+            $this->addError($errorMessage, self::ERROR_CODE_CLASS_NOT_VALID);
         }
     }
 }
