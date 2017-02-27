@@ -29,7 +29,6 @@ class MagicMethodsTraitTest extends AbstractUnitTest
         $dummyConfigurationObject->setBar($bar);
         $dummyConfigurationObject->setUpperCaseProperty($foo);
 
-
         $this->assertEquals($foo, $dummyConfigurationObject->getFoo());
         $this->assertEquals($bar, $dummyConfigurationObject->getBar());
         $this->assertEquals($foo, $dummyConfigurationObject->getUpperCaseProperty());
@@ -65,6 +64,5 @@ class MagicMethodsTraitTest extends AbstractUnitTest
         $this->assertEquals(null, call_user_func([$dummyConfigurationObject, 'setBaz']));
 
         unset($dummyConfigurationObject);
-
     }
 }

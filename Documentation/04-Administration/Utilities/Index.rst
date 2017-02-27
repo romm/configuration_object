@@ -173,6 +173,39 @@ Because objects can have a lot of properties, you may want not to be forced to w
     $bar = $myObject->getBar(); // Will work as well.
     $bar = $myObject->setBar('bar'); // You got it? :)
 
+.. note::
+
+    If for some reason you want to disable the magic methods for a given property, you need to tag it with ``@disableMagicMethods``.
+
+    **Example:**
+
+    .. code-block:: php
+        :linenos:
+        :emphasize-lines: 19
+
+        use Romm\ConfObj\ConfigurationObjectInterface;
+        use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+        use Romm\ConfObj\Traits\ConfigurationObject\MagicMethodsTrait;
+
+        class MyObject implements ConfigurationObjectInterface
+        {
+            use DefaultConfigurationObjectTrait;
+            use MagicMethodsTrait;
+
+            /**
+             * @var string
+             */
+            protected $foo;
+
+            /**
+             * This property will not be accessible by magic setter/getter.
+             *
+             * @var string
+             * @disableMagicMethods
+             */
+            protected $bar;
+        }
+
 .. hint::
 
     The usage of this trait will not provide auto-completion in IDEs like PhpStorm. But you can still use the class annotation ``@method`` (see `phpDoc official documentation <https://phpdoc.org/docs/latest/references/phpdoc/tags/method.html>`_) to simulate it.
