@@ -15,6 +15,8 @@ namespace Romm\ConfigurationObject\Traits\ConfigurationObject;
 
 use Romm\ConfigurationObject\Exceptions\MethodNotFoundException;
 use Romm\ConfigurationObject\Exceptions\PropertyNotAccessibleException;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Reflection\ClassReflection;
 
 /**
  * This trait will implement magic setters and getters for accessible properties
@@ -133,17 +135,24 @@ trait MagicMethodsTrait
      */
     private function isPropertyAccessible($propertyName)
     {
-        if (false === isset(self::$_accessibleProperties[get_class($this)])) {
-            self::$_accessibleProperties[get_class($this)] = [];
+        $className = get_class($this);
 
-            $reflect = new \ReflectionObject($this);
-            $properties = $reflect->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
+        if (false === isset(self::$_accessibleProperties[$className])) {
+            self::$_accessibleProperties[$className] = [];
+
+            /** @var ClassReflection $classReflection */
+            $classReflection = GeneralUtility::makeInstance(ClassReflection::class, $this);
+            $properties = $classReflection->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
 
             foreach ($properties as $property) {
-                self::$_accessibleProperties[get_class($this)][$property->getName()] = true;
+                if (false === $property->isTaggedWith('disableMagicMethods')) {
+                    self::$_accessibleProperties[$className][$property->getName()] = true;
+                }
             }
+
+            unset($classReflection);
         }
 
-        return isset(self::$_accessibleProperties[get_class($this)][$propertyName]);
+        return isset(self::$_accessibleProperties[$className][$propertyName]);
     }
 }
