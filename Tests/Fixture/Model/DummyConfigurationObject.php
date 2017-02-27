@@ -31,6 +31,12 @@ class DummyConfigurationObject implements ConfigurationObjectInterface
     protected $bar;
 
     /**
+     * @var array
+     * @disableMagicMethods
+     */
+    protected $baz;
+
+    /**
      * @var \Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObject
      */
     protected $subObject;
