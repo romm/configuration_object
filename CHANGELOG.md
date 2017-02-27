@@ -1,5 +1,12 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.5.0 - 2017-02-27
+------------------
+
+A new tag `@disableMagicMethods` has been introduced for classes which use `MagicMethodsTrait`.
+
+ - **[[#10](https://github.com/romm/configuration_object/pull/10)] [FEATURE] Introduce `@disableMagicMethods` tag support**
+
 1.4.0 - 2017-02-21
 ------------------
 
