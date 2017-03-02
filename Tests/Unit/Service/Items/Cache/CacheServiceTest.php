@@ -2,6 +2,7 @@
 namespace Romm\ConfigurationObject\Tests\Unit\Service\Items\Cache;
 
 use Romm\ConfigurationObject\ConfigurationObjectInstance;
+use Romm\ConfigurationObject\Core\Service\CacheService as InternalCacheService;
 use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDTO;
 use Romm\ConfigurationObject\Service\Items\Cache\CacheService;
 use Romm\ConfigurationObject\Service\ServiceFactory;
@@ -14,6 +15,18 @@ use TYPO3\CMS\Extbase\Error\Result;
 
 class CacheServiceTest extends AbstractUnitTest
 {
+    protected function setUp()
+    {
+        parent::setUp();
+
+        /** @var InternalCacheService|\PHPUnit_Framework_MockObject_MockObject $cacheServiceMock */
+        $cacheServiceMock = $this->getMockBuilder(InternalCacheService::class)
+            ->setMethods(['getCacheManager'])
+            ->getMock();
+        $cacheServiceMock->method('getCacheManager')
+            ->willReturn($this->configurationObjectCoreMock->getCacheManager());
+        $this->configurationObjectCoreMock->injectCacheService($cacheServiceMock);
+    }
 
     /**
      * Will initialize an instance of a cache service, and check that the cache
