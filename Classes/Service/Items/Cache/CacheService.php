@@ -52,7 +52,7 @@ class CacheService extends AbstractService implements ConfigurationObjectBeforeS
     /**
      * Default identifier of the cache instance.
      */
-    const DEFAULT_CACHE_IDENTIFIER = 'cache_configuration_object';
+    const DEFAULT_CACHE_IDENTIFIER = 'cache_configuration_object_default';
 
     /**
      * Default backend cache class name.
@@ -119,18 +119,17 @@ class CacheService extends AbstractService implements ConfigurationObjectBeforeS
     public function initialize()
     {
         $this->cacheIdentifier = $this->options[self::OPTION_CACHE_NAME];
+        $options = [
+            'backend'  => $this->options[self::OPTION_CACHE_BACKEND],
+            'frontend' => VariableFrontend::class,
+            'groups'   => $this->options[self::OPTION_CACHE_GROUPS],
+            'options'  => $this->options[self::OPTION_CACHE_OPTIONS]
+        ];
 
         // Adds the cache to the list of TYPO3 caches.
-        $this->getCacheManager()->setCacheConfigurations(
-            [
-                $this->cacheIdentifier => [
-                    'backend'  => $this->options[self::OPTION_CACHE_BACKEND],
-                    'frontend' => VariableFrontend::class,
-                    'groups'   => $this->options[self::OPTION_CACHE_GROUPS],
-                    'options'  => $this->options[self::OPTION_CACHE_OPTIONS]
-                ]
-            ]
-        );
+        Core::get()
+            ->getCacheService()
+            ->registerDynamicCache($this->cacheIdentifier, $options);
     }
 
     /**

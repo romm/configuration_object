@@ -4,6 +4,7 @@ namespace Romm\ConfigurationObject\Tests\Unit;
 use Romm\ConfigurationObject\ConfigurationObjectFactory;
 use Romm\ConfigurationObject\ConfigurationObjectMapper;
 use Romm\ConfigurationObject\Core\Core;
+use Romm\ConfigurationObject\Core\Service\CacheService as InternalCacheService;
 use Romm\ConfigurationObject\Service\Items\Cache\CacheService;
 use Romm\ConfigurationObject\Service\Items\Parents\ParentsUtility;
 use Romm\ConfigurationObject\Service\ServiceFactory;
@@ -12,6 +13,7 @@ use Romm\ConfigurationObject\Validation\ValidatorResolver;
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\Cache\CacheFactory;
 use TYPO3\CMS\Core\Cache\CacheManager;
+use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Object\Container\Container;
@@ -79,6 +81,7 @@ trait ConfigurationObjectUnitTestUtility
         $this->configurationObjectCoreMock->injectReflectionService(new ReflectionService);
         $this->configurationObjectCoreMock->injectValidatorResolver(new ValidatorResolver);
         $this->configurationObjectCoreMock->injectParentsUtility(new ParentsUtility);
+        $this->configurationObjectCoreMock->injectCacheService(new InternalCacheService);
 
         $this->configurationObjectCoreMock->method('getServiceFactoryInstance')
             ->will(
@@ -115,6 +118,13 @@ trait ConfigurationObjectUnitTestUtility
             $cacheFactory = new CacheFactory('foo', $cacheManager);
             $cacheManager->injectCacheFactory($cacheFactory);
         }
+
+        $cacheManager->setCacheConfigurations([
+            InternalCacheService::CACHE_IDENTIFIER => [
+                'backend'  => TransientMemoryBackend::class,
+                'frontend' => VariableFrontend::class
+            ]
+        ]);
 
         $this->configurationObjectCoreMock->injectCacheManager($cacheManager);
 

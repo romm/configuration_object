@@ -13,6 +13,7 @@
 
 namespace Romm\ConfigurationObject\Core;
 
+use Romm\ConfigurationObject\Core\Service\CacheService;
 use Romm\ConfigurationObject\Exceptions\MethodNotFoundException;
 use Romm\ConfigurationObject\Service\Items\Parents\ParentsUtility;
 use Romm\ConfigurationObject\Service\ServiceFactory;
@@ -32,7 +33,6 @@ use TYPO3\CMS\Extbase\Reflection\ReflectionService;
  */
 class Core implements SingletonInterface
 {
-
     /**
      * @var Core
      */
@@ -62,6 +62,11 @@ class Core implements SingletonInterface
      * @var ParentsUtility
      */
     protected $parentsUtility;
+
+    /**
+     * @var CacheService
+     */
+    protected $cacheService;
 
     /**
      * @var array
@@ -173,7 +178,10 @@ class Core implements SingletonInterface
      */
     public function getServiceFactoryInstance()
     {
-        return GeneralUtility::makeInstance(ServiceFactory::class);
+        /** @var ServiceFactory $serviceFactory */
+        $serviceFactory = GeneralUtility::makeInstance(ServiceFactory::class);
+
+        return $serviceFactory;
     }
 
     /**
@@ -254,5 +262,21 @@ class Core implements SingletonInterface
     public function injectParentsUtility(ParentsUtility $parentsUtility)
     {
         $this->parentsUtility = $parentsUtility;
+    }
+
+    /**
+     * @return CacheService
+     */
+    public function getCacheService()
+    {
+        return $this->cacheService;
+    }
+
+    /**
+     * @param CacheService $cacheService
+     */
+    public function injectCacheService(CacheService $cacheService)
+    {
+        $this->cacheService = $cacheService;
     }
 }
