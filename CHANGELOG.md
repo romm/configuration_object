@@ -1,5 +1,16 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.5.1 - 2017-03-02
+------------------
+
+An issue concerning the cache handling has been solved. Upgrading is recommended!
+
+ - **[[#12](https://github.com/romm/configuration_object/pull/12)] [BUGFIX] Fix incorrect cache handling**
+
+   This commit refactors a major part of how "dynamic" caches are handled by Configuration Object API. In the provided cache service that can be attached to a configuration object, it is possible to declare the options for this cache; it means the cache is registered long after TYPO3 initialization, resulting in issues like caches entries not being deleted on caches flush.
+
+   A new internal cache service has been introduced, which will handle these "dynamic" caches: when one of these caches is used, its configuration is saved in the internal cache: in further request, the cache will be properly registered during TYPO3 initialization.
+
 1.5.0 - 2017-02-27
 ------------------
 
