@@ -74,21 +74,20 @@ trait ConfigurationObjectUnitTestUtility
      */
     private function setUpConfigurationObjectCore()
     {
-        $this->configurationObjectCoreMock = $this->getMockBuilder(Core::class)
+        $this->configurationObjectCoreMock = $this->getConfigurationObjectMockBuilder(Core::class)
             ->setMethods(['getServiceFactoryInstance'])
             ->getMock();
         $this->configurationObjectCoreMock->injectObjectManager($this->getConfigurationObjectObjectManagerMock());
         $this->configurationObjectCoreMock->injectReflectionService(new ReflectionService);
         $this->configurationObjectCoreMock->injectValidatorResolver(new ValidatorResolver);
         $this->configurationObjectCoreMock->injectParentsUtility(new ParentsUtility);
-        $this->configurationObjectCoreMock->injectCacheService(new InternalCacheService);
 
         $this->configurationObjectCoreMock->method('getServiceFactoryInstance')
             ->will(
                 $this->returnCallback(
                     function () {
                         /** @var ServiceFactory|\PHPUnit_Framework_MockObject_MockObject $serviceFactoryMock */
-                        $serviceFactoryMock = $this->getMockBuilder(ServiceFactory::class)
+                        $serviceFactoryMock = $this->getConfigurationObjectMockBuilder(ServiceFactory::class)
                             ->setMethods(['manageServiceData'])
                             ->getMock();
                         $serviceFactoryMock->method('manageServiceData')
@@ -127,6 +126,11 @@ trait ConfigurationObjectUnitTestUtility
         ]);
 
         $this->configurationObjectCoreMock->injectCacheManager($cacheManager);
+        $cacheService = new InternalCacheService;
+        $cacheService->registerInternalCache();
+        $this->inject($cacheService, 'cacheManager', $cacheManager);
+
+        $this->configurationObjectCoreMock->injectCacheService($cacheService);
 
         $reflectedCore = new \ReflectionClass(Core::class);
         $objectManagerProperty = $reflectedCore->getProperty('instance');
@@ -167,7 +171,7 @@ trait ConfigurationObjectUnitTestUtility
     protected function injectMockedConfigurationObjectFactory()
     {
         /** @var ConfigurationObjectMapper|\PHPUnit_Framework_MockObject_MockObject $mockedConfigurationObjectMapper */
-        $mockedConfigurationObjectMapper = $this->getMockBuilder(ConfigurationObjectMapper::class)
+        $mockedConfigurationObjectMapper = $this->getConfigurationObjectMockBuilder(ConfigurationObjectMapper::class)
             ->setMethods(['getObjectConverter'])
             ->getMock();
 
@@ -227,7 +231,7 @@ trait ConfigurationObjectUnitTestUtility
         $mockedConfigurationObjectMapper->initializeObject();
 
         /** @var ConfigurationObjectFactory|\PHPUnit_Framework_MockObject_MockObject $mockedConfigurationObjectFactory */
-        $mockedConfigurationObjectFactory = $this->getMockBuilder(ConfigurationObjectFactory::class)
+        $mockedConfigurationObjectFactory = $this->getConfigurationObjectMockBuilder(ConfigurationObjectFactory::class)
             ->setMethods(['getConfigurationObjectMapper'])
             ->getMock();
 
@@ -250,7 +254,7 @@ trait ConfigurationObjectUnitTestUtility
     private function getConfigurationObjectObjectManagerMock()
     {
         /** @var \PHPUnit_Framework_MockObject_MockObject $mockObjectManager */
-        $mockObjectManager = $this->getMockBuilder(ObjectManagerInterface::class)
+        $mockObjectManager = $this->getConfigurationObjectMockBuilder(ObjectManagerInterface::class)
             ->getMock();
         $mockObjectManager->expects($this->any())
             ->method('get')
@@ -262,7 +266,7 @@ trait ConfigurationObjectUnitTestUtility
 
                         if (in_array(AbstractValidator::class, class_parents($className))) {
                             /** @var  AbstractValidator|\PHPUnit_Framework_MockObject_MockObject $instance */
-                            $instance = $this->getMockBuilder($className)
+                            $instance = $this->getConfigurationObjectMockBuilder($className)
                                 ->setMethods(['translateErrorMessage'])
                                 ->setConstructorArgs($arguments)
                                 ->getMock();
@@ -283,7 +287,7 @@ trait ConfigurationObjectUnitTestUtility
                                 )
                             ) {
                                 /** @var ConfigurationManager|\PHPUnit_Framework_MockObject_MockObject $configurationManager */
-                                $configurationManager = $this->getMockBuilder(ConfigurationManager::class)
+                                $configurationManager = $this->getConfigurationObjectMockBuilder(ConfigurationManager::class)
                                     ->setMethods(['isFeatureEnabled'])
                                     ->getMock();
                                 $configurationManager->method('isFeatureEnabled')
@@ -294,7 +298,7 @@ trait ConfigurationObjectUnitTestUtility
                                 $reflectedProperty->setValue($configurationManager, Core::get()->getObjectManager());
 
                                 /** @var EnvironmentService|\PHPUnit_Framework_MockObject_MockObject $environmentServiceMock */
-                                $environmentServiceMock = $this->getMockBuilder(EnvironmentService::class)
+                                $environmentServiceMock = $this->getConfigurationObjectMockBuilder(EnvironmentService::class)
                                     ->setMethods(['isEnvironmentInFrontendMode', 'isEnvironmentInBackendMode'])
                                     ->getMock();
                                 $environmentServiceMock
@@ -336,5 +340,16 @@ trait ConfigurationObjectUnitTestUtility
             );
 
         return $mockObjectManager;
+    }
+
+    /**
+     * Just a wrapper to have auto-completion.
+     *
+     * @param string $className
+     * @return \PHPUnit_Framework_MockObject_MockBuilder
+     */
+    private function getConfigurationObjectMockBuilder($className)
+    {
+        return $this->getMockBuilder($className);
     }
 }
