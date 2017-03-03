@@ -37,6 +37,11 @@ class CacheService implements SingletonInterface
     ];
 
     /**
+     * @var CacheManager
+     */
+    protected $cacheManager;
+
+    /**
      * Function called from `ext_localconf` file which will register the
      * internal cache earlier.
      *
@@ -119,9 +124,11 @@ class CacheService implements SingletonInterface
      */
     protected function getCacheManager()
     {
-        /** @var CacheManager $cacheManager */
-        $cacheManager = GeneralUtility::makeInstance(CacheManager::class);
+        if (null === $this->cacheManager) {
+            /** @var CacheManager $cacheManager */
+            $this->cacheManager = GeneralUtility::makeInstance(CacheManager::class);
+        }
 
-        return $cacheManager;
+        return $this->cacheManager;
     }
 }
