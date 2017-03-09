@@ -49,8 +49,11 @@ class CacheService implements SingletonInterface
      */
     public function registerInternalCache()
     {
-        $this->getCacheManager()
-            ->setCacheConfigurations([self::CACHE_IDENTIFIER => $this->cacheOptions]);
+        $cacheManager = $this->getCacheManager();
+
+        if (false === $cacheManager->hasCache(self::CACHE_IDENTIFIER)) {
+            $cacheManager->setCacheConfigurations([self::CACHE_IDENTIFIER => $this->cacheOptions]);
+        }
     }
 
     /**

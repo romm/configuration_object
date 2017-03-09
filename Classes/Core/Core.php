@@ -269,6 +269,8 @@ class Core implements SingletonInterface
      */
     public function getCacheService()
     {
+        $this->cacheService->registerInternalCache();
+
         return $this->cacheService;
     }
 

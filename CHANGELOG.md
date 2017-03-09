@@ -1,5 +1,16 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.5.2 - 2017-03-09
+------------------
+
+An issue concerning early cache registration has been solved.
+
+ - **[[#15](https://github.com/romm/configuration_object/pull/15)] [BUGFIX] Allow request to register internal cache very early**
+ 
+ This commit fixes an issue, where a configuration object was constructed very early in TYPO3 request dispatch, for instance in TCA definition. The cache was not registered yet, and that would lead to an exception being thrown.
+ 
+ The cache is now registered any time it is accessed.
+
 1.5.1 - 2017-03-02
 ------------------
 
