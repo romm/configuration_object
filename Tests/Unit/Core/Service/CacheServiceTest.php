@@ -34,6 +34,41 @@ class CacheServiceTest extends AbstractUnitTest
     }
 
     /**
+     * Checks that the cache instance is registered only once, even if the
+     * registration method is called several times.
+     *
+     * @test
+     */
+    public function internalCacheIsRegisteredOnlyOnce()
+    {
+        /** @var CacheService|\PHPUnit_Framework_MockObject_MockObject $cacheServiceMock */
+        $cacheServiceMock = $this->getMockBuilder(CacheService::class)
+            ->setMethods(['getCacheManager'])
+            ->getMock();
+
+        /** @var CacheManager|ObjectProphecy $cacheManagerProphecy */
+        $cacheManagerProphecy = $this->prophesize(CacheManager::class);
+
+        $cacheManagerProphecy->hasCache(CacheService::CACHE_IDENTIFIER)
+            ->willReturn(false);
+
+        $cacheManagerProphecy->setCacheConfigurations(Argument::type('array'))
+            ->shouldBeCalled()
+            ->will(function () use ($cacheManagerProphecy) {
+                $cacheManagerProphecy->hasCache(CacheService::CACHE_IDENTIFIER)
+                    ->shouldBeCalled()
+                    ->willReturn(false);
+            });
+
+        $cacheServiceMock->method('getCacheManager')
+            ->willReturn($cacheManagerProphecy->reveal());
+
+        $cacheServiceMock->registerInternalCache();
+        $cacheServiceMock->registerInternalCache();
+        $cacheServiceMock->registerInternalCache();
+    }
+
+    /**
      * Checks that a cache can be registered dynamically, and only once per
      * request.
      *
