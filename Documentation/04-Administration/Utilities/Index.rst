@@ -50,7 +50,7 @@ The trait :php:`ArrayConversionTrait` provides the function ``toArray()`` which 
         use ArrayConversionTrait;
 
         /**
-         * @var \ArrayObject<SubObject>
+         * @var SubObject[]
          */
         protected $subObjects;
     }
@@ -86,7 +86,7 @@ In some cases, a sub-object of a configuration object can be stored in an array,
         use DefaultConfigurationObjectTrait;
 
         /**
-         * @var \ArrayObject<SubObject>
+         * @var SubObject[]
          */
         protected $subObjects;
 
