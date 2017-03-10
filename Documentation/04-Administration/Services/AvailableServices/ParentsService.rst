@@ -51,7 +51,7 @@ Example
         use DefaultConfigurationObjectTrait;
 
         /**
-         * @var \ArrayObject<SubObject>
+         * @var SubObject[]
          */
         protected $subObjects;
 

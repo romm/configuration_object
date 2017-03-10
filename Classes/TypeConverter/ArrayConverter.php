@@ -73,7 +73,16 @@ class ArrayConverter extends AbstractTypeConverter
      */
     public function getTypeOfChildProperty($targetType, $propertyName, PropertyMappingConfigurationInterface $configuration)
     {
-        $parsedTargetType = TypeHandlingUtility::parseType($targetType);
+        /**
+         * @see \Romm\ConfigurationObject\Reflection\ReflectionService
+         */
+        if ('[]' === substr($targetType, -2)) {
+            $parsedTargetType = [
+                'elementType' => substr($targetType, 0, -2)
+            ];
+        } else {
+            $parsedTargetType = TypeHandlingUtility::parseType($targetType);
+        }
 
         return $parsedTargetType['elementType'];
     }

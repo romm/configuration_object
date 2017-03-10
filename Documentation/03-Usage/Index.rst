@@ -42,7 +42,7 @@ Please note that a configuration object root class (first level of the tree) nee
         protected $name;
 
         /**
-         * @var \ArrayObject<MyVendor\MyExtension\Configuration\Employee>
+         * @var \MyVendor\MyExtension\Configuration\Employee[]
          */
         protected $employees;
     }
@@ -65,6 +65,27 @@ Please note that a configuration object root class (first level of the tree) nee
          */
         protected $email;
     }
+
+.. tip::
+
+    There are three ways to declare an array object property:
+
+    .. code-block:: php
+        :linenos:
+        :emphasize-lines: 2,6
+
+        /**
+         * @var \MyVendor\MyExtension\Configuration\Employee[]
+         *
+         * OR
+         *
+         * @var \ArrayObject<\MyVendor\MyExtension\Configuration\Employee>
+         *
+         * OR
+         *
+         * @var array<\MyVendor\MyExtension\Configuration\Employee>
+         */
+        protected $employees;
 
 -----
 

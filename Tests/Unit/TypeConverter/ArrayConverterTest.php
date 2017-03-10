@@ -1,9 +1,11 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\TypeConverter;
 
+use Romm\ConfigurationObject\Tests\Fixture\Company\Employee;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithStoreArrayIndexTrait;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use Romm\ConfigurationObject\TypeConverter\ArrayConverter;
+use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface;
 
 class ArrayConverterTest extends AbstractUnitTest
 {
@@ -46,5 +48,31 @@ class ArrayConverterTest extends AbstractUnitTest
         $index = $dummyConfigurationObject->getArrayIndex();
 
         $this->assertEquals('foo', $index);
+    }
+
+    /**
+     * Checks that the three different ways of writing array object annotations
+     * are found:
+     * `\Some\Class[]`
+     * `ArrayObject<\Some\Class>`
+     * `array<\Some\Class>`
+     *
+     * @test
+     */
+    public function childPropertyTypesAreFound()
+    {
+        $configurationMock = $this->getMockBuilder(PropertyMappingConfigurationInterface::class)
+            ->getMock();
+
+        $arrayConverter = new ArrayConverter();
+
+        $type = $arrayConverter->getTypeOfChildProperty(Employee::class . '[]', 'foo', $configurationMock);
+        $this->assertEquals(Employee::class, $type);
+
+        $type = $arrayConverter->getTypeOfChildProperty(\ArrayObject::class . '<' . Employee::class . '>', 'foo', $configurationMock);
+        $this->assertEquals(Employee::class, $type);
+
+        $type = $arrayConverter->getTypeOfChildProperty('array<' . Employee::class . '>', 'foo', $configurationMock);
+        $this->assertEquals(Employee::class, $type);
     }
 }

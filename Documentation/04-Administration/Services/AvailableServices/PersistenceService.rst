@@ -47,7 +47,7 @@ Example
         protected $boss;
 
         /**
-         * @var \ArrayObject<\TYPO3\CMS\Beuser\Domain\Model\BackendUser>
+         * @var \TYPO3\CMS\Beuser\Domain\Model\BackendUser[]
          */
         protected $employees;
 
