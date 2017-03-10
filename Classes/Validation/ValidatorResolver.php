@@ -13,9 +13,12 @@
 
 namespace Romm\ConfigurationObject\Validation;
 
+use Romm\ConfigurationObject\Core\Core;
+use Romm\ConfigurationObject\Reflection\ReflectionService;
 use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesInterface;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeCollectionValidator;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeObjectValidator;
+use TYPO3\CMS\Extbase\Reflection\ReflectionService as ExtbaseReflectionService;
 use TYPO3\CMS\Extbase\Validation\Validator\CollectionValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\ConjunctionValidator;
 
@@ -83,5 +86,13 @@ class ValidatorResolver extends \TYPO3\CMS\Extbase\Validation\ValidatorResolver
         }
 
         return $conjunctionValidator;
+    }
+
+    /**
+     * @param ExtbaseReflectionService $reflectionService
+     */
+    public function injectReflectionService(ExtbaseReflectionService $reflectionService)
+    {
+        $this->reflectionService = Core::get()->getObjectManager()->get(ReflectionService::class);
     }
 }

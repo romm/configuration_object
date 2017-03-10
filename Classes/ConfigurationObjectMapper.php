@@ -261,17 +261,30 @@ class ConfigurationObjectMapper extends PropertyMapper
      */
     protected function getTypeConverter($source, $targetType, $configuration)
     {
-        $typeConverter = $this->findTypeConverter($source, $targetType, $configuration);
+        $typeConverter = null;
 
-        if ($typeConverter instanceof ExtbaseArrayConverter
-            || $this->parseCompositeType($targetType) === '\\ArrayObject'
-            || $this->parseCompositeType($targetType) === 'array'
-        ) {
-            $typeConverter = $this->objectManager->get(ArrayConverter::class);
+        /**
+         * @see \Romm\ConfigurationObject\Reflection\ReflectionService
+         */
+        if ('[]' === substr($targetType, -2)) {
+            $className = substr($targetType, 0, -2);
+
+            if (Core::get()->classExists($className)) {
+                $typeConverter = $this->objectManager->get(ArrayConverter::class);
+            }
         }
 
-        if ($typeConverter instanceof ObjectConverter) {
-            $typeConverter = $this->getObjectConverter();
+        if (!$typeConverter) {
+            $typeConverter = $this->findTypeConverter($source, $targetType, $configuration);
+
+            if ($typeConverter instanceof ExtbaseArrayConverter
+                || $this->parseCompositeType($targetType) === '\\ArrayObject'
+                || $this->parseCompositeType($targetType) === 'array'
+            ) {
+                $typeConverter = $this->objectManager->get(ArrayConverter::class);
+            } elseif ($typeConverter instanceof ObjectConverter) {
+                $typeConverter = $this->getObjectConverter();
+            }
         }
 
         if (!is_object($typeConverter) || !$typeConverter instanceof TypeConverterInterface) {
