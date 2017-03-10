@@ -242,6 +242,7 @@ class ConfigurationObjectMapper extends PropertyMapper
             $resolverResult = $resolver->getResult();
 
             if ($resolverResult->hasErrors()) {
+                $targetType = MixedTypesResolver::OBJECT_TYPE_NONE;
                 $this->messages->forProperty(implode('.', $currentPropertyPath))->merge($resolverResult);
             }
         }
