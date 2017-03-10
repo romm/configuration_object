@@ -25,7 +25,6 @@ use TYPO3\CMS\Extbase\Property\TypeConverter\StringConverter;
 use TYPO3\CMS\Extbase\Reflection\ClassSchema;
 use TYPO3\CMS\Extbase\Reflection\ReflectionService;
 use TYPO3\CMS\Extbase\Service\EnvironmentService;
-use TYPO3\CMS\Extbase\Service\TypeHandlingService;
 use TYPO3\CMS\Extbase\Utility\ArrayUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
@@ -226,7 +225,6 @@ trait ConfigurationObjectUnitTestUtility
         } else {
             $reflectionService->injectObjectManager(Core::get()->getObjectManager());
         }
-        $mockedConfigurationObjectMapper->injectReflectionService($reflectionService);
 
         $mockedConfigurationObjectMapper->initializeObject();
 

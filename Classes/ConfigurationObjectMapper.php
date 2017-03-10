@@ -14,6 +14,7 @@
 namespace Romm\ConfigurationObject;
 
 use Romm\ConfigurationObject\Core\Core;
+use Romm\ConfigurationObject\Core\Service\ReflectionService;
 use Romm\ConfigurationObject\Service\DataTransferObject\ConfigurationObjectConversionDTO;
 use Romm\ConfigurationObject\Service\DataTransferObject\GetTypeConverterDTO;
 use Romm\ConfigurationObject\Service\Event\ObjectConversionAfterServiceEventInterface;
@@ -32,7 +33,7 @@ use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ArrayConverter as ExtbaseArrayConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ObjectConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverterInterface;
-use TYPO3\CMS\Extbase\Reflection\ReflectionService;
+use TYPO3\CMS\Extbase\Reflection\PropertyReflection;
 
 /**
  * Custom mapper used for configuration objects.
@@ -46,12 +47,6 @@ use TYPO3\CMS\Extbase\Reflection\ReflectionService;
  */
 class ConfigurationObjectMapper extends PropertyMapper
 {
-
-    /**
-     * @var ReflectionService
-     */
-    protected $reflectionService;
-
     /**
      * Contains the initial called target type.
      *
@@ -166,12 +161,11 @@ class ConfigurationObjectMapper extends PropertyMapper
     protected function convertChildProperties(array $source, $targetType, TypeConverterInterface $typeConverter, PropertyMappingConfigurationInterface $configuration, array &$currentPropertyPath)
     {
         $convertedChildProperties = [];
+        $properties = $source;
 
         // If the target is a class, we get its properties, else we assume the source should be converted.
-        $properties = $this->getProperties($targetType);
-
-        if (null === $properties) {
-            $properties = $source;
+        if (Core::get()->classExists($targetType)) {
+            $properties = $this->getProperties($targetType);
         }
 
         foreach ($source as $propertyName => $propertyValue) {
@@ -296,21 +290,22 @@ class ConfigurationObjectMapper extends PropertyMapper
     }
 
     /**
-     * Internal function which fetches the properties of a class, and stores
-     * them in a local cache to improve performances.
+     * Internal function that fetches the properties of a class.
      *
-     * @param mixed $targetType
-     * @return array|null
+     * @param $targetType
+     * @return array
      */
     protected function getProperties($targetType)
     {
-        if (false === isset($this->typeProperties[$targetType])) {
-            $this->typeProperties[$targetType] = (Core::get()->classExists($targetType)) ?
-                $this->reflectionService->getClassSchema($targetType)->getProperties() :
-                null;
-        }
+        $properties = ReflectionService::get()->getClassReflection($targetType)->getProperties();
+        $propertiesKeys = array_map(
+            function (PropertyReflection $propertyReflection) {
+                return $propertyReflection->getName();
+            },
+            $properties
+        );
 
-        return $this->typeProperties[$targetType];
+        return array_combine($propertiesKeys, $properties);
     }
 
     /**
@@ -319,13 +314,5 @@ class ConfigurationObjectMapper extends PropertyMapper
     protected function getObjectConverter()
     {
         return $this->objectManager->get(ConfigurationObjectConverter::class);
-    }
-
-    /**
-     * @param ReflectionService $reflectionService
-     */
-    public function injectReflectionService(ReflectionService $reflectionService)
-    {
-        $this->reflectionService = $reflectionService;
     }
 }
