@@ -14,6 +14,7 @@
 namespace Romm\ConfigurationObject\Service;
 
 use Romm\ConfigurationObject\Core\Core;
+use Romm\ConfigurationObject\Core\Service\ReflectionService;
 use Romm\ConfigurationObject\Exceptions\DuplicateEntryException;
 use Romm\ConfigurationObject\Exceptions\EntryNotFoundException;
 use Romm\ConfigurationObject\Exceptions\Exception;
@@ -24,8 +25,6 @@ use Romm\ConfigurationObject\Exceptions\WrongInheritanceException;
 use Romm\ConfigurationObject\Service\DataTransferObject\AbstractServiceDTO;
 use Romm\ConfigurationObject\Service\Event\ServiceEventInterface;
 use Romm\ConfigurationObject\Traits\InternalVariablesTrait;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Reflection\ClassReflection;
 
 /**
  * This class will handle the several services which will be used for a
@@ -73,11 +72,6 @@ class ServiceFactory
      * @var array
      */
     protected $servicesEvents = [];
-
-    /**
-     * @var ClassReflection[]
-     */
-    protected $serviceClassReflection = [];
 
     /**
      * @var string
@@ -341,8 +335,7 @@ class ServiceFactory
     protected function checkServiceEventMethodName($serviceEvent, $eventMethodName)
     {
         if (false === in_array($eventMethodName, self::$servicesChecked[$serviceEvent])) {
-            /** @var ClassReflection $eventClassReflection */
-            $eventClassReflection = GeneralUtility::makeInstance(ClassReflection::class, $serviceEvent);
+            $eventClassReflection = ReflectionService::get()->getClassReflection($serviceEvent);
             self::$servicesChecked[$serviceEvent][] = $eventMethodName;
 
             if (false === $eventClassReflection->hasMethod($eventMethodName)) {
