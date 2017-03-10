@@ -15,6 +15,7 @@ namespace Romm\ConfigurationObject;
 
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Core\Service\ReflectionService;
+use Romm\ConfigurationObject\Exceptions\ClassNotFoundException;
 use Romm\ConfigurationObject\Service\DataTransferObject\ConfigurationObjectConversionDTO;
 use Romm\ConfigurationObject\Service\DataTransferObject\GetTypeConverterDTO;
 use Romm\ConfigurationObject\Service\Event\ObjectConversionAfterServiceEventInterface;
@@ -26,6 +27,7 @@ use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Service\ServiceInterface;
 use Romm\ConfigurationObject\TypeConverter\ArrayConverter;
 use Romm\ConfigurationObject\TypeConverter\ConfigurationObjectConverter;
+use Romm\Formz\Exceptions\InvalidOptionValueException;
 use TYPO3\CMS\Extbase\Error\Error;
 use TYPO3\CMS\Extbase\Property\Exception\TypeConverterException;
 use TYPO3\CMS\Extbase\Property\PropertyMapper;
@@ -170,8 +172,10 @@ class ConfigurationObjectMapper extends PropertyMapper
 
         foreach ($source as $propertyName => $propertyValue) {
             if (array_key_exists($propertyName, $properties)) {
-                $targetPropertyType = $typeConverter->getTypeOfChildProperty($targetType, $propertyName, $configuration);
                 $currentPropertyPath[] = $propertyName;
+                $targetPropertyType = $this->checkMixedTypeAnnotationForProperty($targetType, $propertyName);
+                $targetPropertyType = $targetPropertyType
+                    ?: $typeConverter->getTypeOfChildProperty($targetType, $propertyName, $configuration);
 
                 $targetPropertyValue = (null !== $targetPropertyType)
                     ? $this->doMapping($propertyValue, $targetPropertyType, $configuration, $currentPropertyPath)
@@ -186,6 +190,58 @@ class ConfigurationObjectMapper extends PropertyMapper
         }
 
         return $convertedChildProperties;
+    }
+
+    /**
+     * @param string $targetType
+     * @param string $propertyName
+     * @return null|string
+     * @throws ClassNotFoundException
+     * @throws InvalidOptionValueException
+     */
+    protected function checkMixedTypeAnnotationForProperty($targetType, $propertyName)
+    {
+        $result = null;
+
+        if ($this->serviceFactory->has(ServiceInterface::SERVICE_MIXED_TYPES)) {
+            /** @var MixedTypesService $mixedTypesService */
+            $mixedTypesService = $this->serviceFactory->get(ServiceInterface::SERVICE_MIXED_TYPES);
+
+            $result = $mixedTypesService->checkMixedTypeAnnotationForProperty($targetType, $propertyName);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Will check if the target type class inherits of `MixedTypeInterface`. If
+     * so, it means the real type of the target must be fetched through the
+     * function `getInstanceClassName()`.
+     *
+     * @param mixed $source
+     * @param mixed $targetType
+     * @param array $currentPropertyPath
+     * @return ConfigurationObjectInterface
+     */
+    protected function handleMixedType($source, $targetType, $currentPropertyPath)
+    {
+        if ($this->serviceFactory->has(ServiceInterface::SERVICE_MIXED_TYPES)) {
+            /** @var MixedTypesService $mixedTypesService */
+            $mixedTypesService = $this->serviceFactory->get(ServiceInterface::SERVICE_MIXED_TYPES);
+
+            if ($mixedTypesService->classIsMixedTypeResolver($targetType)) {
+                $resolver = $mixedTypesService->getMixedTypesResolver($source, $targetType);
+                $targetType = $resolver->getObjectType();
+                $resolverResult = $resolver->getResult();
+
+                if ($resolverResult->hasErrors()) {
+                    $targetType = MixedTypesResolver::OBJECT_TYPE_NONE;
+                    $this->messages->forProperty(implode('.', $currentPropertyPath))->merge($resolverResult);
+                }
+            }
+        }
+
+        return $targetType;
     }
 
     /**
@@ -213,35 +269,6 @@ class ConfigurationObjectMapper extends PropertyMapper
         }
 
         return $source;
-    }
-
-    /**
-     * Will check if the target type class inherits of `MixedTypeInterface`. If
-     * so, it means the real type of the target must be fetched through the
-     * function `getInstanceClassName()`.
-     *
-     * @param mixed $source
-     * @param mixed $targetType
-     * @param array $currentPropertyPath
-     * @return ConfigurationObjectInterface
-     */
-    protected function handleMixedType($source, $targetType, $currentPropertyPath)
-    {
-        if ($this->serviceFactory->has(ServiceInterface::SERVICE_MIXED_TYPES)) {
-            /** @var MixedTypesService $mixedTypesService */
-            $mixedTypesService = $this->serviceFactory->get(ServiceInterface::SERVICE_MIXED_TYPES);
-
-            $resolver = $mixedTypesService->getMixedTypesResolver($source, $targetType);
-            $targetType = $resolver->getObjectType();
-            $resolverResult = $resolver->getResult();
-
-            if ($resolverResult->hasErrors()) {
-                $targetType = MixedTypesResolver::OBJECT_TYPE_NONE;
-                $this->messages->forProperty(implode('.', $currentPropertyPath))->merge($resolverResult);
-            }
-        }
-
-        return $targetType;
     }
 
     /**

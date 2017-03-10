@@ -13,8 +13,11 @@
 
 namespace Romm\ConfigurationObject\Service\Items\MixedTypes;
 
-use Romm\ConfigurationObject\ConfigurationObjectInterface;
+use Romm\ConfigurationObject\Core\Core;
+use Romm\ConfigurationObject\Core\Service\ReflectionService;
+use Romm\ConfigurationObject\Exceptions\ClassNotFoundException;
 use Romm\ConfigurationObject\Service\AbstractService;
+use Romm\Formz\Exceptions\InvalidOptionValueException;
 
 /**
  * This service allows the type of a configuration sub-object to be dynamic,
@@ -23,6 +26,10 @@ use Romm\ConfigurationObject\Service\AbstractService;
  */
 class MixedTypesService extends AbstractService
 {
+    /**
+     * The tag that can be added to a property (with a `@`).
+     */
+    const PROPERTY_ANNOTATION_MIXED_TYPE = 'mixedTypesResolver';
 
     /**
      * Default resolver which is returned by the function
@@ -50,14 +57,12 @@ class MixedTypesService extends AbstractService
      */
     public function getMixedTypesResolver($data, $className)
     {
-        $interfaces = class_implements($className);
-
-        if (true === isset($interfaces[MixedTypesInterface::class])) {
+        if (true === $this->classIsMixedTypeResolver($className)) {
             $resolver = new MixedTypesResolver();
             $resolver->setData($data);
             $resolver->setObjectType($className);
 
-            /** @var MixedTypesInterface|ConfigurationObjectInterface $className */
+            /** @var MixedTypesInterface $className */
             $className::getInstanceClassName($resolver);
         } else {
             $resolver = $this->defaultResolver;
@@ -66,5 +71,53 @@ class MixedTypesService extends AbstractService
         }
 
         return $resolver;
+    }
+
+    /**
+     * @param string $className
+     * @return bool
+     */
+    public function classIsMixedTypeResolver($className)
+    {
+        return true === array_key_exists(MixedTypesInterface::class, class_implements($className));
+    }
+
+    public function checkMixedTypeAnnotationForProperty($targetType, $propertyName)
+    {
+        $result = null;
+
+        if (Core::get()->classExists($targetType)) {
+            $classReflection = ReflectionService::get()->getClassReflection($targetType);
+            $propertyReflection = $classReflection->getProperty($propertyName);
+
+            if ($propertyReflection->isTaggedWith(MixedTypesService::PROPERTY_ANNOTATION_MIXED_TYPE)) {
+                $tag = $propertyReflection->getTagValues(MixedTypesService::PROPERTY_ANNOTATION_MIXED_TYPE);
+                $className = trim(end($tag));
+
+                if (false === Core::get()->classExists($className)) {
+                    throw new ClassNotFoundException(
+                        vsprintf(
+                            'Class "%s" given as value for the tag "@%s" of the class property "%s::$%s" was not found.',
+                            [$className, MixedTypesService::PROPERTY_ANNOTATION_MIXED_TYPE, $targetType, $propertyName]
+                        ),
+                        1489155862
+                    );
+                } else {
+                    if (false === $this->classIsMixedTypeResolver($className)) {
+                        throw new InvalidOptionValueException(
+                            vsprintf(
+                                'Class "%s" given as value for the tag "@%s" of the class property "%s::$%s" must implement the interface "%s".',
+                                [$className, MixedTypesService::PROPERTY_ANNOTATION_MIXED_TYPE, $targetType, $propertyName, MixedTypesInterface::class]
+                            ),
+                            1489156005
+                        );
+                    }
+
+                    $result = $className . '[]';
+                }
+            }
+        }
+
+        return $result;
     }
 }
