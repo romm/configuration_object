@@ -173,9 +173,9 @@ class ConfigurationObjectMapper extends PropertyMapper
         foreach ($source as $propertyName => $propertyValue) {
             if (array_key_exists($propertyName, $properties)) {
                 $currentPropertyPath[] = $propertyName;
-                $targetPropertyType = $this->checkMixedTypeAnnotationForProperty($targetType, $propertyName);
-                $targetPropertyType = $targetPropertyType
-                    ?: $typeConverter->getTypeOfChildProperty($targetType, $propertyName, $configuration);
+                $targetPropertyType = $typeConverter->getTypeOfChildProperty($targetType, $propertyName, $configuration);
+                $targetPropertyTypeBis = $this->checkMixedTypeAnnotationForProperty($targetType, $propertyName, $targetPropertyType);
+                $targetPropertyType = $targetPropertyTypeBis ?: $targetPropertyType;
 
                 $targetPropertyValue = (null !== $targetPropertyType)
                     ? $this->doMapping($propertyValue, $targetPropertyType, $configuration, $currentPropertyPath)
@@ -195,11 +195,10 @@ class ConfigurationObjectMapper extends PropertyMapper
     /**
      * @param string $targetType
      * @param string $propertyName
+     * @param string $propertyType
      * @return null|string
-     * @throws ClassNotFoundException
-     * @throws InvalidOptionValueException
      */
-    protected function checkMixedTypeAnnotationForProperty($targetType, $propertyName)
+    protected function checkMixedTypeAnnotationForProperty($targetType, $propertyName, $propertyType)
     {
         $result = null;
 
@@ -207,7 +206,10 @@ class ConfigurationObjectMapper extends PropertyMapper
             /** @var MixedTypesService $mixedTypesService */
             $mixedTypesService = $this->serviceFactory->get(ServiceInterface::SERVICE_MIXED_TYPES);
 
-            $result = $mixedTypesService->checkMixedTypeAnnotationForProperty($targetType, $propertyName);
+            // Is the property composite?
+            $isComposite = $this->parseCompositeType($propertyType) !== $propertyType;
+
+            $result = $mixedTypesService->checkMixedTypeAnnotationForProperty($targetType, $propertyName, $isComposite);
         }
 
         return $result;
@@ -283,26 +285,14 @@ class ConfigurationObjectMapper extends PropertyMapper
      */
     protected function getTypeConverter($source, $targetType, $configuration)
     {
-        $typeConverter = null;
+        $compositeType = $this->parseCompositeType($targetType);
 
-        /**
-         * @see \Romm\ConfigurationObject\Reflection\ReflectionService
-         */
-        if ('[]' === substr($targetType, -2)) {
-            $className = substr($targetType, 0, -2);
-
-            if (Core::get()->classExists($className)) {
-                $typeConverter = $this->objectManager->get(ArrayConverter::class);
-            }
-        }
-
-        if (!$typeConverter) {
+        if (in_array($compositeType, ['\\ArrayObject', 'array'])) {
+            $typeConverter = $this->objectManager->get(ArrayConverter::class);
+        } else {
             $typeConverter = $this->findTypeConverter($source, $targetType, $configuration);
 
-            if ($typeConverter instanceof ExtbaseArrayConverter
-                || $this->parseCompositeType($targetType) === '\\ArrayObject'
-                || $this->parseCompositeType($targetType) === 'array'
-            ) {
+            if ($typeConverter instanceof ExtbaseArrayConverter) {
                 $typeConverter = $this->objectManager->get(ArrayConverter::class);
             } elseif ($typeConverter instanceof ObjectConverter) {
                 $typeConverter = $this->getObjectConverter();
@@ -314,6 +304,19 @@ class ConfigurationObjectMapper extends PropertyMapper
         }
 
         return $typeConverter;
+    }
+
+    /**
+     * @param string $compositeType
+     * @return string
+     */
+    public function parseCompositeType($compositeType)
+    {
+        if ('[]' === substr($compositeType, -2)) {
+            return '\\ArrayObject';
+        } else {
+            return parent::parseCompositeType($compositeType);
+        }
     }
 
     /**

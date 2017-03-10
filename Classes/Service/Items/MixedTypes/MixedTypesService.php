@@ -82,7 +82,15 @@ class MixedTypesService extends AbstractService
         return true === array_key_exists(MixedTypesInterface::class, class_implements($className));
     }
 
-    public function checkMixedTypeAnnotationForProperty($targetType, $propertyName)
+    /**
+     * @param string $targetType
+     * @param string $propertyName
+     * @param string $isComposite
+     * @return null|string
+     * @throws ClassNotFoundException
+     * @throws InvalidOptionValueException
+     */
+    public function checkMixedTypeAnnotationForProperty($targetType, $propertyName, $isComposite)
     {
         $result = null;
 
@@ -113,7 +121,11 @@ class MixedTypesService extends AbstractService
                         );
                     }
 
-                    $result = $className . '[]';
+                    $result = $className;
+
+                    if (true === $isComposite) {
+                        $result .= '[]';
+                    }
                 }
             }
         }
