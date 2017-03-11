@@ -15,7 +15,6 @@ namespace Romm\ConfigurationObject;
 
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Core\Service\ReflectionService;
-use Romm\ConfigurationObject\Exceptions\ClassNotFoundException;
 use Romm\ConfigurationObject\Service\DataTransferObject\ConfigurationObjectConversionDTO;
 use Romm\ConfigurationObject\Service\DataTransferObject\GetTypeConverterDTO;
 use Romm\ConfigurationObject\Service\Event\ObjectConversionAfterServiceEventInterface;
@@ -27,7 +26,6 @@ use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Service\ServiceInterface;
 use Romm\ConfigurationObject\TypeConverter\ArrayConverter;
 use Romm\ConfigurationObject\TypeConverter\ConfigurationObjectConverter;
-use Romm\Formz\Exceptions\InvalidOptionValueException;
 use TYPO3\CMS\Extbase\Error\Error;
 use TYPO3\CMS\Extbase\Property\Exception\TypeConverterException;
 use TYPO3\CMS\Extbase\Property\PropertyMapper;
