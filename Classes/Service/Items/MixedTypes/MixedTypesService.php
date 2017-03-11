@@ -98,15 +98,15 @@ class MixedTypesService extends AbstractService
             $classReflection = ReflectionService::get()->getClassReflection($targetType);
             $propertyReflection = $classReflection->getProperty($propertyName);
 
-            if ($propertyReflection->isTaggedWith(MixedTypesService::PROPERTY_ANNOTATION_MIXED_TYPE)) {
-                $tag = $propertyReflection->getTagValues(MixedTypesService::PROPERTY_ANNOTATION_MIXED_TYPE);
+            if ($propertyReflection->isTaggedWith(self::PROPERTY_ANNOTATION_MIXED_TYPE)) {
+                $tag = $propertyReflection->getTagValues(self::PROPERTY_ANNOTATION_MIXED_TYPE);
                 $className = trim(end($tag));
 
                 if (false === Core::get()->classExists($className)) {
                     throw new ClassNotFoundException(
                         vsprintf(
                             'Class "%s" given as value for the tag "@%s" of the class property "%s::$%s" was not found.',
-                            [$className, MixedTypesService::PROPERTY_ANNOTATION_MIXED_TYPE, $targetType, $propertyName]
+                            [$className, self::PROPERTY_ANNOTATION_MIXED_TYPE, $targetType, $propertyName]
                         ),
                         1489155862
                     );
@@ -115,7 +115,7 @@ class MixedTypesService extends AbstractService
                         throw new InvalidOptionValueException(
                             vsprintf(
                                 'Class "%s" given as value for the tag "@%s" of the class property "%s::$%s" must implement the interface "%s".',
-                                [$className, MixedTypesService::PROPERTY_ANNOTATION_MIXED_TYPE, $targetType, $propertyName, MixedTypesInterface::class]
+                                [$className, self::PROPERTY_ANNOTATION_MIXED_TYPE, $targetType, $propertyName, MixedTypesInterface::class]
                             ),
                             1489156005
                         );
