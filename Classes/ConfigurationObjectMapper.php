@@ -14,6 +14,7 @@
 namespace Romm\ConfigurationObject;
 
 use Romm\ConfigurationObject\Core\Core;
+use Romm\ConfigurationObject\Core\Service\ReflectionService;
 use Romm\ConfigurationObject\Service\DataTransferObject\ConfigurationObjectConversionDTO;
 use Romm\ConfigurationObject\Service\DataTransferObject\GetTypeConverterDTO;
 use Romm\ConfigurationObject\Service\Event\ObjectConversionAfterServiceEventInterface;
@@ -32,7 +33,7 @@ use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ArrayConverter as ExtbaseArrayConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ObjectConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverterInterface;
-use TYPO3\CMS\Extbase\Reflection\ReflectionService;
+use TYPO3\CMS\Extbase\Reflection\PropertyReflection;
 
 /**
  * Custom mapper used for configuration objects.
@@ -46,12 +47,6 @@ use TYPO3\CMS\Extbase\Reflection\ReflectionService;
  */
 class ConfigurationObjectMapper extends PropertyMapper
 {
-
-    /**
-     * @var ReflectionService
-     */
-    protected $reflectionService;
-
     /**
      * Contains the initial called target type.
      *
@@ -166,18 +161,19 @@ class ConfigurationObjectMapper extends PropertyMapper
     protected function convertChildProperties(array $source, $targetType, TypeConverterInterface $typeConverter, PropertyMappingConfigurationInterface $configuration, array &$currentPropertyPath)
     {
         $convertedChildProperties = [];
+        $properties = $source;
 
         // If the target is a class, we get its properties, else we assume the source should be converted.
-        $properties = $this->getProperties($targetType);
-
-        if (null === $properties) {
-            $properties = $source;
+        if (Core::get()->classExists($targetType)) {
+            $properties = $this->getProperties($targetType);
         }
 
         foreach ($source as $propertyName => $propertyValue) {
             if (array_key_exists($propertyName, $properties)) {
-                $targetPropertyType = $typeConverter->getTypeOfChildProperty($targetType, $propertyName, $configuration);
                 $currentPropertyPath[] = $propertyName;
+                $targetPropertyType = $typeConverter->getTypeOfChildProperty($targetType, $propertyName, $configuration);
+                $targetPropertyTypeBis = $this->checkMixedTypeAnnotationForProperty($targetType, $propertyName, $targetPropertyType);
+                $targetPropertyType = $targetPropertyTypeBis ?: $targetPropertyType;
 
                 $targetPropertyValue = (null !== $targetPropertyType)
                     ? $this->doMapping($propertyValue, $targetPropertyType, $configuration, $currentPropertyPath)
@@ -192,6 +188,60 @@ class ConfigurationObjectMapper extends PropertyMapper
         }
 
         return $convertedChildProperties;
+    }
+
+    /**
+     * @param string $targetType
+     * @param string $propertyName
+     * @param string $propertyType
+     * @return null|string
+     */
+    protected function checkMixedTypeAnnotationForProperty($targetType, $propertyName, $propertyType)
+    {
+        $result = null;
+
+        if ($this->serviceFactory->has(ServiceInterface::SERVICE_MIXED_TYPES)) {
+            /** @var MixedTypesService $mixedTypesService */
+            $mixedTypesService = $this->serviceFactory->get(ServiceInterface::SERVICE_MIXED_TYPES);
+
+            // Is the property composite?
+            $isComposite = $this->parseCompositeType($propertyType) !== $propertyType;
+
+            $result = $mixedTypesService->checkMixedTypeAnnotationForProperty($targetType, $propertyName, $isComposite);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Will check if the target type class inherits of `MixedTypeInterface`. If
+     * so, it means the real type of the target must be fetched through the
+     * function `getInstanceClassName()`.
+     *
+     * @param mixed $source
+     * @param mixed $targetType
+     * @param array $currentPropertyPath
+     * @return ConfigurationObjectInterface
+     */
+    protected function handleMixedType($source, $targetType, $currentPropertyPath)
+    {
+        if ($this->serviceFactory->has(ServiceInterface::SERVICE_MIXED_TYPES)) {
+            /** @var MixedTypesService $mixedTypesService */
+            $mixedTypesService = $this->serviceFactory->get(ServiceInterface::SERVICE_MIXED_TYPES);
+
+            if ($mixedTypesService->classIsMixedTypeResolver($targetType)) {
+                $resolver = $mixedTypesService->getMixedTypesResolver($source, $targetType);
+                $targetType = $resolver->getObjectType();
+                $resolverResult = $resolver->getResult();
+
+                if ($resolverResult->hasErrors()) {
+                    $targetType = MixedTypesResolver::OBJECT_TYPE_NONE;
+                    $this->messages->forProperty(implode('.', $currentPropertyPath))->merge($resolverResult);
+                }
+            }
+        }
+
+        return $targetType;
     }
 
     /**
@@ -222,35 +272,6 @@ class ConfigurationObjectMapper extends PropertyMapper
     }
 
     /**
-     * Will check if the target type class inherits of `MixedTypeInterface`. If
-     * so, it means the real type of the target must be fetched through the
-     * function `getInstanceClassName()`.
-     *
-     * @param mixed $source
-     * @param mixed $targetType
-     * @param array $currentPropertyPath
-     * @return ConfigurationObjectInterface
-     */
-    protected function handleMixedType($source, $targetType, $currentPropertyPath)
-    {
-        if ($this->serviceFactory->has(ServiceInterface::SERVICE_MIXED_TYPES)) {
-            /** @var MixedTypesService $mixedTypesService */
-            $mixedTypesService = $this->serviceFactory->get(ServiceInterface::SERVICE_MIXED_TYPES);
-
-            $resolver = $mixedTypesService->getMixedTypesResolver($source, $targetType);
-            $targetType = $resolver->getObjectType();
-            $resolverResult = $resolver->getResult();
-
-            if ($resolverResult->hasErrors()) {
-                $targetType = MixedTypesResolver::OBJECT_TYPE_NONE;
-                $this->messages->forProperty(implode('.', $currentPropertyPath))->merge($resolverResult);
-            }
-        }
-
-        return $targetType;
-    }
-
-    /**
      * This function will fetch the type converter which will convert the source
      * to the requested target type.
      *
@@ -262,26 +283,14 @@ class ConfigurationObjectMapper extends PropertyMapper
      */
     protected function getTypeConverter($source, $targetType, $configuration)
     {
-        $typeConverter = null;
+        $compositeType = $this->parseCompositeType($targetType);
 
-        /**
-         * @see \Romm\ConfigurationObject\Reflection\ReflectionService
-         */
-        if ('[]' === substr($targetType, -2)) {
-            $className = substr($targetType, 0, -2);
-
-            if (Core::get()->classExists($className)) {
-                $typeConverter = $this->objectManager->get(ArrayConverter::class);
-            }
-        }
-
-        if (!$typeConverter) {
+        if (in_array($compositeType, ['\\ArrayObject', 'array'])) {
+            $typeConverter = $this->objectManager->get(ArrayConverter::class);
+        } else {
             $typeConverter = $this->findTypeConverter($source, $targetType, $configuration);
 
-            if ($typeConverter instanceof ExtbaseArrayConverter
-                || $this->parseCompositeType($targetType) === '\\ArrayObject'
-                || $this->parseCompositeType($targetType) === 'array'
-            ) {
+            if ($typeConverter instanceof ExtbaseArrayConverter) {
                 $typeConverter = $this->objectManager->get(ArrayConverter::class);
             } elseif ($typeConverter instanceof ObjectConverter) {
                 $typeConverter = $this->getObjectConverter();
@@ -296,21 +305,35 @@ class ConfigurationObjectMapper extends PropertyMapper
     }
 
     /**
-     * Internal function which fetches the properties of a class, and stores
-     * them in a local cache to improve performances.
+     * @param string $compositeType
+     * @return string
+     */
+    public function parseCompositeType($compositeType)
+    {
+        if ('[]' === substr($compositeType, -2)) {
+            return '\\ArrayObject';
+        } else {
+            return parent::parseCompositeType($compositeType);
+        }
+    }
+
+    /**
+     * Internal function that fetches the properties of a class.
      *
-     * @param mixed $targetType
-     * @return array|null
+     * @param $targetType
+     * @return array
      */
     protected function getProperties($targetType)
     {
-        if (false === isset($this->typeProperties[$targetType])) {
-            $this->typeProperties[$targetType] = (Core::get()->classExists($targetType)) ?
-                $this->reflectionService->getClassSchema($targetType)->getProperties() :
-                null;
-        }
+        $properties = ReflectionService::get()->getClassReflection($targetType)->getProperties();
+        $propertiesKeys = array_map(
+            function (PropertyReflection $propertyReflection) {
+                return $propertyReflection->getName();
+            },
+            $properties
+        );
 
-        return $this->typeProperties[$targetType];
+        return array_combine($propertiesKeys, $properties);
     }
 
     /**
@@ -319,13 +342,5 @@ class ConfigurationObjectMapper extends PropertyMapper
     protected function getObjectConverter()
     {
         return $this->objectManager->get(ConfigurationObjectConverter::class);
-    }
-
-    /**
-     * @param ReflectionService $reflectionService
-     */
-    public function injectReflectionService(ReflectionService $reflectionService)
-    {
-        $this->reflectionService = $reflectionService;
     }
 }
