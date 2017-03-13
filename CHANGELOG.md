@@ -1,5 +1,26 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.6.0 - 2017-03-13
+------------------
+
+Two new features are introduced:
+
+ - **[[#17](https://github.com/romm/configuration_object/pull/17)] [FEATURE] Introduce support for common array object annotation**
+
+   Previously, when a property would be filled by an array of object, only two annotations were supported:
+   
+   `\ArrayObject<\Some\Class>` and `array<\Some\Class>`
+   
+   They are not user-friendly, and most of the time the array is a basic array (not an `ObjectStorage` for instance). The common annotation for this would be:
+   
+   `\Some\Class[]` - which provides better IDE auto-completion, and has better readability.
+   
+   This commit introduces support for this annotation, enjoy!
+   
+ - **[[#19](https://github.com/romm/configuration_object/pull/19)] [FEATURE] Introduce `@mixedTypesResolver` tag annotation**
+ 
+   This tag can be given to properties that need a mixed type resolver to detect their dynamic types. This allows the `@var` tag to be filled with the real type(s) of the values, making the getter/setter methods annotations coherent.
+
 1.5.2 - 2017-03-09
 ------------------
 
@@ -7,9 +28,9 @@ An issue concerning early cache registration has been solved.
 
  - **[[#15](https://github.com/romm/configuration_object/pull/15)] [BUGFIX] Allow request to register internal cache very early**
  
- This commit fixes an issue, where a configuration object was constructed very early in TYPO3 request dispatch, for instance in TCA definition. The cache was not registered yet, and that would lead to an exception being thrown.
+   This commit fixes an issue, where a configuration object was constructed very early in TYPO3 request dispatch, for instance in TCA definition. The cache was not registered yet, and that would lead to an exception being thrown.
  
- The cache is now registered any time it is accessed.
+   The cache is now registered any time it is accessed.
 
 1.5.1 - 2017-03-02
 ------------------

@@ -91,7 +91,7 @@ Let's see what our previous example would look like with a configuration object:
         protected $name;
 
         /**
-         * @var \ArrayObject<MyVendor\MyExtensions\Model\Company\Employee>
+         * @var \MyVendor\MyExtensions\Model\Company\Employee[]
          */
         protected $employees;
     }

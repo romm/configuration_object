@@ -13,10 +13,9 @@
 
 namespace Romm\ConfigurationObject\Traits\ConfigurationObject;
 
+use Romm\ConfigurationObject\Core\Service\ReflectionService;
 use Romm\ConfigurationObject\Exceptions\MethodNotFoundException;
 use Romm\ConfigurationObject\Exceptions\PropertyNotAccessibleException;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Reflection\ClassReflection;
 
 /**
  * This trait will implement magic setters and getters for accessible properties
@@ -29,14 +28,6 @@ use TYPO3\CMS\Extbase\Reflection\ClassReflection;
  */
 trait MagicMethodsTrait
 {
-
-    /**
-     * Contains the list of the accessible properties for the instances of this
-     * class.
-     *
-     * @var array
-     */
-    private static $_accessibleProperties = [];
 
     /**
      * See class description.
@@ -135,24 +126,15 @@ trait MagicMethodsTrait
      */
     private function isPropertyAccessible($propertyName)
     {
+        $result = false;
         $className = get_class($this);
+        $reflectionService = ReflectionService::get();
 
-        if (false === isset(self::$_accessibleProperties[$className])) {
-            self::$_accessibleProperties[$className] = [];
-
-            /** @var ClassReflection $classReflection */
-            $classReflection = GeneralUtility::makeInstance(ClassReflection::class, $this);
-            $properties = $classReflection->getProperties(\ReflectionProperty::IS_PUBLIC | \ReflectionProperty::IS_PROTECTED);
-
-            foreach ($properties as $property) {
-                if (false === $property->isTaggedWith('disableMagicMethods')) {
-                    self::$_accessibleProperties[$className][$property->getName()] = true;
-                }
-            }
-
-            unset($classReflection);
+        if ($reflectionService->isClassPropertyAccessible($className, $propertyName)) {
+            $property = $reflectionService->getClassAccessibleProperty($className, $propertyName);
+            $result = false === $property->isTaggedWith('disableMagicMethods');
         }
 
-        return isset(self::$_accessibleProperties[$className][$propertyName]);
+        return $result;
     }
 }
