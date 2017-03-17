@@ -37,7 +37,7 @@ interface DataPreProcessorInterface
      *
      * You may return whatever new data you want.
      *
-     * @param DataPreProcessor $processor Processor used to handle the data, add possibly add errors.
+     * @param DataPreProcessor $processor Processor used to handle data, and possibly add errors.
      */
     public static function dataPreProcessor(DataPreProcessor $processor);
 }
