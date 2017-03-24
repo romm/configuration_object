@@ -133,7 +133,7 @@ class ConfigurationObjectInstance
     public function refreshValidationResult()
     {
         $validator = Core::get()->getValidatorResolver()
-            ->getBaseValidatorConjunctionWithMixedTypesCheck(get_class($this->object));
+            ->getBaseValidatorConjunction(get_class($this->object));
 
         $this->validationResult = $validator->validate($this->object);
         $this->validationResult->merge($this->mapperResult);
