@@ -1,5 +1,12 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.6.1 - 2017-03-29
+------------------
+
+A bug has been fixed:
+
+ - **[[47f8441](https://github.com/romm/configuration_object/commit/47f8441d98612ef2ac0158f6eaa4b71bd55a4c62)] [BUGFIX] Check for interfaces in class check**
+
 1.6.0 - 2017-03-13
 ------------------
 
