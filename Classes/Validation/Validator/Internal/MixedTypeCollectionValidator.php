@@ -30,7 +30,7 @@ class MixedTypeCollectionValidator extends CollectionValidator
     {
         foreach ($value as $index => $collectionElement) {
             $collectionElementValidator = Core::get()->getValidatorResolver()
-                ->getBaseValidatorConjunctionWithMixedTypesCheck(get_class($collectionElement));
+                ->getBaseValidatorConjunction(get_class($collectionElement));
 
             $this->result->forProperty($index)->merge($collectionElementValidator->validate($collectionElement));
 

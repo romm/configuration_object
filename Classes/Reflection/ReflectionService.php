@@ -24,6 +24,34 @@ use Romm\ConfigurationObject\Core\Core;
 class ReflectionService extends \TYPO3\CMS\Extbase\Reflection\ReflectionService
 {
     /**
+     * @inheritdoc
+     */
+    public function getPropertyTagsValues($className, $propertyName)
+    {
+        $result = parent::getPropertyTagsValues($className, $propertyName);
+
+        if (isset($result['var'])) {
+            $result['var'] = $this->handleArrayAnnotation($result['var']);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPropertyTagValues($className, $propertyName, $tag)
+    {
+        $result = parent::getPropertyTagValues($className, $propertyName, $tag);
+
+        if ($tag === 'var') {
+            $result = $this->handleArrayAnnotation($result);
+        }
+
+        return $result;
+    }
+
+    /**
      * Will transform the annotation:
      * `\Some\Class[]` -> `\ArrayObject<\Some\Class>
      *
@@ -46,33 +74,5 @@ class ReflectionService extends \TYPO3\CMS\Extbase\Reflection\ReflectionService
         }
 
         return $varTags;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getPropertyTagsValues($className, $propertyName)
-    {
-        $result = parent::getPropertyTagsValues($className, $propertyName);
-
-        if (isset($result['var'])) {
-            $result['var'] = $this->handleArrayAnnotation($result['var']);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getPropertyTagValues($className, $propertyName, $tag)
-    {
-        $result = parent::getPropertyTagValues($className, $propertyName, $tag);
-
-        if (isset($result['var'])) {
-            $result['var'] = $this->handleArrayAnnotation($result['var']);
-        }
-
-        return $result;
     }
 }

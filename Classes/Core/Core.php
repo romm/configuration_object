@@ -107,7 +107,7 @@ class Core implements SingletonInterface
     public function classExists($className)
     {
         if (false === isset($this->existingClassList[$className])) {
-            $this->existingClassList[$className] = class_exists($className);
+            $this->existingClassList[$className] = class_exists($className) || interface_exists($className);
         }
 
         return $this->existingClassList[$className];

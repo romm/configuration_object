@@ -110,8 +110,8 @@ class ConfigurationObjectMapper extends PropertyMapper
         $targetType = ltrim($typeConverter->getTargetTypeForSource($source, $targetType), '\\');
 
         if (Core::get()->classExists($targetType)) {
-            $source = $this->handleDataPreProcessor($source, $targetType, $currentPropertyPath);
             $targetType = $this->handleMixedType($source, $targetType, $currentPropertyPath);
+            $source = $this->handleDataPreProcessor($source, $targetType, $currentPropertyPath);
 
             if (MixedTypesResolver::OBJECT_TYPE_NONE === $targetType) {
                 return null;

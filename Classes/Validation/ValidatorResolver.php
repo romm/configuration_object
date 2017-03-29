@@ -15,12 +15,9 @@ namespace Romm\ConfigurationObject\Validation;
 
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Reflection\ReflectionService;
-use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesInterface;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeCollectionValidator;
-use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeObjectValidator;
 use TYPO3\CMS\Extbase\Reflection\ReflectionService as ExtbaseReflectionService;
 use TYPO3\CMS\Extbase\Validation\Validator\CollectionValidator;
-use TYPO3\CMS\Extbase\Validation\Validator\ConjunctionValidator;
 
 /**
  * Customized validator resolver, which it mostly used to support the mixed
@@ -43,49 +40,9 @@ class ValidatorResolver extends \TYPO3\CMS\Extbase\Validation\ValidatorResolver
      */
     public function createValidator($validatorType, array $validatorOptions = [])
     {
-        if (CollectionValidator::class === $validatorType) {
-            $result = parent::createValidator(MixedTypeCollectionValidator::class);
-        } else {
-            $result = parent::createValidator($validatorType, $validatorOptions);
-        }
-
-        return $result;
-    }
-
-    /**
-     * If the given class implements the interface `MixedTypesInterface`, a
-     * custom conjunction validator is used instead of the default one (from the
-     * parent class).
-     *
-     * @param string $targetClassName
-     * @return ConjunctionValidator
-     */
-    public function getBaseValidatorConjunctionWithMixedTypesCheck($targetClassName)
-    {
-        if (false === array_key_exists($targetClassName, $this->baseValidatorConjunctionsWithChecks)) {
-            $this->baseValidatorConjunctionsWithChecks[$targetClassName] = $this->buildBaseValidatorConjunctionWithMixedTypesCheck($targetClassName);
-        }
-
-        return $this->baseValidatorConjunctionsWithChecks[$targetClassName];
-    }
-
-    /**
-     * @param string $targetClassName
-     * @return ConjunctionValidator
-     */
-    protected function buildBaseValidatorConjunctionWithMixedTypesCheck($targetClassName)
-    {
-        $interfaces = class_implements($targetClassName);
-
-        if (true === isset($interfaces[MixedTypesInterface::class])) {
-            $conjunctionValidator = new ConjunctionValidator();
-            $newValidator = new MixedTypeObjectValidator();
-            $conjunctionValidator->addValidator($newValidator);
-        } else {
-            $conjunctionValidator = $this->getBaseValidatorConjunction($targetClassName);
-        }
-
-        return $conjunctionValidator;
+        return (CollectionValidator::class === $validatorType)
+            ? parent::createValidator(MixedTypeCollectionValidator::class)
+            : parent::createValidator($validatorType, $validatorOptions);
     }
 
     /**
