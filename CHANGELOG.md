@@ -1,5 +1,10 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.7.0 - 2017-04-06
+------------------
+
+TYPO3 8.7 LTS is now officially supported!
+
 1.6.1 - 2017-03-29
 ------------------
 
