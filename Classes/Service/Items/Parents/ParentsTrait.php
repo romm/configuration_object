@@ -13,7 +13,6 @@
 
 namespace Romm\ConfigurationObject\Service\Items\Parents;
 
-use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Exceptions\DuplicateEntryException;
 use Romm\ConfigurationObject\Exceptions\EntryNotFoundException;
 use Romm\ConfigurationObject\Exceptions\InvalidTypeException;
@@ -103,39 +102,17 @@ trait ParentsTrait
     }
 
     /**
-     * Will fetch the first parent which matches the given class name.
+     * Will loop along each parent of this object, and every parent of the
+     * parents: the given callback is called with a single parameter which is
+     * the current parent.
      *
-     * If a parent is found, then `$callback` is called, and its returned value
-     * is returned by this function.
+     * When the callback returns `false`, the loop breaks.
      *
-     * If no parent is found, then `$notFoundCallBack` is called if it was
-     * defined.
-     *
-     * @param string   $parentClassName  Name of the class name of the wanted parent.
-     * @param callable $callBack         A closure which will be called if the parent is found.
-     * @param callable $notFoundCallBack A closure which is called if the parent is not found.
-     * @return mixed|null
+     * @param callable $callback
      */
-    public function withFirstParent($parentClassName, callable $callBack, callable $notFoundCallBack = null)
+    public function alongParents(callable $callback)
     {
-        // We first check if the registered parents do match the wanted parent.
-        foreach ($this->_parents as $parent) {
-            if ($parent instanceof $parentClassName) {
-                return $callBack($parent);
-            }
-        }
-
-        // Then, we check each parent's parents.
-        foreach ($this->_parents as $parent) {
-            if (Core::get()->getParentsUtility()->classUsesParentsTrait($parent)) {
-                /** @var ParentsTrait $parent */
-                return $parent->withFirstParent($parentClassName, $callBack, $notFoundCallBack);
-            }
-        }
-
-        return (null !== $notFoundCallBack)
-            ? $notFoundCallBack()
-            : null;
+        ParentsRecursiveService::get()->alongParents($callback, $this, $this->_parents);
     }
 
     /**
@@ -146,13 +123,47 @@ trait ParentsTrait
      */
     public function hasParent($parentClassName)
     {
-        foreach ($this->_parents as $parent) {
+        $found = false;
+
+        $this->alongParents(function ($parent) use ($parentClassName, &$found) {
             if ($parent instanceof $parentClassName) {
-                return true;
+                $found = true;
+
+                return false;
             }
+
+            return true;
+        });
+
+        return $found;
+    }
+
+    /**
+     * Will fetch the first parent which matches the given class name.
+     *
+     * If a parent is found, then `$callback` is called, and its returned value
+     * is returned by this function.
+     *
+     * If no parent is found, then `$notFoundCallBack` is called if it was
+     * defined.
+     *
+     * @param string   $parentClassName  Name of the class name of the wanted parent.
+     * @param callable $callback         A closure which will be called if the parent is found.
+     * @param callable $notFoundCallback A closure which is called if the parent is not found.
+     * @return mixed|null
+     */
+    public function withFirstParent($parentClassName, callable $callback, callable $notFoundCallback = null)
+    {
+        $result = null;
+
+        if ($this->hasParent($parentClassName)) {
+            $parent = $this->getFirstParent($parentClassName);
+            $result = call_user_func($callback, $parent);
+        } elseif (null !== $notFoundCallback) {
+            $result = call_user_func($notFoundCallback);
         }
 
-        return false;
+        return $result;
     }
 
     /**
@@ -167,15 +178,25 @@ trait ParentsTrait
      */
     public function getFirstParent($parentClassName)
     {
-        foreach ($this->_parents as $parent) {
+        $foundParent = null;
+
+        $this->alongParents(function ($parent) use ($parentClassName, &$foundParent) {
             if ($parent instanceof $parentClassName) {
-                return $parent;
+                $foundParent = $parent;
+
+                return false;
             }
+
+            return true;
+        });
+
+        if (null === $foundParent) {
+            throw new EntryNotFoundException(
+                'The parent "' . $parentClassName . '" was not found in this object (class "' . get_class($this) . '"). Use the function "hasParent()" before your call to this function!',
+                1471379635
+            );
         }
 
-        throw new EntryNotFoundException(
-            'The parent "' . $parentClassName . '" was not found in this object (class "' . get_class($this) . '"). Use the function "hasParent()" before your call to this function!',
-            1471379635
-        );
+        return $foundParent;
     }
 }
