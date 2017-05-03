@@ -165,10 +165,8 @@ class ParentsService extends AbstractService implements ObjectConversionAfterSer
             if (is_object($propertyValue)
                 && Core::get()->getParentsUtility()->classUsesParentsTrait($propertyValue)
             ) {
-                $parents = $this->filterParents($parents);
-
                 /** @var ParentsTrait $propertyValue */
-                $propertyValue->setParents($parents);
+                $propertyValue->attachParents($this->filterParents($parents));
             }
         } else {
             if (is_object($propertyValue)) {

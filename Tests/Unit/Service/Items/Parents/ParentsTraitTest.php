@@ -1,7 +1,9 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\Service\Items\Parents;
 
+use Romm\ConfigurationObject\Exceptions\DuplicateEntryException;
 use Romm\ConfigurationObject\Exceptions\EntryNotFoundException;
+use Romm\ConfigurationObject\Exceptions\InvalidTypeException;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithParentsTrait;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyInterface;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
@@ -21,10 +23,79 @@ class ParentsTraitTest extends AbstractUnitTest
 
         $this->assertTrue($object->hasParent(\stdClass::class));
         $this->assertFalse($object->hasParent(self::class));
-        $this->assertEquals(
-            spl_object_hash($object->getFirstParent(\stdClass::class)),
-            spl_object_hash($stdClass)
-        );
+        $this->assertSame($stdClass, $object->getFirstParent(\stdClass::class));
+    }
+
+    /**
+     * @test
+     */
+    public function attachParentAttachesParent()
+    {
+        $object = new DummyConfigurationObjectWithParentsTrait();
+        $stdClass = new \stdClass();
+
+        $object->attachParent($stdClass);
+        $this->assertTrue($object->hasParent(\stdClass::class));
+        $this->assertSame($stdClass, $object->getFirstParent(\stdClass::class));
+    }
+
+    /**
+     * @test
+     */
+    public function attachNonObjectThrowsException()
+    {
+        $this->setExpectedException(InvalidTypeException::class);
+
+        $object = new DummyConfigurationObjectWithParentsTrait();
+        /** @noinspection PhpParamsInspection */
+        $object->attachParent('foo');
+    }
+
+    /**
+     * @test
+     */
+    public function attachExistingParentThrowsException()
+    {
+        $this->setExpectedException(DuplicateEntryException::class);
+
+        $object = new DummyConfigurationObjectWithParentsTrait();
+        $stdClass = new \stdClass();
+
+        $object->attachParent($stdClass);
+        $object->attachParent($stdClass);
+    }
+
+    /**
+     * @test
+     */
+    public function attachParentWithSameClassDoesNotThrowException()
+    {
+        $object = new DummyConfigurationObjectWithParentsTrait();
+        $stdClass = new \stdClass();
+        $stdClass2 = new \stdClass();
+
+        $object->attachParent($stdClass);
+        $object->attachParent($stdClass2);
+    }
+
+    /**
+     * @test
+     */
+    public function attachParentsAttachesParents()
+    {
+        /** @var DummyConfigurationObjectWithParentsTrait|\PHPUnit_Framework_MockObject_MockObject $object */
+        $object = $this->getMockBuilder(DummyConfigurationObjectWithParentsTrait::class)
+            ->setMethods(['attachParent'])
+            ->getMock();
+
+        $foo = $this->prophesize('FooClass')->reveal();
+        $bar = $this->prophesize('BarClass')->reveal();
+
+        $object->expects($this->exactly(2))
+            ->method('attachParent')
+            ->withConsecutive([$foo, false], [$bar, false]);
+
+        $object->attachParents([$foo, $bar]);
     }
 
     /**
@@ -35,7 +106,7 @@ class ParentsTraitTest extends AbstractUnitTest
         $object = new DummyConfigurationObjectWithParentsTrait();
         $stdClass = new \stdClass();
 
-        $object->setParents([$stdClass]);
+        $object->attachParent($stdClass);
         $foo = 'foo';
 
         // The parent should be found, so the value of `$foo` should change.
@@ -92,7 +163,7 @@ class ParentsTraitTest extends AbstractUnitTest
         $dummy = $this->prophesize()->willImplement(DummyInterface::class)->reveal();
 
         $object = new DummyConfigurationObjectWithParentsTrait();
-        $object->setParents([$dummy]);
+        $object->attachParent($dummy);
 
         $this->assertSame($dummy, $object->getFirstParent(DummyInterface::class));
     }

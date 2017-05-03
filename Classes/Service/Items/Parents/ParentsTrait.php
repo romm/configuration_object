@@ -14,7 +14,9 @@
 namespace Romm\ConfigurationObject\Service\Items\Parents;
 
 use Romm\ConfigurationObject\Core\Core;
+use Romm\ConfigurationObject\Exceptions\DuplicateEntryException;
 use Romm\ConfigurationObject\Exceptions\EntryNotFoundException;
+use Romm\ConfigurationObject\Exceptions\InvalidTypeException;
 
 /**
  * Use this trait in your configuration objects (it will work only if they do
@@ -39,6 +41,59 @@ trait ParentsTrait
     public function setParents(array $parents)
     {
         $this->_parents = $parents;
+    }
+
+    /**
+     * @param object $parent
+     * @param bool   $direct If true, the parent will be added as the direct (closest) parent of this object.
+     * @return $this
+     * @throws DuplicateEntryException
+     * @throws InvalidTypeException
+     */
+    public function attachParent($parent, $direct = true)
+    {
+        if (false === is_object($parent)) {
+            throw new InvalidTypeException(
+                'The parent must be an object, "' . gettype($parent) . '" was given.',
+                1493804124
+            );
+        }
+
+        foreach ($this->_parents as $parentItem) {
+            if ($parent === $parentItem) {
+                throw new DuplicateEntryException(
+                    'The given parent (' . get_class($parent) . ') was already attached to this object (' . get_class($this) . ').',
+                    1493804518
+                );
+            }
+        }
+
+        if (true === $direct) {
+            array_unshift($this->_parents, $parent);
+        } else {
+            array_push($this->_parents, $parent);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Loops on each given parent and attach it to this object.
+     *
+     * The order matters: the first item will be added as a direct parent
+     * whereas the last one will be the remote parent.
+     *
+     * Note that this function will also reset
+     *
+     * @param object[] $parents
+     */
+    public function attachParents(array $parents)
+    {
+        $this->_parents = [];
+
+        foreach ($parents as $parent) {
+            $this->attachParent($parent, false);
+        }
     }
 
     /**
@@ -95,11 +150,10 @@ trait ParentsTrait
     }
 
     /**
-     * Returns the first found instance of the desired parent. Returns null if
-     * the parent was not found.
+     * Returns the first found instance of the desired parent.
      *
-     * It is advised to use the function `hasParent()` before using this
-     * function.
+     * An exception is thrown if the parent is not found. It is advised to use
+     * the function `hasParent()` before using this function.
      *
      * @param string $parentClassName Name of the parent class.
      * @return object
