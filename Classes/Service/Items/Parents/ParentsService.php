@@ -103,7 +103,7 @@ class ParentsService extends AbstractService implements ObjectConversionAfterSer
             $path .= $pathSuffix;
 
             if (true === Core::get()->getParentsUtility()->classUsesParentsTrait($property)) {
-                $this->objectsWithParentsPaths[$path] = $path;
+                $this->objectsWithParentsPaths[] = $path;
             }
         }
     }
