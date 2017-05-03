@@ -152,9 +152,9 @@ class ParentsService extends AbstractService implements ObjectConversionAfterSer
     /**
      * Internal function to fill the parents.
      *
-     * @param mixed $entity
-     * @param array $path
-     * @param array $parents
+     * @param mixed    $entity
+     * @param array    $path
+     * @param object[] $parents
      */
     protected function insertParents($entity, array $path, array $parents)
     {
@@ -165,6 +165,8 @@ class ParentsService extends AbstractService implements ObjectConversionAfterSer
             if (is_object($propertyValue)
                 && Core::get()->getParentsUtility()->classUsesParentsTrait($propertyValue)
             ) {
+                $parents = $this->filterParents($parents);
+
                 /** @var ParentsTrait $propertyValue */
                 $propertyValue->setParents($parents);
             }
@@ -176,5 +178,39 @@ class ParentsService extends AbstractService implements ObjectConversionAfterSer
             array_shift($path);
             $this->insertParents($propertyValue, $path, $parents);
         }
+    }
+
+    /**
+     * This function will filter a given array of objects, by removing
+     * unnecessary parents that use `ParentsTrait` and are followed by another
+     * parent that does the same: there is no need to have the full list of
+     * chained parents
+     *
+     * @param object[] $parents
+     * @return object[]
+     */
+    protected function filterParents(array $parents)
+    {
+        $filteredParents = [];
+        $lastParentWithTrait = null;
+
+        foreach ($parents as $parent) {
+            if (Core::get()->getParentsUtility()->classUsesParentsTrait($parent)) {
+                $lastParentWithTrait = $parent;
+            } else {
+                if (null !== $lastParentWithTrait) {
+                    $filteredParents[] = $lastParentWithTrait;
+                    $lastParentWithTrait = null;
+                }
+
+                $filteredParents[] = $parent;
+            }
+        }
+
+        if (null !== $lastParentWithTrait) {
+            $filteredParents[] = $lastParentWithTrait;
+        }
+
+        return $filteredParents;
     }
 }
