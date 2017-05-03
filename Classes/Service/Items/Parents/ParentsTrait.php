@@ -13,8 +13,10 @@
 
 namespace Romm\ConfigurationObject\Service\Items\Parents;
 
-use Romm\ConfigurationObject\Core\Core;
+use Romm\ConfigurationObject\Exceptions\DuplicateEntryException;
 use Romm\ConfigurationObject\Exceptions\EntryNotFoundException;
+use Romm\ConfigurationObject\Exceptions\InvalidTypeException;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Use this trait in your configuration objects (it will work only if they do
@@ -35,10 +37,105 @@ trait ParentsTrait
 
     /**
      * @param object[] $parents
+     *
+     * @deprecated This function is deprecated and will be removed in v2!
+     *             Use function `addParents()` instead.
      */
     public function setParents(array $parents)
     {
+        GeneralUtility::logDeprecatedFunction();
+
         $this->_parents = $parents;
+    }
+
+    /**
+     * @param object $parent
+     * @param bool   $direct If true, the parent will be added as the direct (closest) parent of this object.
+     * @return $this
+     * @throws DuplicateEntryException
+     * @throws InvalidTypeException
+     */
+    public function attachParent($parent, $direct = true)
+    {
+        if (false === is_object($parent)) {
+            throw new InvalidTypeException(
+                'The parent must be an object, "' . gettype($parent) . '" was given.',
+                1493804124
+            );
+        }
+
+        foreach ($this->_parents as $parentItem) {
+            if ($parent === $parentItem) {
+                throw new DuplicateEntryException(
+                    'The given parent (' . get_class($parent) . ') was already attached to this object (' . get_class($this) . ').',
+                    1493804518
+                );
+            }
+        }
+
+        if (true === $direct) {
+            array_unshift($this->_parents, $parent);
+        } else {
+            array_push($this->_parents, $parent);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Loops on each given parent and attach it to this object.
+     *
+     * The order matters: the first item will be added as a direct parent
+     * whereas the last one will be the remote parent.
+     *
+     * Note that this function will also reset
+     *
+     * @param object[] $parents
+     */
+    public function attachParents(array $parents)
+    {
+        $this->_parents = [];
+
+        foreach ($parents as $parent) {
+            $this->attachParent($parent, false);
+        }
+    }
+
+    /**
+     * Will loop along each parent of this object, and every parent of the
+     * parents: the given callback is called with a single parameter which is
+     * the current parent.
+     *
+     * When the callback returns `false`, the loop breaks.
+     *
+     * @param callable $callback
+     */
+    public function alongParents(callable $callback)
+    {
+        ParentsRecursiveService::get()->alongParents($callback, $this, $this->_parents);
+    }
+
+    /**
+     * Returns true if the class has a given parent.
+     *
+     * @param string $parentClassName Name of the parent class.
+     * @return bool
+     */
+    public function hasParent($parentClassName)
+    {
+        $found = false;
+
+        $this->alongParents(function ($parent) use ($parentClassName, &$found) {
+            if ($parent instanceof $parentClassName) {
+                $found = true;
+
+                return false;
+            }
+
+            return true;
+        });
+
+        return $found;
     }
 
     /**
@@ -51,55 +148,29 @@ trait ParentsTrait
      * defined.
      *
      * @param string   $parentClassName  Name of the class name of the wanted parent.
-     * @param callable $callBack         A closure which will be called if the parent is found.
-     * @param callable $notFoundCallBack A closure which is called if the parent is not found.
+     * @param callable $callback         A closure which will be called if the parent is found.
+     * @param callable $notFoundCallback A closure which is called if the parent is not found.
      * @return mixed|null
      */
-    public function withFirstParent($parentClassName, callable $callBack, callable $notFoundCallBack = null)
+    public function withFirstParent($parentClassName, callable $callback, callable $notFoundCallback = null)
     {
-        // We first check if the registered parents do match the wanted parent.
-        foreach ($this->_parents as $parent) {
-            if ($parentClassName === get_class($parent)) {
-                return $callBack($parent);
-            }
+        $result = null;
+
+        if ($this->hasParent($parentClassName)) {
+            $parent = $this->getFirstParent($parentClassName);
+            $result = call_user_func($callback, $parent);
+        } elseif (null !== $notFoundCallback) {
+            $result = call_user_func($notFoundCallback);
         }
 
-        // Then, we check each parent's parents.
-        foreach ($this->_parents as $parent) {
-            if (Core::get()->getParentsUtility()->classUsesParentsTrait($parent)) {
-                /** @var ParentsTrait $parent */
-                return $parent->withFirstParent($parentClassName, $callBack, $notFoundCallBack);
-            }
-        }
-
-        return (null !== $notFoundCallBack)
-            ? $notFoundCallBack()
-            : null;
+        return $result;
     }
 
     /**
-     * Returns true if the class has a given parent.
+     * Returns the first found instance of the desired parent.
      *
-     * @param string $parentClassName Name of the parent class.
-     * @return bool
-     */
-    public function hasParent($parentClassName)
-    {
-        foreach ($this->_parents as $parent) {
-            if ($parentClassName === get_class($parent)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Returns the first found instance of the desired parent. Returns null if
-     * the parent was not found.
-     *
-     * It is advised to use the function `hasParent()` before using this
-     * function.
+     * An exception is thrown if the parent is not found. It is advised to use
+     * the function `hasParent()` before using this function.
      *
      * @param string $parentClassName Name of the parent class.
      * @return object
@@ -107,15 +178,25 @@ trait ParentsTrait
      */
     public function getFirstParent($parentClassName)
     {
-        foreach ($this->_parents as $parent) {
-            if ($parentClassName === get_class($parent)) {
-                return $parent;
+        $foundParent = null;
+
+        $this->alongParents(function ($parent) use ($parentClassName, &$foundParent) {
+            if ($parent instanceof $parentClassName) {
+                $foundParent = $parent;
+
+                return false;
             }
+
+            return true;
+        });
+
+        if (null === $foundParent) {
+            throw new EntryNotFoundException(
+                'The parent "' . $parentClassName . '" was not found in this object (class "' . get_class($this) . '"). Use the function "hasParent()" before your call to this function!',
+                1471379635
+            );
         }
 
-        throw new EntryNotFoundException(
-            'The parent "' . $parentClassName . '" was not found in this object (class "' . get_class($this) . '"). Use the function "hasParent()" before your call to this function!',
-            1471379635
-        );
+        return $foundParent;
     }
 }

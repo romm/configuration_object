@@ -3,6 +3,7 @@ namespace Romm\ConfigurationObject\Tests\Unit;
 
 use Romm\ConfigurationObject\ConfigurationObjectInstance;
 use Romm\ConfigurationObject\Exceptions\Exception;
+use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObject;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithAttributeContainingError;
 use Romm\ConfigurationObject\Tests\Fixture\Validator\WrongValueValidator;
 use TYPO3\CMS\Extbase\Error\Error;
@@ -98,5 +99,27 @@ class ConfigurationObjectInstanceTest extends AbstractUnitTest
         $configurationObjectInstance->getValidationResult();
 
         $this->assertTrue($configurationObjectInstance->hasValidationResult());
+    }
+
+    /**
+     * When a mapping result with errors is given as constructor argument of a
+     * configuration object instance, it should always be returned as validation
+     * result.
+     *
+     * @test
+     */
+    public function mappingResultWithErrorsIsAlwaysReturned()
+    {
+        $dummyConfigurationObject = new DummyConfigurationObject;
+        $mapperResult = new Result();
+        $mapperResult->addError(new Error('foo', 1337));
+
+        $configurationObjectInstance = new ConfigurationObjectInstance($dummyConfigurationObject, $mapperResult);
+
+        $this->assertSame($mapperResult, $configurationObjectInstance->getValidationResult());
+        $configurationObjectInstance->refreshValidationResult();
+        $this->assertSame($mapperResult, $configurationObjectInstance->getValidationResult());
+        $configurationObjectInstance->setValidationResult(new Result);
+        $this->assertSame($mapperResult, $configurationObjectInstance->getValidationResult());
     }
 }

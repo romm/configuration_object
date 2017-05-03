@@ -29,7 +29,7 @@ Configuration Object
         typo3, configuration, object, model
 
     :Copyright:
-        2016
+        2017
 
     :Author:
         Romain Canon

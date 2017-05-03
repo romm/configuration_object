@@ -57,6 +57,10 @@ class ConfigurationObjectInstance
     {
         $this->object = $objectInstance;
         $this->mapperResult = $mapperResult;
+
+        if ($mapperResult->hasErrors()) {
+            $this->validationResult = $mapperResult;
+        }
     }
 
     /**
@@ -108,11 +112,16 @@ class ConfigurationObjectInstance
      * Should only be internally used, please be careful if you need to use this
      * function.
      *
+     * Note that if the mapping result given as constructor argument of this
+     * object contains error, this function will do nothing.
+     *
      * @param Result $result
      */
     public function setValidationResult(Result $result)
     {
-        $this->validationResult = $result;
+        if (false === $this->mapperResult->hasErrors()) {
+            $this->validationResult = $result;
+        }
     }
 
     /**
@@ -126,17 +135,20 @@ class ConfigurationObjectInstance
     }
 
     /**
-     * Sets up the validation result.
+     * If the mapping result which was passed as a constructor argument of
+     * this class contains error, the validation result will be the same.
+     * Otherwise a recursive validation of the object is processed.
      *
      * @return $this
      */
     public function refreshValidationResult()
     {
-        $validator = Core::get()->getValidatorResolver()
-            ->getBaseValidatorConjunction(get_class($this->object));
+        if (false === $this->mapperResult->hasErrors()) {
+            $validator = Core::get()->getValidatorResolver()
+                ->getBaseValidatorConjunction(get_class($this->object));
 
-        $this->validationResult = $validator->validate($this->object);
-        $this->validationResult->merge($this->mapperResult);
+            $this->validationResult = $validator->validate($this->object);
+        }
 
         return $this;
     }

@@ -96,6 +96,7 @@ class ConfigurationObjectFactory implements SingletonInterface
             $mapper = $this->getConfigurationObjectMapper();
             $object = $mapper->convert($dto->getConfigurationObjectData(), $className);
 
+            /** @var ConfigurationObjectInstance $result */
             $result = GeneralUtility::makeInstance(ConfigurationObjectInstance::class, $object, $mapper->getMessages());
 
             $dto->setResult($result);
@@ -103,10 +104,6 @@ class ConfigurationObjectFactory implements SingletonInterface
 
         $serviceFactory->runServicesFromEvent(ConfigurationObjectAfterServiceEventInterface::class, 'configurationObjectAfter', $dto);
         $serviceFactory->runServicesFromEvent(ConfigurationObjectBeforeValidationServiceEventInterface::class, 'configurationObjectBeforeValidation', $dto);
-
-        if (false === $dto->getResult()->hasValidationResult()) {
-            $dto->getResult()->refreshValidationResult();
-        }
 
         $result = $dto->getResult();
         unset($dto);

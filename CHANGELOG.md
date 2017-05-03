@@ -1,5 +1,44 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.8.0 - 2017-05-03
+------------------
+
+This version mainly affects the `ParentsTrait`, but also improves the errors handling of a configuration object validation result:
+
+ - **[[fef1c9c](https://github.com/romm/configuration_object/commit/fef1c9c99889732a7fc6a93ea4f2b6ea2a242416)] [FEATURE] Introduce `ParentsTrait::alongParents()` function**
+ 
+   This function allows to call a callback function for each parent of an object that uses `ParentsTrait`.
+   
+   The callback function has a single parameter which is the current parent object. If `false` is returned by the callback, the loop on the parents stops.
+   
+   This new function is now used by the following functions of `ParentsTrait`: `hasParent`, `withFirstParent` and `getFirstParent`.
+
+ - **[[4c34e94](https://github.com/romm/configuration_object/commit/4c34e94b9df2ab504635a9d2946fda108b873573)] [FEATURE] Introduce parent "attach" functions**
+ 
+   This commit introduces the functions `attachParent()` and `attachParents()` in the `ParentsTrait`. These new functions must be used to attach parents to an object.
+   
+   These function have more security and flexibility than the `setParents()` function which will be deprecated.
+
+ - **[[d4be3b5](https://github.com/romm/configuration_object/commit/d4be3b512375775cf369a7f42d4504d771d95bcf)] [BUGFIX] Check parents type correctly**
+ 
+   This commit changes how the `ParentsTrait` fetches a parent from a given class name.
+   
+   For instance, when searching for an interface class, the old way of checking the parents would not have work, now it does.
+
+ - **[[8a05605](https://github.com/romm/configuration_object/commit/8a0560586b094586fdbb8ed18a4ff3aa01e32df6)] [TASK] Return error when required constructor argument is missing**
+ 
+   When an object is built with the object converter, if a required argument for the constructor is missing, it will now return an error instead of throwing an exception.
+   
+   This way, it will be added to the mapping result, and will let the user have more information about why the object is not valid.
+
+ - **[[a4f41ad](https://github.com/romm/configuration_object/commit/a4f41adac98427bd2592979b9aae4bda11dfb704)] [TASK] Return mapping result if it contains errors**
+
+   When the mapping result given as constructor argument of a configuration object instance contains errors, it will always be returned when the validation result is accessed (function `getValidationResult()`).
+   
+   This is done because if the mapper did not succeed to build a proper object and its sub-objects, then it makes no sense in many cases to launch a whole validation process on an unfinished object.
+   
+   This commit leads to more consistency in an object validation result messages.
+
 1.7.0 - 2017-04-06
 ------------------
 

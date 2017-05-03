@@ -14,6 +14,8 @@
 namespace Romm\ConfigurationObject\TypeConverter;
 
 use Romm\ConfigurationObject\Core\Core;
+use TYPO3\CMS\Extbase\Error\Error;
+use TYPO3\CMS\Extbase\Property\Exception\InvalidTargetException;
 use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ObjectConverter;
 
@@ -42,5 +44,36 @@ class ConfigurationObjectConverter extends ObjectConverter
         }
 
         return parent::getTypeOfChildProperty($targetType, $propertyName, $configuration);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function convertFrom($source, $targetType, array $convertedChildProperties = [], PropertyMappingConfigurationInterface $configuration = null)
+    {
+        try {
+            return parent::convertFrom($source, $targetType, $convertedChildProperties, $configuration);
+        } catch (InvalidTargetException $exception) {
+            return new Error('The following properties must be filled: "' . implode('", "', $this->getRequiredConstructorArguments($targetType)) . '".', $exception->getCode());
+        }
+    }
+
+    /**
+     * @param string $type
+     * @return array
+     */
+    protected function getRequiredConstructorArguments($type)
+    {
+        $requiredArguments = [];
+        $type = $this->objectContainer->getImplementationClassName($type);
+        $arguments = $this->reflectionService->getMethodParameters($type, '__construct');
+
+        foreach ($arguments as $argumentName => $argumentInformation) {
+            if ($argumentInformation['optional'] === false) {
+                $requiredArguments[] = $argumentName;
+            }
+        }
+
+        return $requiredArguments;
     }
 }
