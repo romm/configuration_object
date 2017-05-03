@@ -17,6 +17,7 @@ use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Exceptions\DuplicateEntryException;
 use Romm\ConfigurationObject\Exceptions\EntryNotFoundException;
 use Romm\ConfigurationObject\Exceptions\InvalidTypeException;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Use this trait in your configuration objects (it will work only if they do
@@ -37,9 +38,14 @@ trait ParentsTrait
 
     /**
      * @param object[] $parents
+     *
+     * @deprecated This function is deprecated and will be removed in v2!
+     *             Use function `addParents()` instead.
      */
     public function setParents(array $parents)
     {
+        GeneralUtility::logDeprecatedFunction();
+
         $this->_parents = $parents;
     }
 
