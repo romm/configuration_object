@@ -3,6 +3,7 @@ namespace Romm\ConfigurationObject\Tests\Unit\Service\Items\Parents;
 
 use Romm\ConfigurationObject\Exceptions\EntryNotFoundException;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithParentsTrait;
+use Romm\ConfigurationObject\Tests\Fixture\Model\DummyInterface;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 
 class ParentsTraitTest extends AbstractUnitTest
@@ -79,5 +80,20 @@ class ParentsTraitTest extends AbstractUnitTest
         $object->getFirstParent(\stdClass::class);
 
         unset($object);
+    }
+
+    /**
+     * Checks that a parent with a given interface can be found.
+     *
+     * @test
+     */
+    public function hasParentWithInterface()
+    {
+        $dummy = $this->prophesize()->willImplement(DummyInterface::class)->reveal();
+
+        $object = new DummyConfigurationObjectWithParentsTrait();
+        $object->setParents([$dummy]);
+
+        $this->assertSame($dummy, $object->getFirstParent(DummyInterface::class));
     }
 }

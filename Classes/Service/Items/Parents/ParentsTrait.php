@@ -59,7 +59,7 @@ trait ParentsTrait
     {
         // We first check if the registered parents do match the wanted parent.
         foreach ($this->_parents as $parent) {
-            if ($parentClassName === get_class($parent)) {
+            if ($parent instanceof $parentClassName) {
                 return $callBack($parent);
             }
         }
@@ -86,7 +86,7 @@ trait ParentsTrait
     public function hasParent($parentClassName)
     {
         foreach ($this->_parents as $parent) {
-            if ($parentClassName === get_class($parent)) {
+            if ($parent instanceof $parentClassName) {
                 return true;
             }
         }
@@ -108,7 +108,7 @@ trait ParentsTrait
     public function getFirstParent($parentClassName)
     {
         foreach ($this->_parents as $parent) {
-            if ($parentClassName === get_class($parent)) {
+            if ($parent instanceof $parentClassName) {
                 return $parent;
             }
         }
