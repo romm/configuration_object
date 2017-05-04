@@ -15,9 +15,12 @@ namespace Romm\ConfigurationObject\Validation;
 
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Reflection\ReflectionService;
+use Romm\ConfigurationObject\Validation\Validator\Internal\ConfigurationObjectValidator;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeCollectionValidator;
 use TYPO3\CMS\Extbase\Reflection\ReflectionService as ExtbaseReflectionService;
 use TYPO3\CMS\Extbase\Validation\Validator\CollectionValidator;
+use TYPO3\CMS\Extbase\Validation\Validator\ConjunctionValidator;
+use TYPO3\CMS\Extbase\Validation\Validator\GenericObjectValidator;
 
 /**
  * Customized validator resolver, which it mostly used to support the mixed
@@ -43,6 +46,44 @@ class ValidatorResolver extends \TYPO3\CMS\Extbase\Validation\ValidatorResolver
         return (CollectionValidator::class === $validatorType)
             ? parent::createValidator(MixedTypeCollectionValidator::class)
             : parent::createValidator($validatorType, $validatorOptions);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function buildBaseValidatorConjunction($indexKey, $targetClassName, array $validationGroups = [])
+    {
+        parent::buildBaseValidatorConjunction($indexKey, $targetClassName, $validationGroups);
+
+        /*
+         * The code below is DIRTY: in order to use `SilentExceptionInterface`
+         * feature we need an extended version of the `GenericObjectValidator`,
+         * but this is hardcoded in:
+         * \TYPO3\CMS\Extbase\Validation\ValidatorResolver::buildBaseValidatorConjunction()
+         *
+         * Here we replace every `GenericObjectValidator` by our own instance.
+         *
+         * Please, do not try this at home.
+         */
+        /** @var ConjunctionValidator $conjunctionValidator */
+        $conjunctionValidator = $this->baseValidatorConjunctions[$indexKey];
+
+        foreach ($conjunctionValidator->getValidators() as $validator) {
+            if ($validator instanceof GenericObjectValidator) {
+                /** @var ConfigurationObjectValidator $newValidator */
+                $newValidator = $this->objectManager->get(ConfigurationObjectValidator::class, []);
+
+                foreach ($validator->getPropertyValidators() as $propertyName => $propertyValidators) {
+                    foreach ($propertyValidators as $propertyValidator) {
+                        $newValidator->addPropertyValidator($propertyName, $propertyValidator);
+                    }
+                }
+
+                $conjunctionValidator->removeValidator($validator);
+                unset($validator);
+                $conjunctionValidator->addValidator($newValidator);
+            }
+        }
     }
 
     /**

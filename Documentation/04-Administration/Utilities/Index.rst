@@ -24,6 +24,10 @@ In addition to services, you can use other utilities provided by the API. They d
 
   Provides automatic handling of properties getters and setters.
 
+- :ref:`administration-utilities-silentExceptions`
+
+  Throw exceptions in your getter methods while not blocking the Configuration Object API.
+
 -----
 
 .. _administration-utilities-arrayConversion:
@@ -226,3 +230,49 @@ Because objects can have a lot of properties, you may want not to be forced to w
         {
             // ...
         }
+
+.. _administration-utilities-silentExceptions:
+
+Silent exceptions in getter methods
+-----------------------------------
+
+In some cases you may need to throw an exception in a generic getter method of an object property. For instance:
+
+.. code-block:: php
+    :linenos:
+    :emphasize-lines: 15
+
+    class MyObject
+    {
+        /**
+         * @var SomeOtherObject
+         */
+        protected $foo;
+
+        /**
+         * @return SomeOtherObject
+         * @throws SomeException
+         */
+        public function getFoo()
+        {
+            if (null === $this->foo) {
+                throw MyException('foo has not been filled!');
+            }
+
+            return $this->foo;
+        }
+    }
+
+With this kind of implementation, you probably will be annoyed by the Configuration Object API which will throw the exception while trying to access the property at a very early stage in the object creation.
+
+To avoid this, you need to make the exception implement the interface ``\Romm\ConfigurationObject\Exceptions\SilentExceptionInterface`` (see below). This will indicate to the API that the exceptions that implement this interface can be catch during early processes, meaning the return value of the getter method will be considered as ``null``.
+
+.. code-block:: php
+    :linenos:
+    :emphasize-lines: 3
+
+    use \Romm\ConfigurationObject\Exceptions\SilentExceptionInterface;
+
+    class MyException extends \Exception implements SilentExceptionInterface
+    {
+    }

@@ -14,7 +14,6 @@
 namespace Romm\ConfigurationObject\Traits\ConfigurationObject;
 
 use Romm\ConfigurationObject\Core\Core;
-use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 
 /**
  * Use this trait in any configuration object (or one of its sub-objects), to
@@ -80,7 +79,7 @@ trait ArrayConversionTrait
         $finalProperties = [];
 
         foreach ($properties as $property) {
-            $finalProperties[$property] = ObjectAccess::getProperty($object, $property);
+            $finalProperties[$property] = Core::get()->getObjectService()->getObjectProperty($object, $property);
         }
 
         return $finalProperties;

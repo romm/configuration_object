@@ -14,7 +14,9 @@
 namespace Romm\ConfigurationObject\Core;
 
 use Romm\ConfigurationObject\Core\Service\CacheService;
+use Romm\ConfigurationObject\Core\Service\ObjectService;
 use Romm\ConfigurationObject\Exceptions\MethodNotFoundException;
+use Romm\ConfigurationObject\Exceptions\SilentExceptionInterface;
 use Romm\ConfigurationObject\Service\Items\Parents\ParentsUtility;
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Validation\ValidatorResolver;
@@ -67,6 +69,11 @@ class Core implements SingletonInterface
      * @var CacheService
      */
     protected $cacheService;
+
+    /**
+     * @var ObjectService
+     */
+    protected $objectService;
 
     /**
      * @var array
@@ -164,8 +171,12 @@ class Core implements SingletonInterface
             ) {
                 try {
                     $object->$getterMethodName();
-                } catch (MethodNotFoundException $e) {
-                    $flag = false;
+                } catch (\Exception $e) {
+                    if ($e instanceof MethodNotFoundException
+                        || false === $e instanceof SilentExceptionInterface
+                    ) {
+                        $flag = false;
+                    }
                 }
             }
         }
@@ -246,6 +257,22 @@ class Core implements SingletonInterface
     public function injectCacheManager(CacheManager $cacheManager)
     {
         $this->cacheManager = $cacheManager;
+    }
+
+    /**
+     * @return ObjectService
+     */
+    public function getObjectService()
+    {
+        return $this->objectService;
+    }
+
+    /**
+     * @param ObjectService $objectService
+     */
+    public function injectObjectService(ObjectService $objectService)
+    {
+        $this->objectService = $objectService;
     }
 
     /**

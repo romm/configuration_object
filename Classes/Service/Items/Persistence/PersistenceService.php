@@ -144,17 +144,17 @@ class PersistenceService extends AbstractService implements ObjectConversionBefo
     protected function fetchDomainObjectsInternal($value, array $path, $type, $lastObject = null, array $objectArrayPropertyPath = [])
     {
         $propertyName = reset($path);
-        $propertyValue = ObjectAccess::getProperty($value, $propertyName);
+        $propertyValue = Core::get()->getObjectService()->getObjectProperty($value, $propertyName);
+
+        if (null === $propertyValue) {
+            return;
+        }
 
         if (is_object($value)) {
             $lastObject = $value;
             $objectArrayPropertyPath = [$propertyName];
         } elseif (is_array($value)) {
             $objectArrayPropertyPath[] = $propertyName;
-        }
-
-        if (null === $propertyValue) {
-            return;
         }
 
         if (1 === count($path)) {
@@ -194,7 +194,12 @@ class PersistenceService extends AbstractService implements ObjectConversionBefo
     protected function injectDomainObjectInLastObject($domainObject, $lastObject, array $objectArrayPropertyPath)
     {
         $objectPropertyName = reset($objectArrayPropertyPath);
-        $array = ObjectAccess::getProperty($lastObject, $objectPropertyName);
+        $array = Core::get()->getObjectService()->getObjectProperty($lastObject, $objectPropertyName);
+
+        if (false === is_array($array)) {
+            return;
+        }
+
         array_shift($objectArrayPropertyPath);
 
         $object = ArrayUtility::setValueByPath(

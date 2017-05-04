@@ -20,7 +20,6 @@ use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDT
 use Romm\ConfigurationObject\Service\Event\ConfigurationObjectAfterServiceEventInterface;
 use Romm\ConfigurationObject\Service\Event\ObjectConversionAfterServiceEventInterface;
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
 
 /**
  * This service will take care of saving the parent classes of the configuration
@@ -59,7 +58,7 @@ class ParentsService extends AbstractService implements ObjectConversionAfterSer
 
         if (is_object($result)) {
             foreach (Core::get()->getGettablePropertiesOfObject($result) as $propertyName) {
-                $property = ObjectAccess::getProperty($result, $propertyName);
+                $property = Core::get()->getObjectService()->getObjectProperty($result, $propertyName);
 
                 $this->checkProperty($serviceDataTransferObject, $property, $propertyName);
             }
@@ -159,7 +158,7 @@ class ParentsService extends AbstractService implements ObjectConversionAfterSer
     protected function insertParents($entity, array $path, array $parents)
     {
         $propertyName = reset($path);
-        $propertyValue = ObjectAccess::getProperty($entity, $propertyName);
+        $propertyValue = Core::get()->getObjectService()->getObjectProperty($entity, $propertyName);
 
         if (1 === count($path)) {
             if (is_object($propertyValue)
