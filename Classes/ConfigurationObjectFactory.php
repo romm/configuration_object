@@ -57,6 +57,11 @@ class ConfigurationObjectFactory implements SingletonInterface
     protected $configurationObjectServiceFactory = [];
 
     /**
+     * @var int
+     */
+    protected $runningProcesses = 0;
+
+    /**
      * @return ConfigurationObjectFactory
      */
     public static function getInstance()
@@ -74,9 +79,40 @@ class ConfigurationObjectFactory implements SingletonInterface
      *
      * @param    string $className  Name of the configuration object class. The class must implement `\Romm\ConfigurationObject\ConfigurationObjectInterface`.
      * @param    array  $objectData Data used to fill the object.
-     * @return   ConfigurationObjectInstance
+     * @return ConfigurationObjectInstance
+     * @throws \Exception
      */
     public function get($className, array $objectData)
+    {
+        $this->runningProcesses++;
+
+        try {
+            $result = $this->convertToObject($className, $objectData);
+
+            $this->runningProcesses--;
+
+            return $result;
+        } catch (\Exception $exception) {
+            $this->runningProcesses--;
+
+            throw $exception;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRunning()
+    {
+        return $this->runningProcesses > 0;
+    }
+
+    /**
+     * @param string $className
+     * @param array  $objectData
+     * @return ConfigurationObjectInstance
+     */
+    protected function convertToObject($className, array $objectData)
     {
         $serviceFactory = $this->register($className);
 

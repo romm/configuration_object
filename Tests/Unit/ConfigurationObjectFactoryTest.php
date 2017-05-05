@@ -172,7 +172,7 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
     }
 
     /**
-     * Checks that the mixed-types resolver is called and word correctly.
+     * Checks that the mixed-types resolver is called and works correctly.
      *
      * @test
      */
@@ -197,5 +197,28 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
 
         $this->assertEquals(Employee::class, get_class($employees['jane.doe']));
         $this->assertEquals(AnotherEmployee::class, get_class($employees['john.doe']));
+    }
+
+    /**
+     * Checks that the configuration object factory process can be checked.
+     *
+     * @test
+     */
+    public function configurationObjectFactoryIsRunning()
+    {
+        /** @var ConfigurationObjectFactory|\PHPUnit_Framework_MockObject_MockObject $factory */
+        $factory = $this->getMockBuilder(ConfigurationObjectFactory::class)
+            ->setMethods(['convertToObject'])
+            ->getMock();
+
+        $factory->expects($this->once())
+            ->method('convertToObject')
+            ->willReturnCallback(function () use ($factory) {
+                $this->assertTrue($factory->isRunning());
+            });
+
+        $this->assertFalse($factory->isRunning());
+        $factory->get(Company::class, []);
+        $this->assertFalse($factory->isRunning());
     }
 }

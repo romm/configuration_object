@@ -276,3 +276,16 @@ To avoid this, you need to make the exception implement the interface ``\Romm\Co
     class MyException extends \Exception implements SilentExceptionInterface
     {
     }
+
+.. _administration-utilities-checkFactoryProcessing:
+
+Check if the factory is processing
+----------------------------------
+
+You can check at any moment if the configuration object factory is currently processing (an object is being created). This can be useful for instance if you want to allow magic methods for an object only when it is being converted.
+
+.. code-block:: php
+
+    if (\Romm\ConfigurationObject\ConfigurationObjectFactory::getInstance()->isRunning()) {
+        // ...
+    }
