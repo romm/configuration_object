@@ -1,6 +1,7 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit;
 
+use Prophecy\Comparator\Factory;
 use Romm\ConfigurationObject\ConfigurationObjectFactory;
 use Romm\ConfigurationObject\ConfigurationObjectInstance;
 use Romm\ConfigurationObject\Exceptions\ClassNotFoundException;
@@ -46,6 +47,34 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
         parent::setUp();
 
         $this->initializeConfigurationObjectTestServices();
+    }
+
+    /**
+     * The alias method for converting an object should call the implementation
+     * correctly.
+     *
+     * @test
+     */
+    public function convertMethodsCallsImplementation()
+    {
+        $className = Factory::class;
+        $objectData = ['foo' => 'bar'];
+
+        /** @var ConfigurationObjectFactory|\PHPUnit_Framework_MockObject_MockObject $factoryMock */
+        $factoryMock = $this->getMockBuilder(ConfigurationObjectFactory::class)
+            ->setMethods(['get'])
+            ->getMock();
+
+        $factoryMock->expects($this->once())
+            ->method('get')
+            ->with($className, $objectData);
+
+        $reflection = new \ReflectionClass(ConfigurationObjectFactory::class);
+        $objectManagerProperty = $reflection->getProperty('instance');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue($factoryMock);
+
+        ConfigurationObjectFactory::convert($className, $objectData);
     }
 
     /**

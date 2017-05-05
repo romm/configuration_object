@@ -62,6 +62,20 @@ class ConfigurationObjectFactory implements SingletonInterface
     protected $runningProcesses = 0;
 
     /**
+     * Alias for:
+     *
+     * \Romm\ConfigurationObject\ConfigurationObjectFactory::getInstance()->get(...)
+     *
+     * @param string $className
+     * @param array  $objectData
+     * @return ConfigurationObjectInstance
+     */
+    public static function convert($className, array $objectData)
+    {
+        return self::getInstance()->get($className, $objectData);
+    }
+
+    /**
      * @return ConfigurationObjectFactory
      */
     public static function getInstance()
