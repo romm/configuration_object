@@ -29,8 +29,8 @@ Please note that a configuration object root class (first level of the tree) nee
 
     namespace MyVendor\MyExtension\Configuration;
 
-    use Romm\ConfObj\ConfigurationObjectInterface;
-    use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+    use Romm\ConfigurationObject\ConfigurationObjectInterface;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
 
     class Company implements ConfigurationObjectInterface
     {
@@ -100,7 +100,7 @@ You should now be able to get your configuration object. The basic workflow of t
 
    .. code-block:: php
 
-       $myConfigurationObject = \Romm\ConfObj\ConfigurationObjectFactory::get(
+       $myConfigurationObject = \Romm\ConfigurationObject\ConfigurationObjectFactory::get(
            MyVendor\MyExtension\Configuration\Company::class,
            $myConfigurationArray
        );
@@ -129,7 +129,7 @@ You should now be able to get your configuration object. The basic workflow of t
            ]
        ];
 
-       $companyObject = \Romm\ConfObj\ConfigurationObjectFactory::get(
+       $companyObject = \Romm\ConfigurationObject\ConfigurationObjectFactory::get(
            \MyVendor\MyExtension\Configuration\Company::class,
            $companyArray
        );

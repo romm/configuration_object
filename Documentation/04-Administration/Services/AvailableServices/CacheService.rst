@@ -49,11 +49,11 @@ Example
     :linenos:
     :emphasize-lines: 29-32
 
-    use Romm\ConfObj\Service\ServiceInterface;
-    use Romm\ConfObj\Service\ServiceFactory;
-    use Romm\ConfObj\Service\Items\Cache\CacheService;
-    use Romm\ConfObj\ConfigurationObjectInterface;
-    use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+    use Romm\ConfigurationObject\Service\ServiceInterface;
+    use Romm\ConfigurationObject\Service\ServiceFactory;
+    use Romm\ConfigurationObject\Service\Items\Cache\CacheService;
+    use Romm\ConfigurationObject\ConfigurationObjectInterface;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
     use TYPO3\CMS\Core\Cache\Backend\MemcachedBackend;
 
     class MyObject implements ConfigurationObjectInterface

@@ -80,13 +80,13 @@ Example
     :linenos:
     :emphasize-lines: 34,41,46-47,52,77-95,132,139,143
 
-    use Romm\ConfObj\ConfigurationObjectInterface;
-    use Romm\ConfObj\Service\ServiceInterface;
-    use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
-    use Romm\ConfObj\Traits\ConfigurationObject\MagicMethodsTrait;
+    use Romm\ConfigurationObject\ConfigurationObjectInterface;
+    use Romm\ConfigurationObject\Service\ServiceInterface;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\MagicMethodsTrait;
     use Romm\ConfObjTest\Model\Company\Employee\AbstractEmployee;
-    use Romm\ConfObj\Service\Items\MixedTypes\MixedTypesInterface;
-    use Romm\ConfObj\Service\Items\MixedTypes\MixedTypesResolver;
+    use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesInterface;
+    use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesResolver;
 
     /**
      * COMPANY

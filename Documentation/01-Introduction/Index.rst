@@ -77,8 +77,8 @@ Let's see what our previous example would look like with a configuration object:
 
     namespace MyVendor\MyExtensions\Model\Company;
 
-    use Romm\ConfObj\ConfigurationObjectInterface;
-    use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+    use Romm\ConfigurationObject\ConfigurationObjectInterface;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
 
     class Company implements ConfigurationObjectInterface
     {

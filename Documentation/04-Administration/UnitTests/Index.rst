@@ -22,7 +22,7 @@ First, use the trait ``ConfigurationObjectUnitTestUtility`` in your test class, 
     :emphasize-lines: 7,11
 
     use TYPO3\CMS\Core\Tests\UnitTestCase;
-    use Romm\ConfObj\Tests\Unit\ConfigurationObjectUnitTestUtility;
+    use Romm\ConfigurationObject\Tests\Unit\ConfigurationObjectUnitTestUtility;
 
     class MyTest extends UnitTestCase
     {

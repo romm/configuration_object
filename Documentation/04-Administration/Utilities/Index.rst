@@ -43,10 +43,10 @@ The trait :php:`ArrayConversionTrait` provides the function ``toArray()`` which 
     :linenos:
     :emphasize-lines: 9,21
 
-    use Romm\ConfObj\ConfigurationObjectInterface;
-    use Romm\ConfObj\ConfigurationObjectFactory;
-    use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
-    use Romm\ConfObj\Traits\ConfigurationObject\ArrayConversionTrait;
+    use Romm\ConfigurationObject\ConfigurationObjectInterface;
+    use Romm\ConfigurationObject\ConfigurationObjectFactory;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\ArrayConversionTrait;
 
     class MyObject implements ConfigurationObjectInterface
     {
@@ -80,10 +80,10 @@ In some cases, a sub-object of a configuration object can be stored in an array,
     :linenos:
     :emphasize-lines: 26,47
 
-    use Romm\ConfObj\ConfigurationObjectInterface;
-    use Romm\ConfObj\ConfigurationObjectFactory;
-    use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
-    use Romm\ConfObj\Traits\ConfigurationObject\StoreArrayIndexTrait;
+    use Romm\ConfigurationObject\ConfigurationObjectInterface;
+    use Romm\ConfigurationObject\ConfigurationObjectFactory;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\StoreArrayIndexTrait;
 
     class MyObject implements ConfigurationObjectInterface
     {
@@ -146,9 +146,9 @@ Because objects can have a lot of properties, you may want not to be forced to w
     :linenos:
     :emphasize-lines: 8,28-30
 
-    use Romm\ConfObj\ConfigurationObjectInterface;
-    use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
-    use Romm\ConfObj\Traits\ConfigurationObject\MagicMethodsTrait;
+    use Romm\ConfigurationObject\ConfigurationObjectInterface;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\MagicMethodsTrait;
 
     class MyObject implements ConfigurationObjectInterface
     {
@@ -187,9 +187,9 @@ Because objects can have a lot of properties, you may want not to be forced to w
         :linenos:
         :emphasize-lines: 19
 
-        use Romm\ConfObj\ConfigurationObjectInterface;
-        use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
-        use Romm\ConfObj\Traits\ConfigurationObject\MagicMethodsTrait;
+        use Romm\ConfigurationObject\ConfigurationObjectInterface;
+        use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+        use Romm\ConfigurationObject\Traits\ConfigurationObject\MagicMethodsTrait;
 
         class MyObject implements ConfigurationObjectInterface
         {

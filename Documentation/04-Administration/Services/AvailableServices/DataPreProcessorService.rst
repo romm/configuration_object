@@ -32,12 +32,12 @@ Example
     :linenos:
     :emphasize-lines: 8,31,41-52
 
-    use Romm\ConfObj\ConfigurationObjectInterface;
-    use Romm\ConfObj\Service\ServiceFactory;
-    use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
-    use Romm\ConfObj\Service\ServiceInterface;
-    use Romm\ConfObj\Service\Items\DataPreProcessorInterface;
-    use Romm\ConfObj\Service\Items\DataPreProcessor;
+    use Romm\ConfigurationObject\ConfigurationObjectInterface;
+    use Romm\ConfigurationObject\Service\ServiceFactory;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+    use Romm\ConfigurationObject\Service\ServiceInterface;
+    use Romm\ConfigurationObject\Service\Items\DataPreProcessorInterface;
+    use Romm\ConfigurationObject\Service\Items\DataPreProcessor;
 
     class Person implements ConfigurationObjectInterface, DataPreProcessorInterface
     {

@@ -40,11 +40,11 @@ Example
     :linenos:
     :emphasize-lines: 27,43,61,82
 
-    use Romm\ConfObj\Service\ServiceInterface;
-    use Romm\ConfObj\Service\ServiceFactory;
-    use Romm\ConfObj\ConfigurationObjectInterface;
-    use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
-    use Romm\ConfObj\Service\Items\Parents\ParentsTrait;
+    use Romm\ConfigurationObject\Service\ServiceInterface;
+    use Romm\ConfigurationObject\Service\ServiceFactory;
+    use Romm\ConfigurationObject\ConfigurationObjectInterface;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+    use Romm\ConfigurationObject\Service\Items\Parents\ParentsTrait;
 
     class MyObject implements ConfigurationObjectInterface
     {
