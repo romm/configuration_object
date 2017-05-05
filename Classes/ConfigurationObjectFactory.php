@@ -57,14 +57,6 @@ class ConfigurationObjectFactory implements SingletonInterface
     protected $configurationObjectServiceFactory = [];
 
     /**
-     * Contains the queue of services factory used by this class (useful for
-     * recursive configuration object access).
-     *
-     * @var array
-     */
-    protected $currentServiceFactoryQueue = [];
-
-    /**
      * @return ConfigurationObjectFactory
      */
     public static function getInstance()
