@@ -59,7 +59,7 @@ The trait :php:`ArrayConversionTrait` provides the function ``toArray()`` which 
         protected $subObjects;
     }
 
-    $myConfigurationObject = ConfigurationObjectFactory::get(
+    $myConfigurationObject = ConfigurationObjectFactory::convert(
         MyObject::class,
         $someConfigurationArray
     );
@@ -118,7 +118,7 @@ In some cases, a sub-object of a configuration object can be stored in an array,
         'someOtherIndex' => ['foo' => 'bar']
     ]
 
-    $myConfigurationObject = ConfigurationObjectFactory::get(
+    $myConfigurationObject = ConfigurationObjectFactory::convert(
         MyObject::class,
         $someConfigurationArray
     );
@@ -168,7 +168,7 @@ Because objects can have a lot of properties, you may want not to be forced to w
         // No setter/getter in here...
     }
 
-    $myConfigurationObject = ConfigurationObjectFactory::get(
+    $myConfigurationObject = ConfigurationObjectFactory::convert(
         MyObject::class,
         $someConfigurationArray
     );

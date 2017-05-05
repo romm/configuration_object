@@ -31,7 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * Use as follow:
  *
- *  $confObject = \Romm\ConfigurationObject\ConfigurationObjectFactory::get(
+ *  $confObject = \Romm\ConfigurationObject\ConfigurationObjectFactory::convert(
  *      \MyVendor\MyExtension\Configuration\MyConfiguration::class,
  *      $myConfigurationArray
  *  );

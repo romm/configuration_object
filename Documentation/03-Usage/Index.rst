@@ -100,7 +100,7 @@ You should now be able to get your configuration object. The basic workflow of t
 
    .. code-block:: php
 
-       $myConfigurationObject = \Romm\ConfigurationObject\ConfigurationObjectFactory::get(
+       $myConfigurationObject = \Romm\ConfigurationObject\ConfigurationObjectFactory::convert(
            MyVendor\MyExtension\Configuration\Company::class,
            $myConfigurationArray
        );
@@ -129,7 +129,7 @@ You should now be able to get your configuration object. The basic workflow of t
            ]
        ];
 
-       $companyObject = \Romm\ConfigurationObject\ConfigurationObjectFactory::get(
+       $companyObject = \Romm\ConfigurationObject\ConfigurationObjectFactory::convert(
            \MyVendor\MyExtension\Configuration\Company::class,
            $companyArray
        );

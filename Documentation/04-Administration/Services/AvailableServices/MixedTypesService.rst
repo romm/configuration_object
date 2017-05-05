@@ -227,7 +227,7 @@ Example
         ]
     ];
 
-    $myCompany = ConfigurationObjectFactory::get(
+    $myCompany = ConfigurationObjectFactory::convert(
         Company::class,
         $companyConfigurationArray
     );

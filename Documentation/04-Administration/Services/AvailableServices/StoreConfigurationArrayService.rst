@@ -62,7 +62,7 @@ Example
         protected $name;
     }
 
-    $myConfigurationObject = ConfigurationObjectFactory::get(
+    $myConfigurationObject = ConfigurationObjectFactory::convert(
         MyObject::class,
         $someConfigurationArray
     );
