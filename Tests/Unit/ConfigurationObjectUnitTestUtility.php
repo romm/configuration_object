@@ -5,6 +5,7 @@ use Romm\ConfigurationObject\ConfigurationObjectFactory;
 use Romm\ConfigurationObject\ConfigurationObjectMapper;
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Core\Service\CacheService as InternalCacheService;
+use Romm\ConfigurationObject\Core\Service\ObjectService;
 use Romm\ConfigurationObject\Service\Items\Cache\CacheService;
 use Romm\ConfigurationObject\Service\Items\Parents\ParentsUtility;
 use Romm\ConfigurationObject\Service\ServiceFactory;
@@ -77,6 +78,7 @@ trait ConfigurationObjectUnitTestUtility
             ->setMethods(['getServiceFactoryInstance'])
             ->getMock();
         $this->configurationObjectCoreMock->injectObjectManager($this->getConfigurationObjectObjectManagerMock());
+        $this->configurationObjectCoreMock->injectObjectService(new ObjectService);
         $this->configurationObjectCoreMock->injectReflectionService(new ReflectionService);
         $this->configurationObjectCoreMock->injectValidatorResolver(new ValidatorResolver);
         $this->configurationObjectCoreMock->injectParentsUtility(new ParentsUtility);

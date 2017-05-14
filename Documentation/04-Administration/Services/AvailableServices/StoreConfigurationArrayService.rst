@@ -26,12 +26,12 @@ Example
     :linenos:
     :emphasize-lines: 23,29,44
 
-    use Romm\ConfObj\Service\ServiceInterface;
-    use Romm\ConfObj\Service\ServiceFactory;
-    use Romm\ConfObj\Service\Items\StoreConfigurationArray\StoreConfigurationArrayTrait;
-    use Romm\ConfObj\ConfigurationObjectFactory;
-    use Romm\ConfObj\ConfigurationObjectInterface;
-    use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+    use Romm\ConfigurationObject\Service\ServiceInterface;
+    use Romm\ConfigurationObject\Service\ServiceFactory;
+    use Romm\Conf[...]\Service\Items\StoreConfigurationArray\StoreConfigurationArrayTrait;
+    use Romm\ConfigurationObject\ConfigurationObjectFactory;
+    use Romm\ConfigurationObject\ConfigurationObjectInterface;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
 
     class MyObject implements ConfigurationObjectInterface
     {
@@ -62,7 +62,7 @@ Example
         protected $name;
     }
 
-    $myConfigurationObject = ConfigurationObjectFactory::get(
+    $myConfigurationObject = ConfigurationObjectFactory::convert(
         MyObject::class,
         $someConfigurationArray
     );

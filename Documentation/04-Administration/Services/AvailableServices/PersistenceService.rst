@@ -30,11 +30,11 @@ Example
     :linenos:
     :emphasize-lines: 13,18,28,34,37-38
 
-    use Romm\ConfObj\Service\ServiceInterface;
-    use Romm\ConfObj\Service\ServiceFactory;
-    use Romm\ConfObj\ConfigurationObjectInterface;
-    use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
-    use Romm\ConfObj\Traits\ConfigurationObject\MagicMethodsTrait;
+    use Romm\ConfigurationObject\Service\ServiceInterface;
+    use Romm\ConfigurationObject\Service\ServiceFactory;
+    use Romm\ConfigurationObject\ConfigurationObjectInterface;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\MagicMethodsTrait;
 
     class Company implements ConfigurationObjectInterface
     {
@@ -71,7 +71,7 @@ Example
         ]
     ];
 
-    $myCompany = ConfigurationObjectFactory::get(
+    $myCompany = ConfigurationObjectFactory::convert(
         Company::class,
         $companyConfigurationArray
     );

@@ -24,6 +24,10 @@ In addition to services, you can use other utilities provided by the API. They d
 
   Provides automatic handling of properties getters and setters.
 
+- :ref:`administration-utilities-silentExceptions`
+
+  Throw exceptions in your getter methods while not blocking the Configuration Object API.
+
 -----
 
 .. _administration-utilities-arrayConversion:
@@ -39,10 +43,10 @@ The trait :php:`ArrayConversionTrait` provides the function ``toArray()`` which 
     :linenos:
     :emphasize-lines: 9,21
 
-    use Romm\ConfObj\ConfigurationObjectInterface;
-    use Romm\ConfObj\ConfigurationObjectFactory;
-    use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
-    use Romm\ConfObj\Traits\ConfigurationObject\ArrayConversionTrait;
+    use Romm\ConfigurationObject\ConfigurationObjectInterface;
+    use Romm\ConfigurationObject\ConfigurationObjectFactory;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\ArrayConversionTrait;
 
     class MyObject implements ConfigurationObjectInterface
     {
@@ -55,7 +59,7 @@ The trait :php:`ArrayConversionTrait` provides the function ``toArray()`` which 
         protected $subObjects;
     }
 
-    $myConfigurationObject = ConfigurationObjectFactory::get(
+    $myConfigurationObject = ConfigurationObjectFactory::convert(
         MyObject::class,
         $someConfigurationArray
     );
@@ -76,10 +80,10 @@ In some cases, a sub-object of a configuration object can be stored in an array,
     :linenos:
     :emphasize-lines: 26,47
 
-    use Romm\ConfObj\ConfigurationObjectInterface;
-    use Romm\ConfObj\ConfigurationObjectFactory;
-    use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
-    use Romm\ConfObj\Traits\ConfigurationObject\StoreArrayIndexTrait;
+    use Romm\ConfigurationObject\ConfigurationObjectInterface;
+    use Romm\ConfigurationObject\ConfigurationObjectFactory;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\StoreArrayIndexTrait;
 
     class MyObject implements ConfigurationObjectInterface
     {
@@ -114,7 +118,7 @@ In some cases, a sub-object of a configuration object can be stored in an array,
         'someOtherIndex' => ['foo' => 'bar']
     ]
 
-    $myConfigurationObject = ConfigurationObjectFactory::get(
+    $myConfigurationObject = ConfigurationObjectFactory::convert(
         MyObject::class,
         $someConfigurationArray
     );
@@ -142,9 +146,9 @@ Because objects can have a lot of properties, you may want not to be forced to w
     :linenos:
     :emphasize-lines: 8,28-30
 
-    use Romm\ConfObj\ConfigurationObjectInterface;
-    use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
-    use Romm\ConfObj\Traits\ConfigurationObject\MagicMethodsTrait;
+    use Romm\ConfigurationObject\ConfigurationObjectInterface;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+    use Romm\ConfigurationObject\Traits\ConfigurationObject\MagicMethodsTrait;
 
     class MyObject implements ConfigurationObjectInterface
     {
@@ -164,7 +168,7 @@ Because objects can have a lot of properties, you may want not to be forced to w
         // No setter/getter in here...
     }
 
-    $myConfigurationObject = ConfigurationObjectFactory::get(
+    $myConfigurationObject = ConfigurationObjectFactory::convert(
         MyObject::class,
         $someConfigurationArray
     );
@@ -183,9 +187,9 @@ Because objects can have a lot of properties, you may want not to be forced to w
         :linenos:
         :emphasize-lines: 19
 
-        use Romm\ConfObj\ConfigurationObjectInterface;
-        use Romm\ConfObj\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
-        use Romm\ConfObj\Traits\ConfigurationObject\MagicMethodsTrait;
+        use Romm\ConfigurationObject\ConfigurationObjectInterface;
+        use Romm\ConfigurationObject\Traits\ConfigurationObject\DefaultConfigurationObjectTrait;
+        use Romm\ConfigurationObject\Traits\ConfigurationObject\MagicMethodsTrait;
 
         class MyObject implements ConfigurationObjectInterface
         {
@@ -226,3 +230,62 @@ Because objects can have a lot of properties, you may want not to be forced to w
         {
             // ...
         }
+
+.. _administration-utilities-silentExceptions:
+
+Silent exceptions in getter methods
+-----------------------------------
+
+In some cases you may need to throw an exception in a generic getter method of an object property. For instance:
+
+.. code-block:: php
+    :linenos:
+    :emphasize-lines: 15
+
+    class MyObject
+    {
+        /**
+         * @var SomeOtherObject
+         */
+        protected $foo;
+
+        /**
+         * @return SomeOtherObject
+         * @throws SomeException
+         */
+        public function getFoo()
+        {
+            if (null === $this->foo) {
+                throw MyException('foo has not been filled!');
+            }
+
+            return $this->foo;
+        }
+    }
+
+With this kind of implementation, you probably will be annoyed by the Configuration Object API which will throw the exception while trying to access the property at a very early stage in the object creation.
+
+To avoid this, you need to make the exception implement the interface ``\Romm\ConfigurationObject\Exceptions\SilentExceptionInterface`` (see below). This will indicate to the API that the exceptions that implement this interface can be catch during early processes, meaning the return value of the getter method will be considered as ``null``.
+
+.. code-block:: php
+    :linenos:
+    :emphasize-lines: 3
+
+    use \Romm\ConfigurationObject\Exceptions\SilentExceptionInterface;
+
+    class MyException extends \Exception implements SilentExceptionInterface
+    {
+    }
+
+.. _administration-utilities-checkFactoryProcessing:
+
+Check if the factory is processing
+----------------------------------
+
+You can check at any moment if the configuration object factory is currently processing (an object is being created). This can be useful for instance if you want to allow magic methods for an object only when it is being converted.
+
+.. code-block:: php
+
+    if (\Romm\ConfigurationObject\ConfigurationObjectFactory::getInstance()->isRunning()) {
+        // ...
+    }

@@ -1,6 +1,7 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit;
 
+use Prophecy\Comparator\Factory;
 use Romm\ConfigurationObject\ConfigurationObjectFactory;
 use Romm\ConfigurationObject\ConfigurationObjectInstance;
 use Romm\ConfigurationObject\Exceptions\ClassNotFoundException;
@@ -46,6 +47,34 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
         parent::setUp();
 
         $this->initializeConfigurationObjectTestServices();
+    }
+
+    /**
+     * The alias method for converting an object should call the implementation
+     * correctly.
+     *
+     * @test
+     */
+    public function convertMethodsCallsImplementation()
+    {
+        $className = Factory::class;
+        $objectData = ['foo' => 'bar'];
+
+        /** @var ConfigurationObjectFactory|\PHPUnit_Framework_MockObject_MockObject $factoryMock */
+        $factoryMock = $this->getMockBuilder(ConfigurationObjectFactory::class)
+            ->setMethods(['get'])
+            ->getMock();
+
+        $factoryMock->expects($this->once())
+            ->method('get')
+            ->with($className, $objectData);
+
+        $reflection = new \ReflectionClass(ConfigurationObjectFactory::class);
+        $objectManagerProperty = $reflection->getProperty('instance');
+        $objectManagerProperty->setAccessible(true);
+        $objectManagerProperty->setValue($factoryMock);
+
+        ConfigurationObjectFactory::convert($className, $objectData);
     }
 
     /**
@@ -172,7 +201,7 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
     }
 
     /**
-     * Checks that the mixed-types resolver is called and word correctly.
+     * Checks that the mixed-types resolver is called and works correctly.
      *
      * @test
      */
@@ -197,5 +226,28 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
 
         $this->assertEquals(Employee::class, get_class($employees['jane.doe']));
         $this->assertEquals(AnotherEmployee::class, get_class($employees['john.doe']));
+    }
+
+    /**
+     * Checks that the configuration object factory process can be checked.
+     *
+     * @test
+     */
+    public function configurationObjectFactoryIsRunning()
+    {
+        /** @var ConfigurationObjectFactory|\PHPUnit_Framework_MockObject_MockObject $factory */
+        $factory = $this->getMockBuilder(ConfigurationObjectFactory::class)
+            ->setMethods(['convertToObject'])
+            ->getMock();
+
+        $factory->expects($this->once())
+            ->method('convertToObject')
+            ->willReturnCallback(function () use ($factory) {
+                $this->assertTrue($factory->isRunning());
+            });
+
+        $this->assertFalse($factory->isRunning());
+        $factory->get(Company::class, []);
+        $this->assertFalse($factory->isRunning());
     }
 }

@@ -31,7 +31,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * Use as follow:
  *
- *  $confObject = \Romm\ConfigurationObject\ConfigurationObjectFactory::get(
+ *  $confObject = \Romm\ConfigurationObject\ConfigurationObjectFactory::convert(
  *      \MyVendor\MyExtension\Configuration\MyConfiguration::class,
  *      $myConfigurationArray
  *  );
@@ -57,12 +57,23 @@ class ConfigurationObjectFactory implements SingletonInterface
     protected $configurationObjectServiceFactory = [];
 
     /**
-     * Contains the queue of services factory used by this class (useful for
-     * recursive configuration object access).
-     *
-     * @var array
+     * @var int
      */
-    protected $currentServiceFactoryQueue = [];
+    protected $runningProcesses = 0;
+
+    /**
+     * Alias for:
+     *
+     * \Romm\ConfigurationObject\ConfigurationObjectFactory::getInstance()->get(...)
+     *
+     * @param string $className
+     * @param array  $objectData
+     * @return ConfigurationObjectInstance
+     */
+    public static function convert($className, array $objectData)
+    {
+        return self::getInstance()->get($className, $objectData);
+    }
 
     /**
      * @return ConfigurationObjectFactory
@@ -82,9 +93,40 @@ class ConfigurationObjectFactory implements SingletonInterface
      *
      * @param    string $className  Name of the configuration object class. The class must implement `\Romm\ConfigurationObject\ConfigurationObjectInterface`.
      * @param    array  $objectData Data used to fill the object.
-     * @return   ConfigurationObjectInstance
+     * @return ConfigurationObjectInstance
+     * @throws \Exception
      */
     public function get($className, array $objectData)
+    {
+        $this->runningProcesses++;
+
+        try {
+            $result = $this->convertToObject($className, $objectData);
+
+            $this->runningProcesses--;
+
+            return $result;
+        } catch (\Exception $exception) {
+            $this->runningProcesses--;
+
+            throw $exception;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRunning()
+    {
+        return $this->runningProcesses > 0;
+    }
+
+    /**
+     * @param string $className
+     * @param array  $objectData
+     * @return ConfigurationObjectInstance
+     */
+    protected function convertToObject($className, array $objectData)
     {
         $serviceFactory = $this->register($className);
 
