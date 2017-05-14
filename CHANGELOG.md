@@ -1,5 +1,30 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.9.0 - 2017-05-14
+------------------
+
+ - **[[2baae53](https://github.com/romm/configuration_object/commit/2baae5336f88fad68ed9780410bd904dd67dfaff)] [FEATURE] Introduce alias method for converting an array to an object**
+ 
+   The static method `ConfigurationObjectFactory::convert()` has been added.
+   
+   This is a simple alias for: `\Romm\ConfigurationObject\ConfigurationObjectFactory::getInstance()->get(...)`
+ 
+ - **[[2baae53](https://github.com/romm/configuration_object/commit/2baae5336f88fad68ed9780410bd904dd67dfaff)] [FEATURE] Introduce configuration object factory `isRunning` method**
+  
+   A new method has been added: `ConfigurationObjectFactory::isRunning()`.
+   
+   With this method, you can check at any moment if the configuration object factory is currently processing (an object is being created). This can be useful for instance if you want to allow magic methods for an object only when it is being converted.
+ 
+ - **[[2baae53](https://github.com/romm/configuration_object/commit/2baae5336f88fad68ed9780410bd904dd67dfaff)] [FEATURE] Introduce silent exceptions for getter methods**
+ 
+   This commit introduces the support of a new kind of exceptions: "silent exceptions".
+   
+   This type of exception can be thrown by an object getter methods, and they will be catch during Configuration Object API early processes, while still being thrown when the getter method is actually called from an implementation process.
+   
+   To make an exception become silent, the class must implement the interface `SilentExceptionInterface`.
+   
+   See documentation for more information.
+
 1.8.0 - 2017-05-03
 ------------------
 
