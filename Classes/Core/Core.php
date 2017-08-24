@@ -17,6 +17,7 @@ use Romm\ConfigurationObject\Core\Service\CacheService;
 use Romm\ConfigurationObject\Core\Service\ObjectService;
 use Romm\ConfigurationObject\Exceptions\MethodNotFoundException;
 use Romm\ConfigurationObject\Exceptions\SilentExceptionInterface;
+use Romm\ConfigurationObject\Reflection\ReflectionService;
 use Romm\ConfigurationObject\Service\Items\Parents\ParentsUtility;
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Validation\ValidatorResolver;
@@ -26,7 +27,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
-use TYPO3\CMS\Extbase\Reflection\ReflectionService;
 
 /**
  * General functions.

@@ -6,6 +6,7 @@ use Romm\ConfigurationObject\ConfigurationObjectMapper;
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Core\Service\CacheService as InternalCacheService;
 use Romm\ConfigurationObject\Core\Service\ObjectService;
+use Romm\ConfigurationObject\Reflection\ReflectionService;
 use Romm\ConfigurationObject\Service\Items\Cache\CacheService;
 use Romm\ConfigurationObject\Service\Items\Parents\ParentsUtility;
 use Romm\ConfigurationObject\Service\ServiceFactory;
@@ -24,8 +25,8 @@ use TYPO3\CMS\Extbase\Property\TypeConverter\ArrayConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ObjectConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\StringConverter;
 use TYPO3\CMS\Extbase\Reflection\ClassSchema;
-use TYPO3\CMS\Extbase\Reflection\ReflectionService;
 use TYPO3\CMS\Extbase\Service\EnvironmentService;
+use TYPO3\CMS\Extbase\Service\TypeHandlingService;
 use TYPO3\CMS\Extbase\Utility\ArrayUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
@@ -79,9 +80,13 @@ trait ConfigurationObjectUnitTestUtility
             ->getMock();
         $this->configurationObjectCoreMock->injectObjectManager($this->getConfigurationObjectObjectManagerMock());
         $this->configurationObjectCoreMock->injectObjectService(new ObjectService);
-        $this->configurationObjectCoreMock->injectReflectionService(new ReflectionService);
-        $this->configurationObjectCoreMock->injectValidatorResolver(new ValidatorResolver);
         $this->configurationObjectCoreMock->injectParentsUtility(new ParentsUtility);
+
+        $reflectionService = new ReflectionService;
+        $reflectedProperty = new \ReflectionProperty($reflectionService, 'objectManager');
+        $reflectedProperty->setAccessible(true);
+        $reflectedProperty->setValue($reflectionService, $this->getConfigurationObjectObjectManagerMock());
+        $this->configurationObjectCoreMock->injectReflectionService($reflectionService);
 
         $this->configurationObjectCoreMock->method('getServiceFactoryInstance')
             ->will(

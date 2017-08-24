@@ -14,13 +14,17 @@
 namespace Romm\ConfigurationObject\Validation;
 
 use Romm\ConfigurationObject\Core\Core;
-use Romm\ConfigurationObject\Reflection\ReflectionService;
+use Romm\ConfigurationObject\Core\Service\ObjectService;
+use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesInterface;
+use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesService;
 use Romm\ConfigurationObject\Validation\Validator\Internal\ConfigurationObjectValidator;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeCollectionValidator;
+use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeValidator;
 use TYPO3\CMS\Extbase\Reflection\ReflectionService as ExtbaseReflectionService;
 use TYPO3\CMS\Extbase\Validation\Validator\CollectionValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\ConjunctionValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\GenericObjectValidator;
+use TYPO3\CMS\Extbase\Validation\Validator\ObjectValidatorInterface;
 
 /**
  * Customized validator resolver, which it mostly used to support the mixed
@@ -37,6 +41,11 @@ class ValidatorResolver extends \TYPO3\CMS\Extbase\Validation\ValidatorResolver
      * @var array
      */
     protected $baseValidatorConjunctionsWithChecks = [];
+
+    /**
+     * @var ObjectService
+     */
+    protected $objectService;
 
     /**
      * @inheritdoc
@@ -70,6 +79,13 @@ class ValidatorResolver extends \TYPO3\CMS\Extbase\Validation\ValidatorResolver
 
         foreach ($conjunctionValidator->getValidators() as $validator) {
             if ($validator instanceof GenericObjectValidator) {
+                /*
+                 * A full check is processed on the properties to check for
+                 * mixed types, in which case a validator is added to these
+                 * properties.
+                 */
+                $this->addMixedTypeValidators($targetClassName, $validator);
+
                 /** @var ConfigurationObjectValidator $newValidator */
                 $newValidator = $this->objectManager->get(ConfigurationObjectValidator::class, []);
 
@@ -79,6 +95,7 @@ class ValidatorResolver extends \TYPO3\CMS\Extbase\Validation\ValidatorResolver
                     }
                 }
 
+                // Replacing the old validator with the new one...
                 $conjunctionValidator->removeValidator($validator);
                 unset($validator);
                 $conjunctionValidator->addValidator($newValidator);
@@ -87,10 +104,123 @@ class ValidatorResolver extends \TYPO3\CMS\Extbase\Validation\ValidatorResolver
     }
 
     /**
+     * This function will list the properties of the given class, and filter on
+     * the ones that do not have a validator assigned yet.
+     *
+     * @param string                 $targetClassName
+     * @param GenericObjectValidator $validator
+     */
+    protected function addMixedTypeValidators($targetClassName, GenericObjectValidator $validator)
+    {
+        foreach ($this->reflectionService->getClassPropertyNames($targetClassName) as $property) {
+            /*
+             * If the property already is already bound to an object validator,
+             * there is no need to do further checks.
+             */
+            if ($this->propertyHasObjectValidator($validator, $property)) {
+                continue;
+            }
+
+            if ($this->propertyIsMixedType($targetClassName, $property)) {
+                /*
+                 * The property is mixed, a validator with the `mixedTypes`
+                 * option is added, to delegate the validator resolving to
+                 * later (when the property is actually filled).
+                 */
+                $objectValidator = $this->createValidator(MixedTypeValidator::class);
+
+                $validator->addPropertyValidator($property, $objectValidator);
+            }
+        }
+    }
+
+    /**
+     * Checks among the existing validators of the given property if it does
+     * already has an object validator (can be several types, like the classes
+     * `ObjectValidator` or `ConjunctionValidator`, as long as they implement
+     * the interface `ObjectValidatorInterface`).
+     *
+     * If one is found, `true` is returned.
+     *
+     * @param GenericObjectValidator $validator
+     * @param string                 $property
+     * @return bool
+     */
+    protected function propertyHasObjectValidator(GenericObjectValidator $validator, $property)
+    {
+        $propertiesValidators = $validator->getPropertyValidators();
+
+        if (isset($propertiesValidators[$property])) {
+            foreach ($propertiesValidators[$property] as $validator) {
+                if ($validator instanceof ObjectValidatorInterface) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the given property is a mixed type.
+     *
+     * First, we check if the type of the property is a class that implements
+     * the interface `MixedTypesInterface`.
+     *
+     * If not, we check if the property has the annotation `@mixedTypesResolver`
+     * with a class name that implements the interface `MixedTypesInterface`.
+     *
+     * If one was found, `true` is returned.
+     *
+     * @param string $className
+     * @param string $property
+     * @return bool
+     */
+    protected function propertyIsMixedType($className, $property)
+    {
+        $mixedType = false;
+
+        $propertySchema = $this->reflectionService->getClassSchema($className)->getProperty($property);
+
+        if ($this->classIsMixedType($propertySchema['type'])) {
+            $mixedType = true;
+        } else {
+            if ($this->reflectionService->isPropertyTaggedWith($className, $property, MixedTypesService::PROPERTY_ANNOTATION_MIXED_TYPE)) {
+                $tags = $this->reflectionService->getPropertyTagValues($className, $property, MixedTypesService::PROPERTY_ANNOTATION_MIXED_TYPE);
+                $mixedTypeClassName = reset($tags);
+
+                if ($this->classIsMixedType($mixedTypeClassName)) {
+                    $mixedType = true;
+                }
+            }
+        }
+
+        return $mixedType;
+    }
+
+    /**
+     * @param string $className
+     * @return bool
+     */
+    protected function classIsMixedType($className)
+    {
+        return Core::get()->classExists($className)
+            && array_key_exists(MixedTypesInterface::class, class_implements($className));
+    }
+
+    /**
      * @param ExtbaseReflectionService $reflectionService
      */
     public function injectReflectionService(ExtbaseReflectionService $reflectionService)
     {
-        $this->reflectionService = Core::get()->getObjectManager()->get(ReflectionService::class);
+        $this->reflectionService = Core::get()->getReflectionService();
+    }
+
+    /**
+     * @param ObjectService $objectService
+     */
+    public function injectObjectService(ObjectService $objectService)
+    {
+        $this->objectService = $objectService;
     }
 }
