@@ -54,26 +54,7 @@ class ConfigurationObjectConverter extends ObjectConverter
         try {
             return parent::convertFrom($source, $targetType, $convertedChildProperties, $configuration);
         } catch (InvalidTargetException $exception) {
-            return new Error('The following properties must be filled: "' . implode('", "', $this->getRequiredConstructorArguments($targetType)) . '".', $exception->getCode());
+            return new Error('Error during conversion: ' . $exception->getMessage(), $exception->getCode());
         }
-    }
-
-    /**
-     * @param string $type
-     * @return array
-     */
-    protected function getRequiredConstructorArguments($type)
-    {
-        $requiredArguments = [];
-        $type = $this->objectContainer->getImplementationClassName($type);
-        $arguments = $this->reflectionService->getMethodParameters($type, '__construct');
-
-        foreach ($arguments as $argumentName => $argumentInformation) {
-            if ($argumentInformation['optional'] === false) {
-                $requiredArguments[] = $argumentName;
-            }
-        }
-
-        return $requiredArguments;
     }
 }
