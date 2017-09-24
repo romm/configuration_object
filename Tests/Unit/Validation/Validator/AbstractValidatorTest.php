@@ -13,14 +13,15 @@ abstract class AbstractValidatorTest extends AbstractUnitTest
      * localized messages.
      *
      * @param string $className
-     * @param array  $arguments
+     * @param array $arguments
+     * @param array $methods
      * @return \PHPUnit_Framework_MockObject_MockObject|ValidatorInterface
      */
-    protected function getMockedValidatorInstance($className, array $arguments = [])
+    protected function getMockedValidatorInstance($className, array $arguments = [], array $methods = ['translateErrorMessage'])
     {
         /** @var ValidatorInterface|\PHPUnit_Framework_MockObject_MockObject $mockedClassExistsValidator */
         $mockedClassExistsValidator = $this->getMockBuilder($className)
-            ->setMethods(['translateErrorMessage'])
+            ->setMethods($methods)
             ->setConstructorArgs([$arguments])
             ->getMock();
 

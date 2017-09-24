@@ -16,6 +16,9 @@
             <trans-unit id="validator.class_extends_class.not_valid">
                 <source>The class "%s" does not extend the class "%s".</source>
             </trans-unit>
+            <trans-unit id="validator.icon_exists.not_valid">
+                <source>The icon "%s" is not registered.</source>
+            </trans-unit>
 
         </body>
     </file>
