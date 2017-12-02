@@ -60,11 +60,6 @@ class CacheService extends AbstractService implements ConfigurationObjectBeforeS
     const DEFAULT_CACHE_BACKEND = FileBackend::class;
 
     /**
-     * Default group for created caches instances.
-     */
-    const DEFAULT_CACHE_GROUP = 'all';
-
-    /**
      * We need to check very early if the object exists in cache, to avoid
      * calling other services/functions which wont be used because they were
      * already used when the object was put in cache.
@@ -92,7 +87,7 @@ class CacheService extends AbstractService implements ConfigurationObjectBeforeS
     protected $supportedOptions = [
         self::OPTION_CACHE_NAME    => [self::DEFAULT_CACHE_IDENTIFIER, true],
         self::OPTION_CACHE_BACKEND => [self::DEFAULT_CACHE_BACKEND, true],
-        self::OPTION_CACHE_GROUPS  => [[self::DEFAULT_CACHE_GROUP], false],
+        self::OPTION_CACHE_GROUPS  => [['all', 'system'], false],
         self::OPTION_CACHE_OPTIONS => [[], false]
     ];
 

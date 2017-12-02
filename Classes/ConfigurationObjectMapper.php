@@ -106,6 +106,10 @@ class ConfigurationObjectMapper extends PropertyMapper
      */
     protected function doMapping($source, $targetType, PropertyMappingConfigurationInterface $configuration, &$currentPropertyPath)
     {
+        if ($source === null) {
+            return null;
+        }
+
         $typeConverter = $this->getTypeConverter($source, $targetType, $configuration);
         $targetType = ltrim($typeConverter->getTargetTypeForSource($source, $targetType), '\\');
 

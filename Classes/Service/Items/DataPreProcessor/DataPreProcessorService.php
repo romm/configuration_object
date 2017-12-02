@@ -13,6 +13,7 @@
 
 namespace Romm\ConfigurationObject\Service\Items\DataPreProcessor;
 
+use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Service\AbstractService;
 
 /**
@@ -55,17 +56,19 @@ class DataPreProcessorService extends AbstractService
      */
     public function getDataPreProcessor($data, $className)
     {
-        $interfaces = class_implements($className);
+        $processor = $this->defaultProcessor;
+        $processor->setData($data);
 
-        if (true === isset($interfaces[DataPreProcessorInterface::class])) {
-            $processor = new DataPreProcessor();
-            $processor->setData($data);
+        if (Core::get()->classExists($className)) {
+            $interfaces = class_implements($className);
 
-            /** @var DataPreProcessorInterface $className */
-            $className::dataPreProcessor($processor);
-        } else {
-            $processor = $this->defaultProcessor;
-            $processor->setData($data);
+            if (true === isset($interfaces[DataPreProcessorInterface::class])) {
+                $processor = new DataPreProcessor();
+                $processor->setData($data);
+
+                /** @var DataPreProcessorInterface $className */
+                $className::dataPreProcessor($processor);
+            }
         }
 
         return $processor;

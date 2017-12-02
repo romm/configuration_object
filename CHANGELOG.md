@@ -1,9 +1,32 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.10.0 - 2017-12-02
+-------------------
+
+ - **[[38635d1](https://github.com/romm/configuration_object/commit/38635d13216665f33101523ab125a4c2801dcf20)] [FEATURE] Introduce `FileExistsValidator`**
+
+   This new validator allows checking if a file exists (the syntax `EXT:my_extension/Path/To/My/File.txt` can be used).
+
+ - **[[91caefe](https://github.com/romm/configuration_object/commit/91caefe93626aec280560afb9af9f1213a352725)] [FEATURE] Introduce `IconExistsValidator`**
+ 
+   This new validator allows checking if an icon identifier has been registered in the TYPO3 icon registry.
+   
+ - **[[bd6e1ff](https://github.com/romm/configuration_object/commit/bd6e1fff590c2e4b6a5343bd0bb72271717a07bb)] [BUGFIX] Check for invalid class name in data pre-processor handler**
+
+ - **[[3fd01de](https://github.com/romm/configuration_object/commit/3fd01de4adbab004149d5d5467793a6b850c07cb)] [BUGFIX] Handle mixed types for properties with single object**
+
+   Object properties that used the "mixed types" feature were not checked if the property was filled with a single instance. Only composite types (means the properties contains several object instances) were actually checked.
+   
+   This commit patches the validator resolver (in a 💩 way) to allow it to handle single instances. A new internal validator has been introduced: it will wait for the actual object instance to be validated, in order to create an up to date validator conjunction.
+
+ - **[[9250e3e](https://github.com/romm/configuration_object/commit/9250e3e96e1452f1f9258a193d1720e11b0a927e)] [BUGFIX] Handle `null` in source values during mapping**
+
+   If a value that should be mapped to an object is `null`, no type converter will be found and an exception will be thrown. To prevent this, we must handle this specific situation in the mapper, before the type converter is fetched.
+
 1.9.0 - 2017-05-14
 ------------------
 
- - **[[2baae53](https://github.com/romm/configuration_object/commit/2baae5336f88fad68ed9780410bd904dd67dfaff)] [FEATURE] Introduce alias method for converting an array to an object**
+ - **[[2e7838e](https://github.com/romm/configuration_object/commit/2e7838ed782345efbfba30eabc24eb91fde31723)] [FEATURE] Introduce alias method for converting an array to an object**
  
    The static method `ConfigurationObjectFactory::convert()` has been added.
    
@@ -15,7 +38,7 @@
    
    With this method, you can check at any moment if the configuration object factory is currently processing (an object is being created). This can be useful for instance if you want to allow magic methods for an object only when it is being converted.
  
- - **[[2baae53](https://github.com/romm/configuration_object/commit/2baae5336f88fad68ed9780410bd904dd67dfaff)] [FEATURE] Introduce silent exceptions for getter methods**
+ - **[[83de77d](https://github.com/romm/configuration_object/commit/83de77d917416c2271daeeee1b34fa3edd54b2b1)] [FEATURE] Introduce silent exceptions for getter methods**
  
    This commit introduces the support of a new kind of exceptions: "silent exceptions".
    
