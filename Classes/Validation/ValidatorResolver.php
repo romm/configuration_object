@@ -1,6 +1,6 @@
 <?php
 /*
- * 2017 Romain CANON <romain.hydrocanon@gmail.com>
+ * 2018 Romain CANON <romain.hydrocanon@gmail.com>
  *
  * This file is part of the TYPO3 Configuration Object project.
  * It is free software; you can redistribute it and/or modify it
@@ -46,6 +46,11 @@ class ValidatorResolver extends \TYPO3\CMS\Extbase\Validation\ValidatorResolver
      * @var ObjectService
      */
     protected $objectService;
+
+    /**
+     * @var \Romm\ConfigurationObject\Reflection\ReflectionService
+     */
+    protected $reflectionService;
 
     /**
      * @inheritdoc
