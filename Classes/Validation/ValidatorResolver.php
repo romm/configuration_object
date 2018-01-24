@@ -48,6 +48,11 @@ class ValidatorResolver extends \TYPO3\CMS\Extbase\Validation\ValidatorResolver
     protected $objectService;
 
     /**
+     * @var \Romm\ConfigurationObject\Reflection\ReflectionService
+     */
+    protected $reflectionService;
+
+    /**
      * @inheritdoc
      */
     public function createValidator($validatorType, array $validatorOptions = [])
