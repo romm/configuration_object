@@ -1,5 +1,13 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+1.10.1 - 2018-01-24
+-------------------
+
+ - **[[ae026a5](https://github.com/romm/configuration_object/commit/ae026a55bd6501b1127cfb0272d60c992143fda8)] [BUGFIX] Override Extbase reflection service**
+
+   Fixes a severe issue on TYPO3 6.2 instances.
+ 
+
 1.10.0 - 2017-12-02
 -------------------
 
