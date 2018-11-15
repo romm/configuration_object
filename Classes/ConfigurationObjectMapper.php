@@ -33,7 +33,7 @@ use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ArrayConverter as ExtbaseArrayConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ObjectConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverterInterface;
-use TYPO3\CMS\Extbase\Reflection\PropertyReflection;
+use Romm\ConfigurationObject\Legacy\Reflection\PropertyReflection;
 
 /**
  * Custom mapper used for configuration objects.

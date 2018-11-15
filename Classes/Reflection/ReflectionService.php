@@ -26,7 +26,7 @@ class ReflectionService extends \TYPO3\CMS\Extbase\Reflection\ReflectionService
     /**
      * @inheritdoc
      */
-    public function getPropertyTagsValues($className, $propertyName)
+    public function getPropertyTagsValues($className, $propertyName): array
     {
         $result = parent::getPropertyTagsValues($className, $propertyName);
 
@@ -40,7 +40,7 @@ class ReflectionService extends \TYPO3\CMS\Extbase\Reflection\ReflectionService
     /**
      * @inheritdoc
      */
-    public function getPropertyTagValues($className, $propertyName, $tag)
+    public function getPropertyTagValues($className, $propertyName, $tag): array
     {
         $result = parent::getPropertyTagValues($className, $propertyName, $tag);
 

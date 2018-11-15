@@ -5,7 +5,7 @@ use Romm\ConfigurationObject\Core\Service\ReflectionService;
 use Romm\ConfigurationObject\Exceptions\PropertyNotAccessibleException;
 use Romm\ConfigurationObject\Tests\Fixture\Reflection\ExampleReflection;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
-use TYPO3\CMS\Extbase\Reflection\ClassReflection;
+use Romm\ConfigurationObject\Legacy\Reflection\ClassReflection;
 
 class ReflectionServiceTest extends AbstractUnitTest
 {
