@@ -21,7 +21,7 @@ use Romm\ConfigurationObject\Core\Core;
  * Indeed, TYPO3 does only support annotations like: `\ArrayObject<\Some\Class>`
  * but this is not well supported by IDEs.
  */
-class ReflectionService extends \TYPO3\CMS\Extbase\Reflection\ReflectionService
+class ReflectionService extends \Romm\ConfigurationObject\Legacy\Reflection\ReflectionService
 {
     /**
      * @inheritdoc

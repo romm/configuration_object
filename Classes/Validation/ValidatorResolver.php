@@ -34,7 +34,7 @@ use TYPO3\CMS\Extbase\Validation\Validator\ObjectValidatorInterface;
  * validator is `CollectionValidator`: in this case we use a custom one instead:
  * `MixedTypeCollectionValidator` which will support the mixed types feature.
  */
-class ValidatorResolver extends \TYPO3\CMS\Extbase\Validation\ValidatorResolver
+class ValidatorResolver extends \Romm\ConfigurationObject\Legacy\Validation\ValidatorResolver
 {
 
     /**
