@@ -26,7 +26,7 @@ class ReflectionService extends \Romm\ConfigurationObject\Legacy\Reflection\Refl
     /**
      * @inheritdoc
      */
-    public function getPropertyTagsValues($className, $propertyName): array
+    public function getPropertyTagsValues($className, $propertyName)
     {
         $result = parent::getPropertyTagsValues($className, $propertyName);
 
@@ -40,7 +40,7 @@ class ReflectionService extends \Romm\ConfigurationObject\Legacy\Reflection\Refl
     /**
      * @inheritdoc
      */
-    public function getPropertyTagValues($className, $propertyName, $tag): array
+    public function getPropertyTagValues($className, $propertyName, $tag)
     {
         $result = parent::getPropertyTagValues($className, $propertyName, $tag);
 
