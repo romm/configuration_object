@@ -203,7 +203,7 @@ trait ConfigurationObjectUnitTestUtility
         } else {
             $configurationObjectConverter->injectObjectContainer($objectContainer);
             $configurationObjectConverter->injectObjectManager(Core::get()->getObjectManager());
-            $configurationObjectConverter->injectReflectionService(Core::get()->getReflectionService());
+            $configurationObjectConverter->injectReflectionService(new \TYPO3\CMS\Extbase\Reflection\ReflectionService());
         }
 
         $mockedConfigurationObjectMapper->expects($this->any())

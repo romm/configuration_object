@@ -15,6 +15,7 @@ namespace Romm\ConfigurationObject\Validation;
 
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Core\Service\ObjectService;
+use Romm\ConfigurationObject\Legacy\Reflection\ReflectionService;
 use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesInterface;
 use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesService;
 use Romm\ConfigurationObject\Validation\Validator\Internal\ConfigurationObjectValidator;
@@ -214,9 +215,9 @@ class ValidatorResolver extends \Romm\ConfigurationObject\Legacy\Validation\Vali
     }
 
     /**
-     * @param ExtbaseReflectionService $reflectionService
+     * @param ReflectionService $reflectionService
      */
-    public function injectReflectionService(ExtbaseReflectionService $reflectionService)
+    public function injectReflectionService(ReflectionService $reflectionService)
     {
         $this->reflectionService = Core::get()->getReflectionService();
     }

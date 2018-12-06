@@ -14,6 +14,7 @@ namespace Romm\ConfigurationObject\Legacy\Validation;
  * The TYPO3 project - inspiring people to share!
  */
 
+use Romm\ConfigurationObject\Legacy\Reflection\ReflectionService;
 use TYPO3\CMS\Core\Utility\ClassNamingUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\TypeHandlingUtility;
@@ -83,9 +84,9 @@ class ValidatorResolver implements \TYPO3\CMS\Core\SingletonInterface
     }
 
     /**
-     * @param \TYPO3\CMS\Extbase\Reflection\ReflectionService $reflectionService
+     * @param ReflectionService $reflectionService
      */
-    public function injectReflectionService(\TYPO3\CMS\Extbase\Reflection\ReflectionService $reflectionService)
+    public function injectReflectionService(ReflectionService $reflectionService)
     {
         $this->reflectionService = $reflectionService;
     }

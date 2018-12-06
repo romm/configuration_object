@@ -5,6 +5,7 @@ use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeCollectionValidator;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use TYPO3\CMS\Extbase\Reflection\ReflectionService;
 use TYPO3\CMS\Extbase\Validation\Validator\BooleanValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\CollectionValidator;
 use TYPO3\CMS\Extbase\Validation\ValidatorResolver as ExtbaseValidatorResolver;
@@ -41,7 +42,7 @@ class ValidatorResolverTest extends AbstractUnitTest
             $reflectedProperty->setValue($extbaseValidatorResolver, Core::get()->getReflectionService());
         } else {
             $extbaseValidatorResolver->injectObjectManager(Core::get()->getObjectManager());
-            $extbaseValidatorResolver->injectReflectionService(Core::get()->getReflectionService());
+            $extbaseValidatorResolver->injectReflectionService(new ReflectionService());
         }
 
         $validator = $validatorResolver->createValidator(CollectionValidator::class);
