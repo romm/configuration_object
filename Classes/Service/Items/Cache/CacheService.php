@@ -193,7 +193,9 @@ class CacheService extends AbstractService implements ConfigurationObjectBeforeS
                 $objectCacheHash = $this->getConfigurationObjectCacheHash($serviceDataTransferObject);
                 $validationCacheHash = $this->getConfigurationObjectValidationResultCacheHash($serviceDataTransferObject);
 
-                if (false === $this->getCacheInstance()->has($validationCacheHash)) {
+                if (false === $this->getCacheInstance()->has($validationCacheHash)
+                    || $this->getCacheInstance()->get($validationCacheHash) === false
+                ) {
                     $cacheValidationResult = $serviceDataTransferObject->getResult()->getValidationResult();
                     $this->getCacheInstance()->flushByTag($objectCacheHash);
                     $this->getCacheInstance()->set($validationCacheHash, $cacheValidationResult, [$objectCacheHash]);
