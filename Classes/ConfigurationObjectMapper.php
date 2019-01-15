@@ -15,6 +15,7 @@ namespace Romm\ConfigurationObject;
 
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Core\Service\ReflectionService;
+use Romm\ConfigurationObject\Legacy\Reflection\PropertyReflection;
 use Romm\ConfigurationObject\Service\DataTransferObject\ConfigurationObjectConversionDTO;
 use Romm\ConfigurationObject\Service\DataTransferObject\GetTypeConverterDTO;
 use Romm\ConfigurationObject\Service\Event\ObjectConversionAfterServiceEventInterface;
@@ -33,7 +34,6 @@ use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ArrayConverter as ExtbaseArrayConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ObjectConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverterInterface;
-use Romm\ConfigurationObject\Legacy\Reflection\PropertyReflection;
 
 /**
  * Custom mapper used for configuration objects.

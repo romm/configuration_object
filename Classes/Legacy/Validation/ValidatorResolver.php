@@ -1,4 +1,5 @@
 <?php
+
 namespace Romm\ConfigurationObject\Legacy\Validation;
 
 /*
@@ -16,7 +17,6 @@ namespace Romm\ConfigurationObject\Legacy\Validation;
 
 use Romm\ConfigurationObject\Legacy\Reflection\ReflectionService;
 use TYPO3\CMS\Core\Utility\ClassNamingUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Utility\TypeHandlingUtility;
 use TYPO3\CMS\Extbase\Validation\Exception\NoSuchValidatorException;
 use TYPO3\CMS\Extbase\Validation\Validator\ConjunctionValidator;

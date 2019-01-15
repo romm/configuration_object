@@ -21,7 +21,6 @@ use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesService;
 use Romm\ConfigurationObject\Validation\Validator\Internal\ConfigurationObjectValidator;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeCollectionValidator;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeValidator;
-use TYPO3\CMS\Extbase\Reflection\ReflectionService as ExtbaseReflectionService;
 use TYPO3\CMS\Extbase\Validation\Validator\CollectionValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\ConjunctionValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\GenericObjectValidator;

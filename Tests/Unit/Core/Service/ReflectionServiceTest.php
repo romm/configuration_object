@@ -1,11 +1,12 @@
 <?php
+
 namespace Romm\ConfigurationObject\Tests\Unit\Core\Service\Cache;
 
 use Romm\ConfigurationObject\Core\Service\ReflectionService;
 use Romm\ConfigurationObject\Exceptions\PropertyNotAccessibleException;
+use Romm\ConfigurationObject\Legacy\Reflection\ClassReflection;
 use Romm\ConfigurationObject\Tests\Fixture\Reflection\ExampleReflection;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
-use Romm\ConfigurationObject\Legacy\Reflection\ClassReflection;
 
 class ReflectionServiceTest extends AbstractUnitTest
 {

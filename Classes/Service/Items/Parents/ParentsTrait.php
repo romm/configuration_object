@@ -16,7 +16,6 @@ namespace Romm\ConfigurationObject\Service\Items\Parents;
 use Romm\ConfigurationObject\Exceptions\DuplicateEntryException;
 use Romm\ConfigurationObject\Exceptions\EntryNotFoundException;
 use Romm\ConfigurationObject\Exceptions\InvalidTypeException;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Use this trait in your configuration objects (it will work only if they do

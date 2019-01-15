@@ -151,7 +151,6 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
         return $companyObject;
     }
 
-
     // @todo test
 //    /**
 //     * Will test the creation of a company with a value considered as wrong. The
