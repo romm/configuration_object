@@ -485,7 +485,7 @@ class ReflectionService implements \TYPO3\CMS\Core\SingletonInterface
         if (!class_exists($className)) {
             throw new Exception('The classname "' . $className . '" was not found and thus can not be reflected.', 1278450972);
         }
-        $classSchema = $this->objectManager->get(\TYPO3\CMS\Extbase\Reflection\ClassSchema::class, $className);
+        $classSchema = $this->objectManager->get(ClassSchema::class, $className);
         if (is_subclass_of($className, \TYPO3\CMS\Extbase\DomainObject\AbstractEntity::class)) {
             $classSchema->setModelType(ClassSchema::MODELTYPE_ENTITY);
             $possibleRepositoryClassName = ClassNamingUtility::translateModelNameToRepositoryName($className);
@@ -498,7 +498,7 @@ class ReflectionService implements \TYPO3\CMS\Core\SingletonInterface
         foreach ($this->getClassPropertyNames($className) as $propertyName) {
             if (!$this->isPropertyTaggedWith($className, $propertyName, 'transient') && $this->isPropertyTaggedWith($className, $propertyName, 'var')) {
                 $cascadeTagValues = $this->getPropertyTagValues($className, $propertyName, 'cascade');
-                $classSchema->addProperty($propertyName, implode(' ', $this->getPropertyTagValues($className, $propertyName, 'var')), $this->isPropertyTaggedWith($className, $propertyName, 'lazy'), $cascadeTagValues[0]);
+                $classSchema->addProperty($propertyName, implode(' ', $this->getPropertyTagValues($className, $propertyName, 'var')), $this->isPropertyTaggedWith($className, $propertyName, 'lazy'), $cascadeTagValues[0] ?? null);
             }
             if ($this->isPropertyTaggedWith($className, $propertyName, 'uuid')) {
                 $classSchema->setUuidPropertyName($propertyName);

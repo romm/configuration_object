@@ -60,7 +60,7 @@ class ServiceFactoryTest extends AbstractUnitTest
      */
     public function checkDuplicateServiceEntryWhileAddingService()
     {
-        $this->setExpectedException(DuplicateEntryException::class);
+        $this->expectException(DuplicateEntryException::class);
 
         $serviceFactory = ServiceFactory::getInstance();
         $serviceFactory->attach(ParentsService::class, [])
@@ -77,7 +77,7 @@ class ServiceFactoryTest extends AbstractUnitTest
      */
     public function getServiceInstanceBeforeInitializationThrowsException()
     {
-        $this->setExpectedException(InitializationNotSetException::class);
+        $this->expectException(InitializationNotSetException::class);
 
         $serviceFactory = ServiceFactory::getInstance();
         $serviceFactory->attach(ParentsService::class, [])
@@ -95,7 +95,7 @@ class ServiceFactoryTest extends AbstractUnitTest
      */
     public function forServiceNotAddedThrowsException()
     {
-        $this->setExpectedException(Exception::class);
+        $this->expectException(Exception::class);
 
         $serviceFactory = ServiceFactory::getInstance();
         $serviceFactory->with(ParentsService::class);
@@ -111,7 +111,7 @@ class ServiceFactoryTest extends AbstractUnitTest
      */
     public function setOptionForNotAddedServiceThrowsException()
     {
-        $this->setExpectedException(InitializationNotSetException::class);
+        $this->expectException(InitializationNotSetException::class);
 
         $serviceFactory = ServiceFactory::getInstance();
         $serviceFactory->setOption(CacheService::OPTION_CACHE_OPTIONS, ['foo' => 'bar']);
@@ -147,7 +147,7 @@ class ServiceFactoryTest extends AbstractUnitTest
      */
     public function initializeWithWrongServiceThrowsException()
     {
-        $this->setExpectedException(WrongInheritanceException::class);
+        $this->expectException(WrongInheritanceException::class);
 
         $serviceFactory = ServiceFactory::getInstance();
         $serviceFactory->attach('WrongClassName')
@@ -189,7 +189,7 @@ class ServiceFactoryTest extends AbstractUnitTest
         $serviceFactory->attach(ParentsService::class)
             ->initialize();
 
-        $this->setExpectedException(EntryNotFoundException::class);
+        $this->expectException(EntryNotFoundException::class);
         $serviceFactory->get(\stdClass::class);
 
         unset($serviceFactory);
@@ -203,7 +203,7 @@ class ServiceFactoryTest extends AbstractUnitTest
      */
     public function runWrongServiceThrowsException()
     {
-        $this->setExpectedException(WrongInheritanceException::class);
+        $this->expectException(WrongInheritanceException::class);
 
         $serviceFactory = ServiceFactory::getInstance();
         $serviceFactory->initialize();
@@ -222,7 +222,7 @@ class ServiceFactoryTest extends AbstractUnitTest
      */
     public function runWrongMethodFromServiceThrowsException()
     {
-        $this->setExpectedException(Exception::class);
+        $this->expectException(Exception::class);
 
         $serviceFactory = ServiceFactory::getInstance();
 

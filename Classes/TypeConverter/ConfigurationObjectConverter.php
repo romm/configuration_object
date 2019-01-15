@@ -14,10 +14,12 @@
 namespace Romm\ConfigurationObject\TypeConverter;
 
 use Romm\ConfigurationObject\Core\Core;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Error\Error;
 use TYPO3\CMS\Extbase\Property\Exception\InvalidTargetException;
 use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationInterface;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ObjectConverter;
+use TYPO3\CMS\Extbase\Reflection\ClassSchema;
 
 /**
  * Configuration object converter.
@@ -36,7 +38,9 @@ class ConfigurationObjectConverter extends ObjectConverter
         $specificTargetType = $this->objectContainer->getImplementationClassName($targetType);
 
         if (Core::get()->classExists($specificTargetType)) {
-            $propertyTags = $this->reflectionService->getPropertyTagValues($specificTargetType, $propertyName, 'var');
+            /** @var ClassSchema $classSchema */
+            $classSchema = GeneralUtility::makeInstance(ClassSchema::class, $specificTargetType);
+            $propertyTags = $classSchema->getProperty($propertyName)['tags']['var'];
 
             if (!empty($propertyTags)) {
                 return current($propertyTags);

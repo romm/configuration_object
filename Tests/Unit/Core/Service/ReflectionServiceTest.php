@@ -87,7 +87,7 @@ class ReflectionServiceTest extends AbstractUnitTest
      */
     public function notAccessiblePropertyThrowsException()
     {
-        $this->setExpectedException(PropertyNotAccessibleException::class);
+        $this->expectException(PropertyNotAccessibleException::class);
 
         $service = new ReflectionService;
 

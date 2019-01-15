@@ -115,10 +115,10 @@ class CacheService extends AbstractService implements ConfigurationObjectBeforeS
     {
         $this->cacheIdentifier = $this->options[self::OPTION_CACHE_NAME];
         $options = [
-            'backend'  => $this->options[self::OPTION_CACHE_BACKEND],
+            'backend'  => $this->options[self::OPTION_CACHE_BACKEND] ?? null,
             'frontend' => VariableFrontend::class,
-            'groups'   => $this->options[self::OPTION_CACHE_GROUPS],
-            'options'  => $this->options[self::OPTION_CACHE_OPTIONS]
+            'groups'   => $this->options[self::OPTION_CACHE_GROUPS] ?? [],
+            'options'  => $this->options[self::OPTION_CACHE_OPTIONS] ?? []
         ];
 
         // Adds the cache to the list of TYPO3 caches.

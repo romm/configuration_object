@@ -18,6 +18,7 @@ use Romm\ConfigurationObject\Service\Items\DataPreProcessor\DataPreProcessorInte
 use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesInterface;
 use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesResolver;
 use Romm\ConfigurationObject\Traits\ConfigurationObject\MagicMethodsTrait;
+use TYPO3\CMS\Extbase\Annotation\Validate;
 
 /**
  * @method setName(string $name)
@@ -34,21 +35,21 @@ class Employee implements DataPreProcessorInterface, MixedTypesInterface
 
     /**
      * @var string
-     * @validate TYPO3.CMS.Extbase:NotEmpty
-     * @validate Romm\ConfigurationObject\Tests\Fixture\Validator\WrongValueValidator
+     * @Validate(validator="TYPO3.CMS.Extbase:NotEmpty")
+     * @Validate(validator="Romm\ConfigurationObject\Tests\Fixture\Validator\WrongValueValidator")
      */
     protected $name;
 
     /**
      * @var string
-     * @validate TYPO3.CMS.Extbase:NotEmpty
-     * @validate Romm.ConfigurationObject:HasValues(values= Male|Female)
+     * @Validate(validator="TYPO3.CMS.Extbase:NotEmpty")
+     * @Validate(validator="Romm.ConfigurationObject:HasValues", values="Male|Female")
      */
     protected $gender;
 
     /**
      * @var string
-     * @validate TYPO3.CMS.Extbase:EmailAddress
+     * @Validate(validator="TYPO3.CMS.Extbase:EmailAddress")
      */
     protected $email;
 

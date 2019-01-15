@@ -43,7 +43,7 @@ trait ParentsTrait
      */
     public function setParents(array $parents)
     {
-        GeneralUtility::logDeprecatedFunction();
+        trigger_error('\Romm\ConfigurationObject\Service\Items\Parents\ParentsTrait->setParents() - This function is deprecated and will be removed in v2!', E_USER_DEPRECATED);
 
         $this->_parents = $parents;
     }
