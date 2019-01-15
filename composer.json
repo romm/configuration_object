@@ -17,7 +17,8 @@
   ],
   "require": {
     "php": "^7.1",
-    "typo3/cms-core": "^9.5"
+    "typo3/cms-core": "^9.5",
+    "typo3/cms-beuser": "^9.5"
   },
   "require-dev": {
     "mikey179/vfsStream": "^1.6",
@@ -31,10 +32,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Romm\\ConfigurationObject\\Tests\\": "Tests",
-      "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
-      "TYPO3\\CMS\\Fluid\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/fluid/Tests/",
-      "TYPO3\\CMS\\Beuser\\": ".Build/vendor/typo3/cms/typo3/sysext/beuser/Classes/"
+      "Romm\\ConfigurationObject\\Tests\\": "Tests"
     }
   },
   "replace": {
