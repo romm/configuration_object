@@ -14,10 +14,10 @@
 namespace Romm\ConfigurationObject\Core\Service;
 
 use Romm\ConfigurationObject\Exceptions\PropertyNotAccessibleException;
+use Romm\ConfigurationObject\Legacy\Reflection\ClassReflection;
+use Romm\ConfigurationObject\Legacy\Reflection\PropertyReflection;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Reflection\ClassReflection;
-use TYPO3\CMS\Extbase\Reflection\PropertyReflection;
 
 /**
  * An abstraction for class reflection, which is used a lot by this API, to

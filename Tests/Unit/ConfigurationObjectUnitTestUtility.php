@@ -16,6 +16,7 @@ use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
 use TYPO3\CMS\Core\Cache\CacheFactory;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Object\Container\Container;
@@ -27,7 +28,6 @@ use TYPO3\CMS\Extbase\Property\TypeConverter\StringConverter;
 use TYPO3\CMS\Extbase\Reflection\ClassSchema;
 use TYPO3\CMS\Extbase\Service\EnvironmentService;
 use TYPO3\CMS\Extbase\Service\TypeHandlingService;
-use TYPO3\CMS\Extbase\Utility\ArrayUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\GenericObjectValidator;
@@ -56,7 +56,9 @@ trait ConfigurationObjectUnitTestUtility
     protected function initializeConfigurationObjectTestServices()
     {
         // We need to register the type converters used in these examples.
-        $list = ArrayUtility::getValueByPath($GLOBALS, 'TYPO3_CONF_VARS.EXTCONF.extbase.typeConverters') ?: [];
+        $list = ArrayUtility::isValidPath($GLOBALS, 'TYPO3_CONF_VARS.EXTCONF.extbase.typeConverters', '.')
+            ? ArrayUtility::getValueByPath($GLOBALS, 'TYPO3_CONF_VARS.EXTCONF.extbase.typeConverters', '.')
+            : [];
 
         foreach (self::$defaultTypeConverters as $converter) {
             if (false === in_array($converter, $list)) {
@@ -203,7 +205,12 @@ trait ConfigurationObjectUnitTestUtility
         } else {
             $configurationObjectConverter->injectObjectContainer($objectContainer);
             $configurationObjectConverter->injectObjectManager(Core::get()->getObjectManager());
-            $configurationObjectConverter->injectReflectionService(Core::get()->getReflectionService());
+
+            $reflectionService = new \Romm\ConfigurationObject\Legacy\Reflection\ReflectionService();
+            $reflectionService->injectObjectManager(Core::get()->getObjectManager());
+            $reflectedProperty = new \ReflectionProperty($configurationObjectConverter, 'reflectionService');
+            $reflectedProperty->setAccessible(true);
+            $reflectedProperty->setValue($configurationObjectConverter, $reflectionService);
         }
 
         $mockedConfigurationObjectMapper->expects($this->any())

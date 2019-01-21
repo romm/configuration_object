@@ -45,7 +45,7 @@ class AbstractServiceDTOTest extends AbstractUnitTest
      */
     public function constructorThrowsExceptionOnWrongClassName()
     {
-        $this->setExpectedException(ClassNotFoundException::class);
+        $this->expectException(ClassNotFoundException::class);
         $this->getMockForAbstractClass(AbstractServiceDTO::class, ['Some wrong class name', $this->serviceFactory]);
     }
 
@@ -57,7 +57,7 @@ class AbstractServiceDTOTest extends AbstractUnitTest
      */
     public function constructorThrowsExceptionOnWrongInheritance()
     {
-        $this->setExpectedException(WrongInheritanceException::class);
+        $this->expectException(WrongInheritanceException::class);
         $this->getMockForAbstractClass(AbstractServiceDTO::class, [\stdClass::class, $this->serviceFactory]);
     }
 

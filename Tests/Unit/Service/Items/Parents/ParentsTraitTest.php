@@ -19,7 +19,7 @@ class ParentsTraitTest extends AbstractUnitTest
         $object = new DummyConfigurationObjectWithParentsTrait();
         $stdClass = new \stdClass();
 
-        $object->setParents([$stdClass]);
+        @$object->setParents([$stdClass]);
 
         $this->assertTrue($object->hasParent(\stdClass::class));
         $this->assertFalse($object->hasParent(self::class));
@@ -44,7 +44,7 @@ class ParentsTraitTest extends AbstractUnitTest
      */
     public function attachNonObjectThrowsException()
     {
-        $this->setExpectedException(InvalidTypeException::class);
+        $this->expectException(InvalidTypeException::class);
 
         $object = new DummyConfigurationObjectWithParentsTrait();
         /** @noinspection PhpParamsInspection */
@@ -56,7 +56,7 @@ class ParentsTraitTest extends AbstractUnitTest
      */
     public function attachExistingParentThrowsException()
     {
-        $this->setExpectedException(DuplicateEntryException::class);
+        $this->expectException(DuplicateEntryException::class);
 
         $object = new DummyConfigurationObjectWithParentsTrait();
         $stdClass = new \stdClass();
@@ -147,7 +147,7 @@ class ParentsTraitTest extends AbstractUnitTest
     {
         $object = new DummyConfigurationObjectWithParentsTrait();
 
-        $this->setExpectedException(EntryNotFoundException::class);
+        $this->expectException(EntryNotFoundException::class);
         $object->getFirstParent(\stdClass::class);
 
         unset($object);

@@ -24,7 +24,7 @@ class ObjectServiceTest extends AbstractUnitTest
      */
     public function notSilentExceptionIsThrown()
     {
-        $this->setExpectedException(DummyException::class);
+        $this->expectException(DummyException::class);
 
         $service = new ObjectService;
         $model = new ModelWithSilentExceptions;

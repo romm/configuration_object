@@ -17,6 +17,7 @@ use Romm\ConfigurationObject\ConfigurationObjectInterface;
 use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Service\ServiceInterface;
 use Romm\ConfigurationObject\Traits\ConfigurationObject\MagicMethodsTrait;
+use TYPO3\CMS\Extbase\Annotation\Validate;
 
 /**
  * @method string getName()

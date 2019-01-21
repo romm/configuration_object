@@ -45,7 +45,7 @@ class MagicMethodsTraitTest extends AbstractUnitTest
     {
         $dummyConfigurationObject = new DummyConfigurationObject();
 
-        $this->setExpectedException(MethodNotFoundException::class);
+        $this->expectException(MethodNotFoundException::class);
         $this->assertEquals(null, call_user_func([$dummyConfigurationObject, 'getNotExistingProperty']));
 
         unset($dummyConfigurationObject);
@@ -60,7 +60,7 @@ class MagicMethodsTraitTest extends AbstractUnitTest
     {
         $dummyConfigurationObject = new DummyConfigurationObject();
 
-        $this->setExpectedException(MethodNotFoundException::class);
+        $this->expectException(MethodNotFoundException::class);
         $this->assertEquals(null, call_user_func([$dummyConfigurationObject, 'setBaz']));
 
         unset($dummyConfigurationObject);

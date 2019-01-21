@@ -23,7 +23,7 @@ class IconExistsValidatorTest extends AbstractValidatorTest
         $mockedIconExistsValidator = $this->getMockedValidatorInstance(IconExistsValidator::class, [], ['translateErrorMessage', 'getIconRegistry']);
 
         if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-            $this->setExpectedException(UnsupportedVersionException::class);
+            $this->expectException(UnsupportedVersionException::class);
             $mockedIconExistsValidator->validate($correctIcon);
         } else {
             $iconRegistry = $this->prophesize(IconRegistry::class);

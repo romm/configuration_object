@@ -48,7 +48,7 @@ class AbstractServiceTest extends AbstractUnitTest
         $this->inject($this->abstractService, 'supportedOptions', $supportedOptions);
 
         if (null !== $exceptionThrown) {
-            $this->setExpectedException($exceptionThrown);
+            $this->expectException($exceptionThrown);
         }
 
         $this->abstractService->initializeObject($options);
@@ -135,7 +135,7 @@ class AbstractServiceTest extends AbstractUnitTest
     public function callBackCanBeDelayed(array $delayedCallBacks, array $expectedResult, $exceptionThrown = null)
     {
         if (null !== $exceptionThrown) {
-            $this->setExpectedException($exceptionThrown);
+            $this->expectException($exceptionThrown);
         }
 
         $this->abstractService->_setStatic('delayedCallbacks', []);

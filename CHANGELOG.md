@@ -1,5 +1,17 @@
 # ![Configuration Object](Documentation/Images/configuration-object-icon@medium.png) Configuration Object – ChangeLog
 
+2.0.0 - 2019-01-21
+-------------------
+
+ - **[[b2fe328](https://github.com/romm/configuration_object/commit/b2fe328057c8bb6d73d063e61ec361b94f4f530d)] [!!!][TASK] Make extension compatible for TYPO3 9.5**
+
+   Versions 6.2, 7.6 and 8.6 are not supported anymore
+
+ - **[[9ac85e1](https://github.com/romm/configuration_object/commit/9ac85e1455e050e81c97142dbc8a67ee7f8a8a79)] [BUGFIX] Manage recursivity in mapper**
+
+ - **[[297c3c6](https://github.com/romm/configuration_object/commit/297c3c69b865522f79b41e1b51f8876ee0e314ad)] [BUGFIX] Handler invalid cache entry**
+
+
 1.10.1 - 2018-01-24
 -------------------
 
