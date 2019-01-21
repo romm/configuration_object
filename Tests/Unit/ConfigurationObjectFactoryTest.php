@@ -151,28 +151,27 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
         return $companyObject;
     }
 
-    // @todo test
-//    /**
-//     * Will test the creation of a company with a value considered as wrong. The
-//     * result should be an object containing exactly one error.
-//     *
-//     * @test
-//     */
-//    public function createCompanyObjectWithWrongValues()
-//    {
-//        $values = $this->defaultCompanyValues;
-//        // Overriding the name with a wrong value which wont pass the validators.
-//        $values['employees']['john.doe']['name'] = WrongValueValidator::WRONG_VALUE;
-//
-//        $companyObject = ConfigurationObjectFactory::getInstance()
-//            ->get(Company::class, $values);
-//
-//        $this->assertTrue($companyObject->getValidationResult()->hasErrors());
-//        $this->assertEquals(1, count($companyObject->getValidationResult()->getFlattenedErrors()));
-//
-//        $this->expectException(Exception::class);
-//        $companyObject->getObject();
-//    }
+    /**
+     * Will test the creation of a company with a value considered as wrong. The
+     * result should be an object containing exactly one error.
+     *
+     * @test
+     */
+    public function createCompanyObjectWithWrongValues()
+    {
+        $values = $this->defaultCompanyValues;
+        // Overriding the name with a wrong value which wont pass the validators.
+        $values['employees']['john.doe']['name'] = WrongValueValidator::WRONG_VALUE;
+
+        $companyObject = ConfigurationObjectFactory::getInstance()
+            ->get(Company::class, $values);
+
+        $this->assertTrue($companyObject->getValidationResult()->hasErrors());
+        $this->assertEquals(1, count($companyObject->getValidationResult()->getFlattenedErrors()));
+
+        $this->expectException(Exception::class);
+        $companyObject->getObject();
+    }
 
     /**
      * Checks that the data pre-processor is called and works correctly.

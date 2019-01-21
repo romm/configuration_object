@@ -205,7 +205,12 @@ trait ConfigurationObjectUnitTestUtility
         } else {
             $configurationObjectConverter->injectObjectContainer($objectContainer);
             $configurationObjectConverter->injectObjectManager(Core::get()->getObjectManager());
-            $configurationObjectConverter->injectReflectionService(new \TYPO3\CMS\Extbase\Reflection\ReflectionService());
+
+            $reflectionService = new \Romm\ConfigurationObject\Legacy\Reflection\ReflectionService();
+            $reflectionService->injectObjectManager(Core::get()->getObjectManager());
+            $reflectedProperty = new \ReflectionProperty($configurationObjectConverter, 'reflectionService');
+            $reflectedProperty->setAccessible(true);
+            $reflectedProperty->setValue($configurationObjectConverter, $reflectionService);
         }
 
         $mockedConfigurationObjectMapper->expects($this->any())

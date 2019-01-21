@@ -1,6 +1,7 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\TypeConverter;
 
+use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithConstructorArguments;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use Romm\ConfigurationObject\TypeConverter\ConfigurationObjectConverter;
@@ -21,6 +22,7 @@ class ConfigurationObjectConverterTest extends AbstractUnitTest
         $configurationObjectConverter = new ConfigurationObjectConverter;
         $this->inject($configurationObjectConverter, 'objectContainer', new Container);
         $this->inject($configurationObjectConverter, 'reflectionService', new ReflectionService);
+        $this->inject($configurationObjectConverter, 'objectManager', Core::get()->getObjectManager());
 
         $result = $configurationObjectConverter->convertFrom(
             null,

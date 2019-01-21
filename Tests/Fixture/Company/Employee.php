@@ -35,21 +35,21 @@ class Employee implements DataPreProcessorInterface, MixedTypesInterface
 
     /**
      * @var string
-     * @Validate(validator="TYPO3.CMS.Extbase:NotEmpty")
-     * @Validate(validator="Romm\ConfigurationObject\Tests\Fixture\Validator\WrongValueValidator")
+     * @validate TYPO3.CMS.Extbase:NotEmpty
+     * @validate Romm\ConfigurationObject\Tests\Fixture\Validator\WrongValueValidator
      */
     protected $name;
 
     /**
      * @var string
-     * @Validate(validator="TYPO3.CMS.Extbase:NotEmpty")
-     * @Validate(validator="Romm.ConfigurationObject:HasValues", values="Male|Female")
+     * @validate TYPO3.CMS.Extbase:NotEmpty
+     * @validate Romm.ConfigurationObject:HasValues(values="Male|Female")
      */
     protected $gender;
 
     /**
      * @var string
-     * @Validate(validator="TYPO3.CMS.Extbase:EmailAddress")
+     * @validate TYPO3.CMS.Extbase:EmailAddress
      */
     protected $email;
 

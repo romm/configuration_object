@@ -29,7 +29,7 @@ class Company implements ConfigurationObjectInterface
 
     /**
      * @var string
-     * @Validate(validator="TYPO3.CMS.Extbase:NotEmpty")
+     * @validate TYPO3.CMS.Extbase:NotEmpty
      */
     protected $name;
 

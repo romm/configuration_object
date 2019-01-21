@@ -18,47 +18,46 @@ class ConfigurationObjectInstanceTest extends AbstractUnitTest
         $this->injectMockedValidatorResolverInCore();
     }
 
-    // @todo test
-//    /**
-//     * Will check a full workflow of the life of an instance of the class
-//     * `ConfigurationObjectInstance`.
-//     *
-//     * @test
-//     */
-//    public function checkEverythingWorksCorrectly()
-//    {
-//        $dummyConfigurationObject = new DummyConfigurationObjectWithAttributeContainingError();
-//        $dummyConfigurationObject->setFoo(WrongValueValidator::WRONG_VALUE);
-//        $mapperResult = new Result();
-//
-//        $configurationObjectInstance = new ConfigurationObjectInstance($dummyConfigurationObject, $mapperResult);
-//
-//        $this->assertFalse($configurationObjectInstance->hasValidationResult());
-//
-//        $result = new Result();
-//        $error = new Error('hello world!', 1337);
-//        $result->addError($error);
-//
-//        $configurationObjectInstance->setValidationResult($result);
-//
-//        $this->assertTrue($configurationObjectInstance->hasValidationResult());
-//        $this->assertEquals(
-//            serialize($result),
-//            serialize($configurationObjectInstance->getValidationResult())
-//        );
-//
-//        $this->assertEquals(
-//            serialize($dummyConfigurationObject),
-//            serialize($configurationObjectInstance->getObject(true))
-//        );
-//
-//        $configurationObjectInstance->refreshValidationResult();
-//
-//        $this->assertEquals(
-//            WrongValueValidator::ERROR_MESSAGE,
-//            $configurationObjectInstance->getValidationResult()->forProperty('foo')->getFirstError()->getMessage()
-//        );
-//    }
+    /**
+     * Will check a full workflow of the life of an instance of the class
+     * `ConfigurationObjectInstance`.
+     *
+     * @test
+     */
+    public function checkEverythingWorksCorrectly()
+    {
+        $dummyConfigurationObject = new DummyConfigurationObjectWithAttributeContainingError();
+        $dummyConfigurationObject->setFoo(WrongValueValidator::WRONG_VALUE);
+        $mapperResult = new Result();
+
+        $configurationObjectInstance = new ConfigurationObjectInstance($dummyConfigurationObject, $mapperResult);
+
+        $this->assertFalse($configurationObjectInstance->hasValidationResult());
+
+        $result = new Result();
+        $error = new Error('hello world!', 1337);
+        $result->addError($error);
+
+        $configurationObjectInstance->setValidationResult($result);
+
+        $this->assertTrue($configurationObjectInstance->hasValidationResult());
+        $this->assertEquals(
+            serialize($result),
+            serialize($configurationObjectInstance->getValidationResult())
+        );
+
+        $this->assertEquals(
+            serialize($dummyConfigurationObject),
+            serialize($configurationObjectInstance->getObject(true))
+        );
+
+        $configurationObjectInstance->refreshValidationResult();
+
+        $this->assertEquals(
+            WrongValueValidator::ERROR_MESSAGE,
+            $configurationObjectInstance->getValidationResult()->forProperty('foo')->getFirstError()->getMessage()
+        );
+    }
 
     /**
      * Trying to access to the real object of an instance of
@@ -84,24 +83,23 @@ class ConfigurationObjectInstanceTest extends AbstractUnitTest
         $configurationObjectInstance->getObject();
     }
 
-    // @todo test
-//    /**
-//     * @test
-//     */
-//    public function getNotExistingValidationResultsLaunchesRefresh()
-//    {
-//        $dummyConfigurationObject = new DummyConfigurationObjectWithAttributeContainingError();
-//        $dummyConfigurationObject->setFoo(WrongValueValidator::WRONG_VALUE);
-//        $mapperResult = new Result();
-//
-//        $configurationObjectInstance = new ConfigurationObjectInstance($dummyConfigurationObject, $mapperResult);
-//
-//        $this->assertFalse($configurationObjectInstance->hasValidationResult());
-//
-//        $configurationObjectInstance->getValidationResult();
-//
-//        $this->assertTrue($configurationObjectInstance->hasValidationResult());
-//    }
+    /**
+     * @test
+     */
+    public function getNotExistingValidationResultsLaunchesRefresh()
+    {
+        $dummyConfigurationObject = new DummyConfigurationObjectWithAttributeContainingError();
+        $dummyConfigurationObject->setFoo(WrongValueValidator::WRONG_VALUE);
+        $mapperResult = new Result();
+
+        $configurationObjectInstance = new ConfigurationObjectInstance($dummyConfigurationObject, $mapperResult);
+
+        $this->assertFalse($configurationObjectInstance->hasValidationResult());
+
+        $configurationObjectInstance->getValidationResult();
+
+        $this->assertTrue($configurationObjectInstance->hasValidationResult());
+    }
 
     /**
      * When a mapping result with errors is given as constructor argument of a

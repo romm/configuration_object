@@ -11,21 +11,20 @@ use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 class ParentsTraitTest extends AbstractUnitTest
 {
 
-    // @todo test
-//    /**
-//     * @test
-//     */
-//    public function setParentSetsParent()
-//    {
-//        $object = new DummyConfigurationObjectWithParentsTrait();
-//        $stdClass = new \stdClass();
-//
-//        $object->setParents([$stdClass]);
-//
-//        $this->assertTrue($object->hasParent(\stdClass::class));
-//        $this->assertFalse($object->hasParent(self::class));
-//        $this->assertSame($stdClass, $object->getFirstParent(\stdClass::class));
-//    }
+    /**
+     * @test
+     */
+    public function setParentSetsParent()
+    {
+        $object = new DummyConfigurationObjectWithParentsTrait();
+        $stdClass = new \stdClass();
+
+        @$object->setParents([$stdClass]);
+
+        $this->assertTrue($object->hasParent(\stdClass::class));
+        $this->assertFalse($object->hasParent(self::class));
+        $this->assertSame($stdClass, $object->getFirstParent(\stdClass::class));
+    }
 
     /**
      * @test

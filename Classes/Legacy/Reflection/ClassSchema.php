@@ -111,6 +111,14 @@ class ClassSchema
     }
 
     /**
+     * @return bool
+     */
+    public function hasConstructor(): bool
+    {
+        return isset($this->methods['__construct']);
+    }
+
+    /**
      * Returns the given property defined in this schema. Check with
      * hasProperty($propertyName) before!
      *
