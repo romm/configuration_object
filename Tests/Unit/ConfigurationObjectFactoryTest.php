@@ -85,7 +85,7 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
      */
     public function createObjectWithWrongClassNameThrowsException()
     {
-        $this->setExpectedException(ClassNotFoundException::class);
+        $this->expectException(ClassNotFoundException::class);
         ConfigurationObjectFactory::getInstance()
             ->get('dummyClass', []);
     }
@@ -99,7 +99,7 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
      */
     public function createObjectWithClassNameWithoutInterfaceThrowsException()
     {
-        $this->setExpectedException(WrongInheritanceException::class);
+        $this->expectException(WrongInheritanceException::class);
         ConfigurationObjectFactory::getInstance()
             ->get(\stdClass::class, []);
     }
@@ -112,7 +112,7 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
      */
     public function createObjectWithWrongServiceFactoryThrowsException()
     {
-        $this->setExpectedException(WrongServiceException::class);
+        $this->expectException(WrongServiceException::class);
         ConfigurationObjectFactory::getInstance()
             ->get(DummyConfigurationObjectWithWrongServiceFactory::class, []);
     }
@@ -125,7 +125,7 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
      */
     public function getConfigurationObjectServiceFactoryFromUnregisteredObjectThrowsException()
     {
-        $this->setExpectedException(EntryNotFoundException::class);
+        $this->expectException(EntryNotFoundException::class);
         ConfigurationObjectFactory::getInstance()
             ->getConfigurationObjectServiceFactory('UnregisteredClassName');
     }
@@ -169,7 +169,7 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
         $this->assertTrue($companyObject->getValidationResult()->hasErrors());
         $this->assertEquals(1, count($companyObject->getValidationResult()->getFlattenedErrors()));
 
-        $this->setExpectedException(Exception::class);
+        $this->expectException(Exception::class);
         $companyObject->getObject();
     }
 

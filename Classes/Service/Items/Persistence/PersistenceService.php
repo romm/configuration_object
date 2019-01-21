@@ -19,10 +19,10 @@ use Romm\ConfigurationObject\Service\DataTransferObject\ConfigurationObjectConve
 use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDTO;
 use Romm\ConfigurationObject\Service\Event\ConfigurationObjectAfterServiceEventInterface;
 use Romm\ConfigurationObject\Service\Event\ObjectConversionBeforeServiceEventInterface;
+use TYPO3\CMS\Core\Utility\ArrayUtility;
 use TYPO3\CMS\Extbase\DomainObject\DomainObjectInterface;
 use TYPO3\CMS\Extbase\Persistence\Generic\PersistenceManager;
 use TYPO3\CMS\Extbase\Reflection\ObjectAccess;
-use TYPO3\CMS\Extbase\Utility\ArrayUtility;
 
 /**
  * If activated, this service will handle the TYPO3 domain object properties of
@@ -205,7 +205,8 @@ class PersistenceService extends AbstractService implements ObjectConversionBefo
         $object = ArrayUtility::setValueByPath(
             $array,
             implode('.', $objectArrayPropertyPath),
-            $domainObject
+            $domainObject,
+            '.'
         );
 
         ObjectAccess::setProperty($lastObject, $objectPropertyName, $object);

@@ -79,7 +79,7 @@ class ConfigurationObjectInstanceTest extends AbstractUnitTest
 
         $configurationObjectInstance->setValidationResult($result);
 
-        $this->setExpectedException(Exception::class);
+        $this->expectException(Exception::class);
         $configurationObjectInstance->getObject();
     }
 

@@ -1,6 +1,6 @@
 <?php
 /*
- * 2017 Romain CANON <romain.hydrocanon@gmail.com>
+ * 2018 Romain CANON <romain.hydrocanon@gmail.com>
  *
  * This file is part of the TYPO3 Configuration Object project.
  * It is free software; you can redistribute it and/or modify it
@@ -25,7 +25,6 @@ use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Service\WrongServiceException;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationBuilder;
 
 /**
  * This class provides function to get a configuration object from a data array.
@@ -61,16 +60,6 @@ class ConfigurationObjectFactory implements SingletonInterface
      * @var int
      */
     protected $runningProcesses = 0;
-
-    /**
-     * @var int
-     */
-    protected $counter = 0;
-
-    /**
-     * @var ConfigurationObjectMapper[]
-     */
-    protected $mappers = [];
 
     /**
      * Alias for:
@@ -147,9 +136,7 @@ class ConfigurationObjectFactory implements SingletonInterface
 
         if (false === $dto->getResult() instanceof ConfigurationObjectInstance) {
             $mapper = $this->getConfigurationObjectMapper();
-            $this->counter++;
             $object = $mapper->convert($dto->getConfigurationObjectData(), $className);
-            $this->counter--;
 
             /** @var ConfigurationObjectInstance $result */
             $result = GeneralUtility::makeInstance(ConfigurationObjectInstance::class, $object, $mapper->getMessages());
@@ -216,19 +203,7 @@ class ConfigurationObjectFactory implements SingletonInterface
      */
     protected function getConfigurationObjectMapper()
     {
-        if (!isset($this->mappers[$this->counter])) {
-            $objectManager = Core::get()->getObjectManager();
-            $configurationBuilder = $objectManager->get(PropertyMappingConfigurationBuilder::class);
-
-            $instance = new ConfigurationObjectMapper();
-            $instance->injectObjectManager($objectManager);
-            $instance->injectConfigurationBuilder($configurationBuilder);
-            $instance->initializeObject();
-
-            $this->mappers[$this->counter] = $instance;
-        }
-
-        return $this->mappers[$this->counter];
+        return Core::get()->getObjectManager()->get(ConfigurationObjectMapper::class);
     }
 
     /**

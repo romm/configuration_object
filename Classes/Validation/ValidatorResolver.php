@@ -15,12 +15,12 @@ namespace Romm\ConfigurationObject\Validation;
 
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Core\Service\ObjectService;
+use Romm\ConfigurationObject\Legacy\Reflection\ReflectionService;
 use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesInterface;
 use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesService;
 use Romm\ConfigurationObject\Validation\Validator\Internal\ConfigurationObjectValidator;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeCollectionValidator;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeValidator;
-use TYPO3\CMS\Extbase\Reflection\ReflectionService as ExtbaseReflectionService;
 use TYPO3\CMS\Extbase\Validation\Validator\CollectionValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\ConjunctionValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\GenericObjectValidator;
@@ -34,7 +34,7 @@ use TYPO3\CMS\Extbase\Validation\Validator\ObjectValidatorInterface;
  * validator is `CollectionValidator`: in this case we use a custom one instead:
  * `MixedTypeCollectionValidator` which will support the mixed types feature.
  */
-class ValidatorResolver extends \TYPO3\CMS\Extbase\Validation\ValidatorResolver
+class ValidatorResolver extends \Romm\ConfigurationObject\Legacy\Validation\ValidatorResolver
 {
 
     /**
@@ -214,9 +214,9 @@ class ValidatorResolver extends \TYPO3\CMS\Extbase\Validation\ValidatorResolver
     }
 
     /**
-     * @param ExtbaseReflectionService $reflectionService
+     * @param ReflectionService $reflectionService
      */
-    public function injectReflectionService(ExtbaseReflectionService $reflectionService)
+    public function injectReflectionService(ReflectionService $reflectionService)
     {
         $this->reflectionService = Core::get()->getReflectionService();
     }
