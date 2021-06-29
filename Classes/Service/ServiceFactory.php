@@ -25,6 +25,7 @@ use Romm\ConfigurationObject\Exceptions\WrongInheritanceException;
 use Romm\ConfigurationObject\Service\DataTransferObject\AbstractServiceDTO;
 use Romm\ConfigurationObject\Service\Event\ServiceEventInterface;
 use Romm\ConfigurationObject\Traits\InternalVariablesTrait;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * This class will handle the several services which will be used for a

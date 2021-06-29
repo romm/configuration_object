@@ -198,7 +198,7 @@ class ClassSchema
     }
 
     /**
-     * Sets the property marked as uuid of an object with @uuid
+     * Sets the property marked as uuid of an object with \@uuid
      *
      * @param string $propertyName
      * @throws \InvalidArgumentException
