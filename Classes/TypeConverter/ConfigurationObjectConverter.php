@@ -31,15 +31,24 @@ class ConfigurationObjectConverter extends ObjectConverter
      *
      * @inheritdoc
      */
-    public function getTypeOfChildProperty($targetType, $propertyName, PropertyMappingConfigurationInterface $configuration)
+    public function getTypeOfChildProperty(string $targetType, string $propertyName, PropertyMappingConfigurationInterface $configuration): string
     {
         $specificTargetType = $this->objectContainer->getImplementationClassName($targetType);
 
         if (Core::get()->classExists($specificTargetType)) {
-            $propertyTags = $this->reflectionService->getPropertyTagValues($specificTargetType, $propertyName, 'var');
+            $property = $this->reflectionService->getClassSchema($specificTargetType)->getProperty($propertyName);
 
-            if (!empty($propertyTags)) {
-                return current($propertyTags);
+            $elementType = $property->getElementType();
+            $type = $property->getType();
+
+            if ($type === "array" && $elementType !== null) {
+                return $elementType . '[]';
+            }
+            if ($elementType !== null) {
+                return $elementType;
+            }
+            if ($type !== null) {
+                return $type;
             }
         }
 
@@ -49,7 +58,7 @@ class ConfigurationObjectConverter extends ObjectConverter
     /**
      * @inheritdoc
      */
-    public function convertFrom($source, $targetType, array $convertedChildProperties = [], PropertyMappingConfigurationInterface $configuration = null)
+    public function convertFrom($source, string $targetType, array $convertedChildProperties = [], PropertyMappingConfigurationInterface $configuration = null): ?object
     {
         try {
             return parent::convertFrom($source, $targetType, $convertedChildProperties, $configuration);

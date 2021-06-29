@@ -135,7 +135,7 @@ trait ConfigurationObjectUnitTestUtility
 
         $this->configurationObjectCoreMock->injectCacheManager($cacheManager);
         $cacheService = new InternalCacheService;
-        $cacheService->registerInternalCache();
+//        $cacheService->registerInternalCache();
         $this->inject($cacheService, 'cacheManager', $cacheManager);
 
         $this->configurationObjectCoreMock->injectCacheService($cacheService);

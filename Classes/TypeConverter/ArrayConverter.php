@@ -34,7 +34,7 @@ class ArrayConverter extends AbstractTypeConverter
     /**
      * @var    string
      */
-    protected $targetType = '\\ArrayObject';
+    protected $targetType = \ArrayObject::class;
 
     /**
      * @var    int
@@ -46,7 +46,7 @@ class ArrayConverter extends AbstractTypeConverter
      *
      * @inheritdoc
      */
-    public function convertFrom($source, $targetType, array $convertedChildProperties = [], PropertyMappingConfigurationInterface $configuration = null)
+    public function convertFrom($source, string $targetType, array $convertedChildProperties = [], PropertyMappingConfigurationInterface $configuration = null)
     {
         $result = [];
         $array = ('array' === $targetType)
@@ -71,8 +71,11 @@ class ArrayConverter extends AbstractTypeConverter
      * @see \TYPO3\CMS\Extbase\Property\TypeConverter\AbstractTypeConverter::getTypeOfChildProperty()
      * @inheritdoc
      */
-    public function getTypeOfChildProperty($targetType, $propertyName, PropertyMappingConfigurationInterface $configuration)
+    public function getTypeOfChildProperty(string $targetType, string $propertyName, PropertyMappingConfigurationInterface $configuration): string
     {
+        if ($targetType === 'array') {
+            return 'string';
+        }
         /**
          * @see \Romm\ConfigurationObject\Reflection\ReflectionService
          */
@@ -84,6 +87,6 @@ class ArrayConverter extends AbstractTypeConverter
             $parsedTargetType = TypeHandlingUtility::parseType($targetType);
         }
 
-        return $parsedTargetType['elementType'];
+        return $parsedTargetType['elementType'] ?? $parsedTargetType['type'];
     }
 }

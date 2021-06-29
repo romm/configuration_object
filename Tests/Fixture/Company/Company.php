@@ -29,12 +29,12 @@ class Company implements ConfigurationObjectInterface
 
     /**
      * @var string
-     * @validate TYPO3.CMS.Extbase:NotEmpty
+     * @Validate("NotEmpty")
      */
     protected $name;
 
     /**
-     * @var \ArrayObject<Romm\ConfigurationObject\Tests\Fixture\Company\Employee>
+     * @var \ArrayObject<\Romm\ConfigurationObject\Tests\Fixture\Company\Employee>
      */
     protected $employees;
 

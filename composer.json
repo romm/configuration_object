@@ -16,9 +16,9 @@
     }
   ],
   "require": {
-    "php": "^7.1",
-    "typo3/cms-core": "^9.5",
-    "typo3/cms-beuser": "^9.5"
+    "php": "^7.4",
+    "typo3/cms-core": "^10.4",
+    "typo3/cms-beuser": "^10.4"
   },
   "require-dev": {
     "mikey179/vfsStream": "^1.6",
@@ -51,8 +51,8 @@
   },
   "extra": {
     "typo3/cms": {
-      "cms-package-dir": "{$vendor-dir}/typo3/cms",
-      "web-dir": ".Build/Web"
+      "web-dir": ".Build/Web",
+      "extension-key": "configuration_object"
     }
   }
 }

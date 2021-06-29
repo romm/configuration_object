@@ -10,9 +10,19 @@ call_user_func(
             \Doctrine\Common\Annotations\AnnotationReader::addGlobalIgnoredName('disableMagicMethods');
         }
 
-        /** @var \Romm\ConfigurationObject\Core\Service\CacheService $cacheService */
-        $cacheService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\Romm\ConfigurationObject\Core\Service\CacheService::class);
-        $cacheService->registerInternalCache();
-        $cacheService->registerDynamicCaches();
+        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['cache_configuration_object'])) {
+            $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['cache_configuration_object'] = [
+                'backend'  => \TYPO3\CMS\Core\Cache\Backend\FileBackend::class,
+                'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
+                'groups'   => ['all', 'system']
+            ];
+        }
+        if (!is_array($GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['cache_configuration_object_default'])) {
+            $GLOBALS['TYPO3_CONF_VARS']['SYS']['caching']['cacheConfigurations']['cache_configuration_object_default'] = [
+                'backend'  => \TYPO3\CMS\Core\Cache\Backend\FileBackend::class,
+                'frontend' => \TYPO3\CMS\Core\Cache\Frontend\VariableFrontend::class,
+                'groups'   => ['all', 'system']
+            ];
+        }
     }
 );
