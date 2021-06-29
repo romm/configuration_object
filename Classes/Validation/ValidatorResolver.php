@@ -15,7 +15,6 @@ namespace Romm\ConfigurationObject\Validation;
 
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Core\Service\ObjectService;
-use Romm\ConfigurationObject\Legacy\Reflection\ReflectionService;
 use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesInterface;
 use Romm\ConfigurationObject\Service\Items\MixedTypes\MixedTypesService;
 use Romm\ConfigurationObject\Validation\Validator\Internal\ConfigurationObjectValidator;
@@ -34,7 +33,7 @@ use TYPO3\CMS\Extbase\Validation\Validator\ObjectValidatorInterface;
  * validator is `CollectionValidator`: in this case we use a custom one instead:
  * `MixedTypeCollectionValidator` which will support the mixed types feature.
  */
-class ValidatorResolver extends \Romm\ConfigurationObject\Legacy\Validation\ValidatorResolver
+class ValidatorResolver extends \TYPO3\CMS\Extbase\Validation\ValidatorResolver
 {
 
     /**
@@ -50,7 +49,7 @@ class ValidatorResolver extends \Romm\ConfigurationObject\Legacy\Validation\Vali
     /**
      * @var \Romm\ConfigurationObject\Reflection\ReflectionService
      */
-    protected $reflectionService;
+    protected $legacyReflectionService;
 
     /**
      * @inheritdoc
@@ -117,7 +116,7 @@ class ValidatorResolver extends \Romm\ConfigurationObject\Legacy\Validation\Vali
      */
     protected function addMixedTypeValidators($targetClassName, GenericObjectValidator $validator)
     {
-        foreach ($this->reflectionService->getClassPropertyNames($targetClassName) as $property) {
+        foreach ($this->legacyReflectionService->getClassPropertyNames($targetClassName) as $property) {
             /*
              * If the property already is already bound to an object validator,
              * there is no need to do further checks.
@@ -185,13 +184,13 @@ class ValidatorResolver extends \Romm\ConfigurationObject\Legacy\Validation\Vali
     {
         $mixedType = false;
 
-        $propertySchema = $this->reflectionService->getClassSchema($className)->getProperty($property);
+        $propertySchema = $this->legacyReflectionService->getClassSchema($className)->getProperty($property);
 
         if ($this->classIsMixedType($propertySchema['type'])) {
             $mixedType = true;
         } else {
-            if ($this->reflectionService->isPropertyTaggedWith($className, $property, MixedTypesService::PROPERTY_ANNOTATION_MIXED_TYPE)) {
-                $tags = $this->reflectionService->getPropertyTagValues($className, $property, MixedTypesService::PROPERTY_ANNOTATION_MIXED_TYPE);
+            if ($this->legacyReflectionService->isPropertyTaggedWith($className, $property, MixedTypesService::PROPERTY_ANNOTATION_MIXED_TYPE)) {
+                $tags = $this->legacyReflectionService->getPropertyTagValues($className, $property, MixedTypesService::PROPERTY_ANNOTATION_MIXED_TYPE);
                 $mixedTypeClassName = reset($tags);
 
                 if ($this->classIsMixedType($mixedTypeClassName)) {
@@ -214,11 +213,11 @@ class ValidatorResolver extends \Romm\ConfigurationObject\Legacy\Validation\Vali
     }
 
     /**
-     * @param ReflectionService $reflectionService
+     * @param \Romm\ConfigurationObject\Reflection\ReflectionService $legacyReflectionService
      */
-    public function injectReflectionService(ReflectionService $reflectionService)
+    public function injectLegacyReflectionService(\Romm\ConfigurationObject\Reflection\ReflectionService $legacyReflectionService)
     {
-        $this->reflectionService = Core::get()->getReflectionService();
+        $this->legacyReflectionService = $legacyReflectionService;
     }
 
     /**
