@@ -22,28 +22,23 @@ class IconExistsValidatorTest extends AbstractValidatorTest
         /** @var IconExistsValidator|\PHPUnit_Framework_MockObject_MockObject $mockedIconExistsValidator */
         $mockedIconExistsValidator = $this->getMockedValidatorInstance(IconExistsValidator::class, [], ['translateErrorMessage', 'getIconRegistry']);
 
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-            $this->expectException(UnsupportedVersionException::class);
-            $mockedIconExistsValidator->validate($correctIcon);
-        } else {
-            $iconRegistry = $this->prophesize(IconRegistry::class);
+        $iconRegistry = $this->prophesize(IconRegistry::class);
 
-            $iconRegistry->isRegistered($correctIcon)
-                ->shouldBeCalled()
-                ->willReturn(true);
+        $iconRegistry->isRegistered($correctIcon)
+            ->shouldBeCalled()
+            ->willReturn(true);
 
-            $iconRegistry->isRegistered($incorrectIcon)
-                ->shouldBeCalled()
-                ->willReturn(false);
+        $iconRegistry->isRegistered($incorrectIcon)
+            ->shouldBeCalled()
+            ->willReturn(false);
 
-            $mockedIconExistsValidator->method('getIconRegistry')
-                ->willReturn($iconRegistry->reveal());
+        $mockedIconExistsValidator->method('getIconRegistry')
+            ->willReturn($iconRegistry->reveal());
 
-            $test = $mockedIconExistsValidator->validate($correctIcon);
-            $this->assertFalse($test->hasErrors());
+        $test = $mockedIconExistsValidator->validate($correctIcon);
+        $this->assertFalse($test->hasErrors());
 
-            $test = $mockedIconExistsValidator->validate($incorrectIcon);
-            $this->assertTrue($test->hasErrors());
-        }
+        $test = $mockedIconExistsValidator->validate($incorrectIcon);
+        $this->assertTrue($test->hasErrors());
     }
 }

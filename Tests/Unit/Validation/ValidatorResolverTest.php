@@ -32,18 +32,8 @@ class ValidatorResolverTest extends AbstractUnitTest
         $validatorResolver = Core::get()->getValidatorResolver();
 
         $extbaseValidatorResolver = new ExtbaseValidatorResolver();
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-            $reflectedProperty = new \ReflectionProperty($extbaseValidatorResolver, 'objectManager');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($extbaseValidatorResolver, Core::get()->getObjectManager());
-
-            $reflectedProperty = new \ReflectionProperty($extbaseValidatorResolver, 'reflectionService');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($extbaseValidatorResolver, Core::get()->getReflectionService());
-        } else {
-            $extbaseValidatorResolver->injectObjectManager(Core::get()->getObjectManager());
-            $extbaseValidatorResolver->injectReflectionService(new ReflectionService());
-        }
+        $extbaseValidatorResolver->injectObjectManager(Core::get()->getObjectManager());
+        $extbaseValidatorResolver->injectReflectionService(new ReflectionService());
 
         $validator = $validatorResolver->createValidator(CollectionValidator::class);
 

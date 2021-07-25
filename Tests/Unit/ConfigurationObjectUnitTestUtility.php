@@ -17,20 +17,15 @@ use TYPO3\CMS\Core\Cache\CacheFactory;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Object\Container\Container;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationBuilder;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ArrayConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ObjectConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\StringConverter;
-use TYPO3\CMS\Extbase\Reflection\ClassSchema;
-use TYPO3\CMS\Extbase\Service\EnvironmentService;
 use TYPO3\CMS\Extbase\Service\TypeHandlingService;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
-use TYPO3\CMS\Extbase\Validation\Validator\GenericObjectValidator;
 
 trait ConfigurationObjectUnitTestUtility
 {
@@ -117,11 +112,6 @@ trait ConfigurationObjectUnitTestUtility
 
         $cacheManager = new CacheManager;
 
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '8.2.0', '<')) {
-            $cacheFactory = new CacheFactory('foo', $cacheManager);
-            $cacheManager->injectCacheFactory($cacheFactory);
-        }
-
         $cacheManager->setCacheConfigurations([
             InternalCacheService::CACHE_IDENTIFIER => [
                 'backend'  => TransientMemoryBackend::class,
@@ -151,18 +141,8 @@ trait ConfigurationObjectUnitTestUtility
         /** @var ValidatorResolver $validatorResolver */
         $validatorResolver = $this->getConfigurationObjectObjectManagerMock()->get(ValidatorResolver::class);
 
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-            $reflectedProperty = new \ReflectionProperty($validatorResolver, 'objectManager');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($validatorResolver, Core::get()->getObjectManager());
-
-            $reflectedProperty = new \ReflectionProperty($validatorResolver, 'reflectionService');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($validatorResolver, Core::get()->getReflectionService());
-        } else {
-            $validatorResolver->injectObjectManager(Core::get()->getObjectManager());
-            $validatorResolver->injectReflectionService(Core::get()->getReflectionService());
-        }
+        $validatorResolver->injectObjectManager(Core::get()->getObjectManager());
+        $validatorResolver->injectReflectionService(Core::get()->getReflectionService());
 
         $this->configurationObjectCoreMock->injectValidatorResolver($validatorResolver);
     }
@@ -181,60 +161,26 @@ trait ConfigurationObjectUnitTestUtility
 
         $objectContainer = new Container();
         $configurationObjectConverter = new ConfigurationObjectConverter();
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-            $reflectedProperty = new \ReflectionProperty($configurationObjectConverter, 'objectContainer');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($configurationObjectConverter, $objectContainer);
 
-            $reflectedProperty = new \ReflectionProperty($configurationObjectConverter, 'objectManager');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($configurationObjectConverter, Core::get()->getObjectManager());
+        $configurationObjectConverter->injectObjectContainer($objectContainer);
+        $configurationObjectConverter->injectObjectManager(Core::get()->getObjectManager());
 
-            $reflectionService = Core::get()->getReflectionService();
-            $reflectedProperty = new \ReflectionProperty($configurationObjectConverter, 'reflectionService');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($configurationObjectConverter, $reflectionService);
-
-            $reflectedProperty = new \ReflectionProperty($configurationObjectConverter, 'reflectionService');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($configurationObjectConverter, $reflectionService);
-        } else {
-            $configurationObjectConverter->injectObjectContainer($objectContainer);
-            $configurationObjectConverter->injectObjectManager(Core::get()->getObjectManager());
-
-            $reflectionService = new \Romm\ConfigurationObject\Legacy\Reflection\ReflectionService();
-            $reflectionService->injectObjectManager(Core::get()->getObjectManager());
-            $reflectedProperty = new \ReflectionProperty($configurationObjectConverter, 'reflectionService');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($configurationObjectConverter, $reflectionService);
-        }
+        $reflectionService = new \Romm\ConfigurationObject\Legacy\Reflection\ReflectionService();
+        $reflectionService->injectObjectManager(Core::get()->getObjectManager());
+        $reflectedProperty = new \ReflectionProperty($configurationObjectConverter, 'reflectionService');
+        $reflectedProperty->setAccessible(true);
+        $reflectedProperty->setValue($configurationObjectConverter, $reflectionService);
 
         $mockedConfigurationObjectMapper->expects($this->any())
             ->method('getObjectConverter')
             ->willReturn($configurationObjectConverter);
 
         $propertyMappingConfigurationBuilder = Core::get()->getObjectManager()->get(PropertyMappingConfigurationBuilder::class);
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-            $reflectedProperty = new \ReflectionProperty($mockedConfigurationObjectMapper, 'configurationBuilder');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($mockedConfigurationObjectMapper, $propertyMappingConfigurationBuilder);
-
-            $reflectedProperty = new \ReflectionProperty($mockedConfigurationObjectMapper, 'objectManager');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($mockedConfigurationObjectMapper, Core::get()->getObjectManager());
-        } else {
-            $mockedConfigurationObjectMapper->injectConfigurationBuilder($propertyMappingConfigurationBuilder);
-            $mockedConfigurationObjectMapper->injectObjectManager(Core::get()->getObjectManager());
-        }
+        $mockedConfigurationObjectMapper->injectConfigurationBuilder($propertyMappingConfigurationBuilder);
+        $mockedConfigurationObjectMapper->injectObjectManager(Core::get()->getObjectManager());
 
         $reflectionService = Core::get()->getReflectionService();
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-            $reflectedProperty = new \ReflectionProperty($reflectionService, 'objectManager');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($reflectionService, Core::get()->getObjectManager());
-        } else {
-            $reflectionService->injectObjectManager(Core::get()->getObjectManager());
-        }
+        $reflectionService->injectObjectManager(Core::get()->getObjectManager());
 
         $mockedConfigurationObjectMapper->initializeObject();
 
@@ -284,58 +230,12 @@ trait ConfigurationObjectUnitTestUtility
                                     return 'LLL:' . $extension . ':' . $key;
                                 }
                             );
-
-                        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')
-                            && (
-                                GenericObjectValidator::class === $className
-                                || in_array(GenericObjectValidator::class, class_parents($className))
-                            )
-                        ) {
-                            /** @var ConfigurationManager|\PHPUnit_Framework_MockObject_MockObject $configurationManager */
-                            $configurationManager = $this->getConfigurationObjectMockBuilder(ConfigurationManager::class)
-                                ->setMethods(['isFeatureEnabled'])
-                                ->getMock();
-                            $configurationManager->method('isFeatureEnabled')
-                                ->willReturn(true);
-
-                            $reflectedProperty = new \ReflectionProperty($configurationManager, 'objectManager');
-                            $reflectedProperty->setAccessible(true);
-                            $reflectedProperty->setValue($configurationManager, Core::get()->getObjectManager());
-
-                            /** @var EnvironmentService|\PHPUnit_Framework_MockObject_MockObject $environmentServiceMock */
-                            $environmentServiceMock = $this->getConfigurationObjectMockBuilder(EnvironmentService::class)
-                                ->setMethods(['isEnvironmentInFrontendMode', 'isEnvironmentInBackendMode'])
-                                ->getMock();
-                            $environmentServiceMock
-                                ->method('isEnvironmentInFrontendMode')
-                                ->willReturn(true);
-                            $environmentServiceMock
-                                ->method('isEnvironmentInBackendMode')
-                                ->willReturn(false);
-
-                            $reflectedProperty = new \ReflectionProperty($configurationManager, 'environmentService');
-                            $reflectedProperty->setAccessible(true);
-                            $reflectedProperty->setValue($configurationManager, $environmentServiceMock);
-
-                            $configurationManager->initializeObject();
-
-                            /** @var GenericObjectValidator $instance */
-                            $instance->injectConfigurationManager($configurationManager);
-                        }
                     } else {
                         $reflectionClass = new \ReflectionClass($className);
                         if (empty($arguments)) {
                             $instance = $reflectionClass->newInstance();
                         } else {
                             $instance = $reflectionClass->newInstanceArgs($arguments);
-                        }
-
-                        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-                            if ($className === ClassSchema::class) {
-                                $reflectedProperty = new \ReflectionProperty($instance, 'typeHandlingService');
-                                $reflectedProperty->setAccessible(true);
-                                $reflectedProperty->setValue($instance, new TypeHandlingService());
-                            }
                         }
                     }
 
