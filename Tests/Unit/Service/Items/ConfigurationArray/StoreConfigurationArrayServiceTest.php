@@ -1,6 +1,7 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\Service\Items\ConfigurationArray;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Romm\ConfigurationObject\Service\DataTransferObject\ConfigurationObjectConversionDTO;
 use Romm\ConfigurationObject\Service\Items\StoreConfigurationArray\StoreConfigurationArrayService;
 use Romm\ConfigurationObject\Service\Items\StoreConfigurationArray\StoreConfigurationArrayTrait;
@@ -78,7 +79,7 @@ class StoreConfigurationArrayServiceTest extends AbstractUnitTest
         $serviceDataTransferObject = new ConfigurationObjectConversionDTO(get_class($object), $serviceFactory);
         $serviceDataTransferObject->setResult($object);
 
-        /** @var StoreConfigurationArrayService|\PHPUnit_Framework_MockObject_MockObject $storeConfigurationArrayService */
+        /** @var StoreConfigurationArrayService|MockObject $storeConfigurationArrayService */
         $storeConfigurationArrayService = $this->getMockBuilder(StoreConfigurationArrayService::class)
             ->setMethods(['storeConfigurationArray'])
             ->getMock();

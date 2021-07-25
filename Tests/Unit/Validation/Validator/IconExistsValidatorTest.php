@@ -1,6 +1,7 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\Validation\Validator;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Romm\ConfigurationObject\Exceptions\UnsupportedVersionException;
 use Romm\ConfigurationObject\Validation\Validator\IconExistsValidator;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
@@ -19,7 +20,7 @@ class IconExistsValidatorTest extends AbstractValidatorTest
         $correctIcon = 'foo';
         $incorrectIcon = 'bar';
 
-        /** @var IconExistsValidator|\PHPUnit_Framework_MockObject_MockObject $mockedIconExistsValidator */
+        /** @var IconExistsValidator|MockObject $mockedIconExistsValidator */
         $mockedIconExistsValidator = $this->getMockedValidatorInstance(IconExistsValidator::class, [], ['translateErrorMessage', 'getIconRegistry']);
 
         $iconRegistry = $this->prophesize(IconRegistry::class);

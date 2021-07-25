@@ -1,6 +1,7 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\Core\Service\Cache;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 use Romm\ConfigurationObject\Core\Service\CacheService;
@@ -20,7 +21,7 @@ class CacheServiceTest extends AbstractUnitTest
     {
         $cacheManager = new CacheManager;
 
-        /** @var CacheService|\PHPUnit_Framework_MockObject_MockObject $cacheServiceMock */
+        /** @var CacheService|MockObject $cacheServiceMock */
         $cacheServiceMock = $this->getMockBuilder(CacheService::class)
             ->setMethods(['getCacheManager'])
             ->getMock();
@@ -41,7 +42,7 @@ class CacheServiceTest extends AbstractUnitTest
      */
     public function internalCacheIsRegisteredOnlyOnce()
     {
-        /** @var CacheService|\PHPUnit_Framework_MockObject_MockObject $cacheServiceMock */
+        /** @var CacheService|MockObject $cacheServiceMock */
         $cacheServiceMock = $this->getMockBuilder(CacheService::class)
             ->setMethods(['getCacheManager'])
             ->getMock();
@@ -79,7 +80,7 @@ class CacheServiceTest extends AbstractUnitTest
         $cacheIdentifier = 'foo';
         $cacheOptions = ['bar' => 'baz'];
 
-        /** @var CacheService|\PHPUnit_Framework_MockObject_MockObject $cacheServiceMock */
+        /** @var CacheService|MockObject $cacheServiceMock */
         $cacheServiceMock = $this->getMockBuilder(CacheService::class)
             ->setMethods(['getCache', 'getCacheManager'])
             ->getMock();

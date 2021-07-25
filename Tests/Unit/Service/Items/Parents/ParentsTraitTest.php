@@ -1,6 +1,7 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\Service\Items\Parents;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Romm\ConfigurationObject\Exceptions\DuplicateEntryException;
 use Romm\ConfigurationObject\Exceptions\EntryNotFoundException;
 use Romm\ConfigurationObject\Exceptions\InvalidTypeException;
@@ -83,7 +84,7 @@ class ParentsTraitTest extends AbstractUnitTest
      */
     public function attachParentsAttachesParents()
     {
-        /** @var DummyConfigurationObjectWithParentsTrait|\PHPUnit_Framework_MockObject_MockObject $object */
+        /** @var DummyConfigurationObjectWithParentsTrait|MockObject $object */
         $object = $this->getMockBuilder(DummyConfigurationObjectWithParentsTrait::class)
             ->setMethods(['attachParent'])
             ->getMock();

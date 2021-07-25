@@ -1,6 +1,7 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\Service\Items\Cache;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Romm\ConfigurationObject\ConfigurationObjectInstance;
 use Romm\ConfigurationObject\Core\Service\CacheService as InternalCacheService;
 use Romm\ConfigurationObject\Service\DataTransferObject\GetConfigurationObjectDTO;
@@ -19,7 +20,7 @@ class CacheServiceTest extends AbstractUnitTest
     {
         parent::setUp();
 
-        /** @var InternalCacheService|\PHPUnit_Framework_MockObject_MockObject $cacheServiceMock */
+        /** @var InternalCacheService|MockObject $cacheServiceMock */
         $cacheServiceMock = $this->getMockBuilder(InternalCacheService::class)
             ->setMethods(['getCacheManager'])
             ->getMock();
@@ -36,7 +37,7 @@ class CacheServiceTest extends AbstractUnitTest
      */
     public function initializationIsSet()
     {
-        /** @var CacheService|AccessibleObjectInterface|\PHPUnit_Framework_MockObject_MockObject $mockedCacheService */
+        /** @var CacheService|AccessibleObjectInterface|MockObject $mockedCacheService */
         $mockedCacheService = $this->getAccessibleMock(CacheService::class, ['dummy']);
         $cacheManager = $mockedCacheService->getCacheManager();
 
@@ -74,7 +75,7 @@ class CacheServiceTest extends AbstractUnitTest
         $configurationObjectInstance = new ConfigurationObjectInstance($dummyObject, $result);
 
         // Mocking the cache service so we can inject a custom mocked cache instance.
-        /** @var CacheService|AccessibleObjectInterface|\PHPUnit_Framework_MockObject_MockObject $mockedCacheService */
+        /** @var CacheService|AccessibleObjectInterface|MockObject $mockedCacheService */
         $mockedCacheService = $this->getAccessibleMock(CacheService::class, ['getCacheInstance']);
 
         $options = [
@@ -134,7 +135,7 @@ class CacheServiceTest extends AbstractUnitTest
         $getConfigurationObjectDTO->setResult($configurationObjectInstance);
 
         // Mocking the cache service so we can inject a custom mocked cache instance.
-        /** @var CacheService|AccessibleObjectInterface|\PHPUnit_Framework_MockObject_MockObject $mockedCacheService */
+        /** @var CacheService|AccessibleObjectInterface|MockObject $mockedCacheService */
         $mockedCacheService = $this->getAccessibleMock(CacheService::class, ['getCacheInstance']);
 
         $options = [
@@ -205,7 +206,7 @@ class CacheServiceTest extends AbstractUnitTest
         $getConfigurationObjectDTO->setResult($configurationObjectInstance);
 
         // Mocking the cache service so we can inject a custom mocked cache instance.
-        /** @var CacheService|AccessibleObjectInterface|\PHPUnit_Framework_MockObject_MockObject $mockedCacheService */
+        /** @var CacheService|AccessibleObjectInterface|MockObject $mockedCacheService */
         $mockedCacheService = $this->getAccessibleMock(CacheService::class, ['getCacheInstance']);
 
         $options = [

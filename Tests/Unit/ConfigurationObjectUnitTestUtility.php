@@ -1,6 +1,8 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit;
 
+use PHPUnit\Framework\MockObject\MockBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
 use Romm\ConfigurationObject\ConfigurationObjectFactory;
 use Romm\ConfigurationObject\ConfigurationObjectMapper;
 use Romm\ConfigurationObject\Core\Core;
@@ -32,7 +34,7 @@ trait ConfigurationObjectUnitTestUtility
 {
 
     /**
-     * @var Core|\PHPUnit_Framework_MockObject_MockObject
+     * @var Core|MockObject
      */
     protected $configurationObjectCoreMock;
 
@@ -89,7 +91,7 @@ trait ConfigurationObjectUnitTestUtility
         $this->configurationObjectCoreMock->method('getServiceFactoryInstance')
             ->willReturnCallback(
                 function () {
-                    /** @var ServiceFactory|\PHPUnit_Framework_MockObject_MockObject $serviceFactoryMock */
+                    /** @var ServiceFactory|MockObject $serviceFactoryMock */
                     $serviceFactoryMock = $this->getConfigurationObjectMockBuilder(ServiceFactory::class)
                         ->setMethods(['manageServiceData'])
                         ->getMock();
@@ -155,7 +157,7 @@ trait ConfigurationObjectUnitTestUtility
      */
     protected function injectMockedConfigurationObjectFactory()
     {
-        /** @var ConfigurationObjectMapper|\PHPUnit_Framework_MockObject_MockObject $mockedConfigurationObjectMapper */
+        /** @var ConfigurationObjectMapper|MockObject $mockedConfigurationObjectMapper */
         $mockedConfigurationObjectMapper = $this->getConfigurationObjectMockBuilder(ConfigurationObjectMapper::class)
             ->setMethods(['getObjectConverter'])
             ->getMock();
@@ -185,7 +187,7 @@ trait ConfigurationObjectUnitTestUtility
 
         $mockedConfigurationObjectMapper->initializeObject();
 
-        /** @var ConfigurationObjectFactory|\PHPUnit_Framework_MockObject_MockObject $mockedConfigurationObjectFactory */
+        /** @var ConfigurationObjectFactory|MockObject $mockedConfigurationObjectFactory */
         $mockedConfigurationObjectFactory = $this->getConfigurationObjectMockBuilder(ConfigurationObjectFactory::class)
             ->setMethods(['getConfigurationObjectMapper'])
             ->getMock();
@@ -204,11 +206,11 @@ trait ConfigurationObjectUnitTestUtility
      * Returns a mocked instance of the Extbase `ObjectManager`. Will allow the
      * main function `get()` to work properly during the tests.
      *
-     * @return ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return ObjectManagerInterface|MockObject
      */
     private function getConfigurationObjectObjectManagerMock()
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject $mockObjectManager */
+        /** @var MockObject $mockObjectManager */
         $mockObjectManager = $this->getConfigurationObjectMockBuilder(ObjectManagerInterface::class)
             ->getMock();
         $mockObjectManager->expects($this->any())
@@ -219,7 +221,7 @@ trait ConfigurationObjectUnitTestUtility
                     $className = array_shift($arguments);
 
                     if (in_array(AbstractValidator::class, class_parents($className))) {
-                        /** @var  AbstractValidator|\PHPUnit_Framework_MockObject_MockObject $instance */
+                        /** @var  AbstractValidator|MockObject $instance */
                         $instance = $this->getConfigurationObjectMockBuilder($className)
                             ->setMethods(['translateErrorMessage'])
                             ->setConstructorArgs($arguments)
@@ -251,7 +253,7 @@ trait ConfigurationObjectUnitTestUtility
      * Just a wrapper to have auto-completion.
      *
      * @param string $className
-     * @return \PHPUnit_Framework_MockObject_MockBuilder
+     * @return MockBuilder
      */
     private function getConfigurationObjectMockBuilder($className)
     {

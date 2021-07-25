@@ -1,6 +1,7 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\Comparator\Factory;
 use Romm\ConfigurationObject\ConfigurationObjectFactory;
 use Romm\ConfigurationObject\ConfigurationObjectInstance;
@@ -60,7 +61,7 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
         $className = Factory::class;
         $objectData = ['foo' => 'bar'];
 
-        /** @var ConfigurationObjectFactory|\PHPUnit_Framework_MockObject_MockObject $factoryMock */
+        /** @var ConfigurationObjectFactory|MockObject $factoryMock */
         $factoryMock = $this->getMockBuilder(ConfigurationObjectFactory::class)
             ->setMethods(['get'])
             ->getMock();
@@ -235,7 +236,7 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
      */
     public function configurationObjectFactoryIsRunning()
     {
-        /** @var ConfigurationObjectFactory|\PHPUnit_Framework_MockObject_MockObject $factory */
+        /** @var ConfigurationObjectFactory|MockObject $factory */
         $factory = $this->getMockBuilder(ConfigurationObjectFactory::class)
             ->setMethods(['convertToObject'])
             ->getMock();

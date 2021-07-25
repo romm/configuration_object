@@ -1,6 +1,7 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\Service\Items\Parents;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Romm\ConfigurationObject\Service\Items\Parents\ParentsUtility;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithParentsTrait;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
@@ -44,7 +45,7 @@ class ParentsUtilityTest extends AbstractUnitTest
      */
     public function checkClassesUsingParentsTraitAreStoredInLocalCache()
     {
-        /** @var ParentsUtility|\PHPUnit_Framework_MockObject_MockObject $parentsUtility */
+        /** @var ParentsUtility|MockObject $parentsUtility */
         $parentsUtility = $this->getMockBuilder(ParentsUtility::class)
             ->setMethods(['checkClassUsesParentsTrait'])
             ->getMock();
