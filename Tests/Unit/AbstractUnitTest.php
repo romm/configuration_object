@@ -1,6 +1,7 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit;
 
+use Prophecy\PhpUnit\ProphecyTrait;
 use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
 use function get_class;
@@ -11,6 +12,7 @@ use function substr;
 abstract class AbstractUnitTest extends UnitTestCase
 {
     use ConfigurationObjectUnitTestUtility;
+    use ProphecyTrait;
 
     protected $resetSingletonInstances = true;
 
