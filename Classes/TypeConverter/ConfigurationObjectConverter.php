@@ -41,7 +41,7 @@ class ConfigurationObjectConverter extends ObjectConverter
             $elementType = $property->getElementType();
             $type = $property->getType();
 
-            if ($type === "array" && $elementType !== null) {
+            if ($type === 'array' && $elementType !== null) {
                 return $elementType . '[]';
             }
             if ($elementType !== null) {

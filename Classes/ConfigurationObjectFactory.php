@@ -25,7 +25,6 @@ use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\Service\WrongServiceException;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * This class provides function to get a configuration object from a data array.

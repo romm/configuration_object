@@ -138,7 +138,7 @@ class AbstractServiceTest extends AbstractUnitTest
             $this->expectException($exceptionThrown);
         }
 
-        $this->inject($this->abstractService, 'delayedCallbacks',[]);
+        $this->inject($this->abstractService, 'delayedCallbacks', []);
         foreach ($delayedCallBacks as $callBackInfo) {
             /** @noinspection PhpMethodParametersCountMismatchInspection */
             $this->abstractService->_call('delay', $callBackInfo[0], $callBackInfo[1]);

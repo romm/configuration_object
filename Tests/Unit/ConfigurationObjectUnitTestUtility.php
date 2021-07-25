@@ -15,7 +15,6 @@ use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\TypeConverter\ConfigurationObjectConverter;
 use Romm\ConfigurationObject\Validation\ValidatorResolver;
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
-use TYPO3\CMS\Core\Cache\CacheFactory;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\DependencyInjection\FailsafeContainer;
@@ -26,7 +25,6 @@ use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationBuilder;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ArrayConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ObjectConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\StringConverter;
-use TYPO3\CMS\Extbase\Service\TypeHandlingService;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
