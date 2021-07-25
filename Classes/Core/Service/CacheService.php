@@ -13,16 +13,14 @@
 
 namespace Romm\ConfigurationObject\Core\Service;
 
-use TYPO3\CMS\Core\Cache\Backend\FileBackend;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\FrontendInterface;
-use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CacheService implements SingletonInterface
 {
-    const CACHE_IDENTIFIER = 'cache_configuration_object';
+    const CACHE_IDENTIFIER = 'configuration_object';
     const CACHE_TAG_DYNAMIC_CACHE = 'dynamic-cache';
 
     /**
