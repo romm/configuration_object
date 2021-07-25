@@ -16,7 +16,7 @@
     }
   ],
   "require": {
-    "php": "^7.4",
+    "php": "^7.2",
     "typo3/cms-core": "^10.4",
     "typo3/cms-beuser": "^10.4"
   },
@@ -24,7 +24,7 @@
     "mikey179/vfsstream": "^1.6",
     "satooshi/php-coveralls": "^1.0",
     "typo3/testing-framework": "^6.8",
-    "phpspec/prophecy-phpunit": "^2.0"
+    "phpspec/prophecy-phpunit": "^1.0 || ^2.0"
   },
   "autoload": {
     "psr-4": {
