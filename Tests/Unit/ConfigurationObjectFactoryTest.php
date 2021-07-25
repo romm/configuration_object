@@ -42,7 +42,7 @@ class ConfigurationObjectFactoryTest extends AbstractUnitTest
         ]
     ];
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

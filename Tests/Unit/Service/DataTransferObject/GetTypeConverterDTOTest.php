@@ -14,7 +14,7 @@ class GetTypeConverterDTOTest extends AbstractUnitTest
      */
     protected $getTypeConverterDataTransferObject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

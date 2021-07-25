@@ -12,7 +12,7 @@ use TYPO3\CMS\Extbase\Validation\ValidatorResolver as ExtbaseValidatorResolver;
 
 class ValidatorResolverTest extends AbstractUnitTest
 {
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

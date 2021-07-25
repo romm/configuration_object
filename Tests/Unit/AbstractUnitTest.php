@@ -9,7 +9,7 @@ abstract class AbstractUnitTest extends UnitTestCase
 
     protected $resetSingletonInstances = true;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->setUpConfigurationObjectCore();
     }

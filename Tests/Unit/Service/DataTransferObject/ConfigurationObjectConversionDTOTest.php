@@ -13,7 +13,7 @@ class ConfigurationObjectConversionDTOTest extends AbstractUnitTest
      */
     protected $configurationObjectConversionDataTransferObject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

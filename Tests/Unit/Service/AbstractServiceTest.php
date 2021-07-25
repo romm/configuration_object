@@ -18,7 +18,7 @@ class AbstractServiceTest extends AbstractUnitTest
      */
     protected $abstractService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
