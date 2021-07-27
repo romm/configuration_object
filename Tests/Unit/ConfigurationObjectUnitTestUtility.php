@@ -143,7 +143,7 @@ trait ConfigurationObjectUnitTestUtility
         $validatorResolver = $this->getConfigurationObjectObjectManagerMock()->get(ValidatorResolver::class);
 
         $validatorResolver->injectObjectManager(Core::get()->getObjectManager());
-        $validatorResolver->injectReflectionService(Core::get()->getReflectionService());
+        $validatorResolver->injectLegacyReflectionService(Core::get()->getReflectionService());
 
         $this->configurationObjectCoreMock->injectValidatorResolver($validatorResolver);
     }

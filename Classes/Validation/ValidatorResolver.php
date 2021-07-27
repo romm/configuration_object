@@ -219,12 +219,4 @@ class ValidatorResolver extends \TYPO3\CMS\Extbase\Validation\ValidatorResolver
     {
         $this->legacyReflectionService = $legacyReflectionService;
     }
-
-    /**
-     * @param ObjectService $objectService
-     */
-    public function injectObjectService(ObjectService $objectService)
-    {
-        $this->objectService = $objectService;
-    }
 }
