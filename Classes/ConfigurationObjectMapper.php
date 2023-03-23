@@ -136,7 +136,9 @@ class ConfigurationObjectMapper extends PropertyMapper
 
         if (null === $this->configurationObjectConversionDTO->getResult()) {
             $result = $typeConverter->convertFrom($source, $targetType, $convertedChildProperties);
-            $this->configurationObjectConversionDTO->setResult($result);
+            if (null !== $this->configurationObjectConversionDTO) {
+                $this->configurationObjectConversionDTO->setResult($result);
+            }
         }
 
         $this->serviceFactory->runServicesFromEvent(ObjectConversionAfterServiceEventInterface::class, 'objectConversionAfter', $this->configurationObjectConversionDTO);
