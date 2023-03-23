@@ -2,6 +2,7 @@
 
 namespace Romm\ConfigurationObject\Tests\Unit\Core\Service\Cache;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Romm\ConfigurationObject\Core\Service\ReflectionService;
 use Romm\ConfigurationObject\Exceptions\PropertyNotAccessibleException;
 use Romm\ConfigurationObject\Legacy\Reflection\ClassReflection;
@@ -41,7 +42,7 @@ class ReflectionServiceTest extends AbstractUnitTest
      */
     public function accessiblePropertiesAreCalculatedOnce()
     {
-        /** @var ReflectionService|\PHPUnit_Framework_MockObject_MockObject $service */
+        /** @var ReflectionService|MockObject $service */
         $service = $this->getMockBuilder(ReflectionService::class)
             ->setMethods(['getClassReflection'])
             ->getMock();

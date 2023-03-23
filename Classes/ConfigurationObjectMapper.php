@@ -91,7 +91,7 @@ class ConfigurationObjectMapper extends PropertyMapper
         $this->configurationObjectConversionDTO = new ConfigurationObjectConversionDTO($this->rootTargetType, $this->serviceFactory);
         $this->getTypeConverterDTO = new GetTypeConverterDTO($this->rootTargetType, $this->serviceFactory);
 
-        $result = call_user_func_array(['parent', 'convert'], func_get_args());
+        $result = parent::convert($source, $targetType, $configuration);
 
         unset($this->configurationObjectConversionDTO);
         unset($this->getTypeConverterDTO);

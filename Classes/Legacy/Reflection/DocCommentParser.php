@@ -14,6 +14,8 @@ namespace Romm\ConfigurationObject\Legacy\Reflection;
  * The TYPO3 project - inspiring people to share!
  */
 
+use function chr;
+
 /**
  * A little parser which creates tag objects from doc comments
  */
@@ -40,12 +42,12 @@ class DocCommentParser
     {
         $this->description = '';
         $this->tags = [];
-        $lines = explode(LF, $docComment);
+        $lines = explode(chr(10), $docComment);
         foreach ($lines as $line) {
             if ($line !== '' && strpos($line, '@') !== false) {
                 $this->parseTag(substr($line, strpos($line, '@')));
             } elseif (empty($this->tags)) {
-                $this->description .= preg_replace('#\\s*/?[*/]*(.*)$#', '$1', $line) . LF;
+                $this->description .= preg_replace('#\\s*/?[*/]*(.*)$#', '$1', $line) . chr(10);
             }
         }
         $this->description = trim($this->description);

@@ -4,7 +4,6 @@ namespace Romm\ConfigurationObject\Tests\Unit\Validation;
 use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use Romm\ConfigurationObject\Validation\Validator\Internal\MixedTypeCollectionValidator;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 use TYPO3\CMS\Extbase\Reflection\ReflectionService;
 use TYPO3\CMS\Extbase\Validation\Validator\BooleanValidator;
 use TYPO3\CMS\Extbase\Validation\Validator\CollectionValidator;
@@ -12,7 +11,7 @@ use TYPO3\CMS\Extbase\Validation\ValidatorResolver as ExtbaseValidatorResolver;
 
 class ValidatorResolverTest extends AbstractUnitTest
 {
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -32,18 +31,8 @@ class ValidatorResolverTest extends AbstractUnitTest
         $validatorResolver = Core::get()->getValidatorResolver();
 
         $extbaseValidatorResolver = new ExtbaseValidatorResolver();
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-            $reflectedProperty = new \ReflectionProperty($extbaseValidatorResolver, 'objectManager');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($extbaseValidatorResolver, Core::get()->getObjectManager());
-
-            $reflectedProperty = new \ReflectionProperty($extbaseValidatorResolver, 'reflectionService');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($extbaseValidatorResolver, Core::get()->getReflectionService());
-        } else {
-            $extbaseValidatorResolver->injectObjectManager(Core::get()->getObjectManager());
-            $extbaseValidatorResolver->injectReflectionService(new ReflectionService());
-        }
+        $extbaseValidatorResolver->injectObjectManager(Core::get()->getObjectManager());
+        $extbaseValidatorResolver->injectReflectionService(new ReflectionService());
 
         $validator = $validatorResolver->createValidator(CollectionValidator::class);
 

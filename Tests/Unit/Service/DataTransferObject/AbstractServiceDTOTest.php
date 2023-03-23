@@ -22,7 +22,7 @@ class AbstractServiceDTOTest extends AbstractUnitTest
      */
     protected $serviceFactory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

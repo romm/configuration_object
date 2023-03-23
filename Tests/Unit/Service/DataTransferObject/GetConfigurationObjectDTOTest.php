@@ -15,7 +15,7 @@ class GetConfigurationObjectDTOTest extends AbstractUnitTest
      */
     protected $getConfigurationObjectDTO;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

@@ -1,6 +1,7 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\Validation\Validator;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use TYPO3\CMS\Extbase\Validation\Validator\ValidatorInterface;
 
@@ -15,11 +16,11 @@ abstract class AbstractValidatorTest extends AbstractUnitTest
      * @param string $className
      * @param array $arguments
      * @param array $methods
-     * @return \PHPUnit_Framework_MockObject_MockObject|ValidatorInterface
+     * @return MockObject|ValidatorInterface
      */
     protected function getMockedValidatorInstance($className, array $arguments = [], array $methods = ['translateErrorMessage'])
     {
-        /** @var ValidatorInterface|\PHPUnit_Framework_MockObject_MockObject $mockedClassExistsValidator */
+        /** @var ValidatorInterface|MockObject $mockedClassExistsValidator */
         $mockedClassExistsValidator = $this->getMockBuilder($className)
             ->setMethods($methods)
             ->setConstructorArgs([$arguments])

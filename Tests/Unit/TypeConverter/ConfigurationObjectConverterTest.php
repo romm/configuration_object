@@ -5,6 +5,7 @@ use Romm\ConfigurationObject\Core\Core;
 use Romm\ConfigurationObject\Tests\Fixture\Model\DummyConfigurationObjectWithConstructorArguments;
 use Romm\ConfigurationObject\Tests\Unit\AbstractUnitTest;
 use Romm\ConfigurationObject\TypeConverter\ConfigurationObjectConverter;
+use TYPO3\CMS\Core\DependencyInjection\FailsafeContainer;
 use TYPO3\CMS\Extbase\Error\Error;
 use TYPO3\CMS\Extbase\Object\Container\Container;
 use TYPO3\CMS\Extbase\Reflection\ReflectionService;
@@ -20,7 +21,7 @@ class ConfigurationObjectConverterTest extends AbstractUnitTest
     public function missingConstructorRequiredArgumentReturnsError()
     {
         $configurationObjectConverter = new ConfigurationObjectConverter;
-        $this->inject($configurationObjectConverter, 'objectContainer', new Container);
+        $this->inject($configurationObjectConverter, 'objectContainer', new Container(new FailsafeContainer()));
         $this->inject($configurationObjectConverter, 'reflectionService', new ReflectionService);
         $this->inject($configurationObjectConverter, 'objectManager', Core::get()->getObjectManager());
 

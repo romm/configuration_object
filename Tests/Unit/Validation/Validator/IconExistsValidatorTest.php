@@ -1,10 +1,9 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit\Validation\Validator;
 
-use Romm\ConfigurationObject\Exceptions\UnsupportedVersionException;
+use PHPUnit\Framework\MockObject\MockObject;
 use Romm\ConfigurationObject\Validation\Validator\IconExistsValidator;
 use TYPO3\CMS\Core\Imaging\IconRegistry;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 class IconExistsValidatorTest extends AbstractValidatorTest
 {
@@ -19,31 +18,26 @@ class IconExistsValidatorTest extends AbstractValidatorTest
         $correctIcon = 'foo';
         $incorrectIcon = 'bar';
 
-        /** @var IconExistsValidator|\PHPUnit_Framework_MockObject_MockObject $mockedIconExistsValidator */
+        /** @var IconExistsValidator|MockObject $mockedIconExistsValidator */
         $mockedIconExistsValidator = $this->getMockedValidatorInstance(IconExistsValidator::class, [], ['translateErrorMessage', 'getIconRegistry']);
 
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-            $this->expectException(UnsupportedVersionException::class);
-            $mockedIconExistsValidator->validate($correctIcon);
-        } else {
-            $iconRegistry = $this->prophesize(IconRegistry::class);
+        $iconRegistry = $this->prophesize(IconRegistry::class);
 
-            $iconRegistry->isRegistered($correctIcon)
-                ->shouldBeCalled()
-                ->willReturn(true);
+        $iconRegistry->isRegistered($correctIcon)
+            ->shouldBeCalled()
+            ->willReturn(true);
 
-            $iconRegistry->isRegistered($incorrectIcon)
-                ->shouldBeCalled()
-                ->willReturn(false);
+        $iconRegistry->isRegistered($incorrectIcon)
+            ->shouldBeCalled()
+            ->willReturn(false);
 
-            $mockedIconExistsValidator->method('getIconRegistry')
-                ->willReturn($iconRegistry->reveal());
+        $mockedIconExistsValidator->method('getIconRegistry')
+            ->willReturn($iconRegistry->reveal());
 
-            $test = $mockedIconExistsValidator->validate($correctIcon);
-            $this->assertFalse($test->hasErrors());
+        $test = $mockedIconExistsValidator->validate($correctIcon);
+        $this->assertFalse($test->hasErrors());
 
-            $test = $mockedIconExistsValidator->validate($incorrectIcon);
-            $this->assertTrue($test->hasErrors());
-        }
+        $test = $mockedIconExistsValidator->validate($incorrectIcon);
+        $this->assertTrue($test->hasErrors());
     }
 }

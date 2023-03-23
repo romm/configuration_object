@@ -18,7 +18,7 @@ class AbstractServiceTest extends AbstractUnitTest
      */
     protected $abstractService;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -138,13 +138,13 @@ class AbstractServiceTest extends AbstractUnitTest
             $this->expectException($exceptionThrown);
         }
 
-        $this->abstractService->_setStatic('delayedCallbacks', []);
+        $this->inject($this->abstractService, 'delayedCallbacks', []);
         foreach ($delayedCallBacks as $callBackInfo) {
             /** @noinspection PhpMethodParametersCountMismatchInspection */
             $this->abstractService->_call('delay', $callBackInfo[0], $callBackInfo[1]);
         }
 
-        $this->assertEquals($this->abstractService->_getStatic('delayedCallbacks'), $expectedResult);
+        $this->assertEquals($this->get($this->abstractService, 'delayedCallbacks'), $expectedResult);
     }
 
     /**

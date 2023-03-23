@@ -41,6 +41,11 @@ trait MagicMethodsTrait
         return $this->handleMagicMethods($name, $arguments);
     }
 
+    public function __set($property, $value)
+    {
+        $this->handlePropertyMagicMethod($property, 'set', [$value]);
+    }
+
     /**
      * See class description.
      *

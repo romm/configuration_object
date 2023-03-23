@@ -1,6 +1,8 @@
 <?php
 namespace Romm\ConfigurationObject\Tests\Unit;
 
+use PHPUnit\Framework\MockObject\MockBuilder;
+use PHPUnit\Framework\MockObject\MockObject;
 use Romm\ConfigurationObject\ConfigurationObjectFactory;
 use Romm\ConfigurationObject\ConfigurationObjectMapper;
 use Romm\ConfigurationObject\Core\Core;
@@ -13,30 +15,24 @@ use Romm\ConfigurationObject\Service\ServiceFactory;
 use Romm\ConfigurationObject\TypeConverter\ConfigurationObjectConverter;
 use Romm\ConfigurationObject\Validation\ValidatorResolver;
 use TYPO3\CMS\Core\Cache\Backend\TransientMemoryBackend;
-use TYPO3\CMS\Core\Cache\CacheFactory;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\VariableFrontend;
+use TYPO3\CMS\Core\DependencyInjection\FailsafeContainer;
 use TYPO3\CMS\Core\Utility\ArrayUtility;
-use TYPO3\CMS\Core\Utility\VersionNumberUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Object\Container\Container;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Extbase\Property\PropertyMappingConfigurationBuilder;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ArrayConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\ObjectConverter;
 use TYPO3\CMS\Extbase\Property\TypeConverter\StringConverter;
-use TYPO3\CMS\Extbase\Reflection\ClassSchema;
-use TYPO3\CMS\Extbase\Service\EnvironmentService;
-use TYPO3\CMS\Extbase\Service\TypeHandlingService;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
-use TYPO3\CMS\Extbase\Validation\Validator\GenericObjectValidator;
 
 trait ConfigurationObjectUnitTestUtility
 {
 
     /**
-     * @var Core|\PHPUnit_Framework_MockObject_MockObject
+     * @var Core|MockObject
      */
     protected $configurationObjectCoreMock;
 
@@ -91,40 +87,31 @@ trait ConfigurationObjectUnitTestUtility
         $this->configurationObjectCoreMock->injectReflectionService($reflectionService);
 
         $this->configurationObjectCoreMock->method('getServiceFactoryInstance')
-            ->will(
-                $this->returnCallback(
-                    function () {
-                        /** @var ServiceFactory|\PHPUnit_Framework_MockObject_MockObject $serviceFactoryMock */
-                        $serviceFactoryMock = $this->getConfigurationObjectMockBuilder(ServiceFactory::class)
-                            ->setMethods(['manageServiceData'])
-                            ->getMock();
-                        $serviceFactoryMock->method('manageServiceData')
-                            ->will(
-                                $this->returnCallback(
-                                    function (array $service) {
-                                        $className = $service['className'];
-                                        $options = $service['options'];
+            ->willReturnCallback(
+                function () {
+                    /** @var ServiceFactory|MockObject $serviceFactoryMock */
+                    $serviceFactoryMock = $this->getConfigurationObjectMockBuilder(ServiceFactory::class)
+                        ->setMethods(['manageServiceData'])
+                        ->getMock();
+                    $serviceFactoryMock->method('manageServiceData')
+                        ->willReturnCallback(
+                            function (array $service) {
+                                $className = $service['className'];
+                                $options = $service['options'];
 
-                                        if (CacheService::class === $className) {
-                                            $options[CacheService::OPTION_CACHE_BACKEND] = TransientMemoryBackend::class;
-                                        }
+                                if (CacheService::class === $className) {
+                                    $options[CacheService::OPTION_CACHE_BACKEND] = TransientMemoryBackend::class;
+                                }
 
-                                        return [$className, $options];
-                                    }
-                                )
-                            );
+                                return [$className, $options];
+                            }
+                        );
 
-                        return $serviceFactoryMock;
-                    }
-                )
+                    return $serviceFactoryMock;
+                }
             );
 
         $cacheManager = new CacheManager;
-
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '8.2.0', '<')) {
-            $cacheFactory = new CacheFactory('foo', $cacheManager);
-            $cacheManager->injectCacheFactory($cacheFactory);
-        }
 
         $cacheManager->setCacheConfigurations([
             InternalCacheService::CACHE_IDENTIFIER => [
@@ -135,7 +122,7 @@ trait ConfigurationObjectUnitTestUtility
 
         $this->configurationObjectCoreMock->injectCacheManager($cacheManager);
         $cacheService = new InternalCacheService;
-        $cacheService->registerInternalCache();
+//        $cacheService->registerInternalCache();
         $this->inject($cacheService, 'cacheManager', $cacheManager);
 
         $this->configurationObjectCoreMock->injectCacheService($cacheService);
@@ -155,18 +142,8 @@ trait ConfigurationObjectUnitTestUtility
         /** @var ValidatorResolver $validatorResolver */
         $validatorResolver = $this->getConfigurationObjectObjectManagerMock()->get(ValidatorResolver::class);
 
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-            $reflectedProperty = new \ReflectionProperty($validatorResolver, 'objectManager');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($validatorResolver, Core::get()->getObjectManager());
-
-            $reflectedProperty = new \ReflectionProperty($validatorResolver, 'reflectionService');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($validatorResolver, Core::get()->getReflectionService());
-        } else {
-            $validatorResolver->injectObjectManager(Core::get()->getObjectManager());
-            $validatorResolver->injectReflectionService(Core::get()->getReflectionService());
-        }
+        $validatorResolver->injectObjectManager(Core::get()->getObjectManager());
+        $validatorResolver->injectReflectionService(Core::get()->getReflectionService());
 
         $this->configurationObjectCoreMock->injectValidatorResolver($validatorResolver);
     }
@@ -178,78 +155,44 @@ trait ConfigurationObjectUnitTestUtility
      */
     protected function injectMockedConfigurationObjectFactory()
     {
-        /** @var ConfigurationObjectMapper|\PHPUnit_Framework_MockObject_MockObject $mockedConfigurationObjectMapper */
+        /** @var ConfigurationObjectMapper|MockObject $mockedConfigurationObjectMapper */
         $mockedConfigurationObjectMapper = $this->getConfigurationObjectMockBuilder(ConfigurationObjectMapper::class)
             ->setMethods(['getObjectConverter'])
             ->getMock();
 
-        $objectContainer = new Container();
+        $objectContainer = new Container(new FailsafeContainer());
         $configurationObjectConverter = new ConfigurationObjectConverter();
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-            $reflectedProperty = new \ReflectionProperty($configurationObjectConverter, 'objectContainer');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($configurationObjectConverter, $objectContainer);
 
-            $reflectedProperty = new \ReflectionProperty($configurationObjectConverter, 'objectManager');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($configurationObjectConverter, Core::get()->getObjectManager());
+        $configurationObjectConverter->injectObjectContainer($objectContainer);
+        $configurationObjectConverter->injectObjectManager(Core::get()->getObjectManager());
 
-            $reflectionService = Core::get()->getReflectionService();
-            $reflectedProperty = new \ReflectionProperty($configurationObjectConverter, 'reflectionService');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($configurationObjectConverter, $reflectionService);
-
-            $reflectedProperty = new \ReflectionProperty($configurationObjectConverter, 'reflectionService');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($configurationObjectConverter, $reflectionService);
-        } else {
-            $configurationObjectConverter->injectObjectContainer($objectContainer);
-            $configurationObjectConverter->injectObjectManager(Core::get()->getObjectManager());
-
-            $reflectionService = new \Romm\ConfigurationObject\Legacy\Reflection\ReflectionService();
-            $reflectionService->injectObjectManager(Core::get()->getObjectManager());
-            $reflectedProperty = new \ReflectionProperty($configurationObjectConverter, 'reflectionService');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($configurationObjectConverter, $reflectionService);
-        }
+        $reflectionService = new \Romm\ConfigurationObject\Legacy\Reflection\ReflectionService();
+        $reflectionService->injectObjectManager(Core::get()->getObjectManager());
+        $reflectedProperty = new \ReflectionProperty($configurationObjectConverter, 'reflectionService');
+        $reflectedProperty->setAccessible(true);
+        $reflectedProperty->setValue($configurationObjectConverter, $reflectionService);
 
         $mockedConfigurationObjectMapper->expects($this->any())
             ->method('getObjectConverter')
-            ->will($this->returnValue($configurationObjectConverter));
+            ->willReturn($configurationObjectConverter);
 
         $propertyMappingConfigurationBuilder = Core::get()->getObjectManager()->get(PropertyMappingConfigurationBuilder::class);
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-            $reflectedProperty = new \ReflectionProperty($mockedConfigurationObjectMapper, 'configurationBuilder');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($mockedConfigurationObjectMapper, $propertyMappingConfigurationBuilder);
-
-            $reflectedProperty = new \ReflectionProperty($mockedConfigurationObjectMapper, 'objectManager');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($mockedConfigurationObjectMapper, Core::get()->getObjectManager());
-        } else {
-            $mockedConfigurationObjectMapper->injectConfigurationBuilder($propertyMappingConfigurationBuilder);
-            $mockedConfigurationObjectMapper->injectObjectManager(Core::get()->getObjectManager());
-        }
+        $mockedConfigurationObjectMapper->injectConfigurationBuilder($propertyMappingConfigurationBuilder);
+        $mockedConfigurationObjectMapper->injectObjectManager(Core::get()->getObjectManager());
 
         $reflectionService = Core::get()->getReflectionService();
-        if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-            $reflectedProperty = new \ReflectionProperty($reflectionService, 'objectManager');
-            $reflectedProperty->setAccessible(true);
-            $reflectedProperty->setValue($reflectionService, Core::get()->getObjectManager());
-        } else {
-            $reflectionService->injectObjectManager(Core::get()->getObjectManager());
-        }
+        $reflectionService->injectObjectManager(Core::get()->getObjectManager());
 
         $mockedConfigurationObjectMapper->initializeObject();
 
-        /** @var ConfigurationObjectFactory|\PHPUnit_Framework_MockObject_MockObject $mockedConfigurationObjectFactory */
+        /** @var ConfigurationObjectFactory|MockObject $mockedConfigurationObjectFactory */
         $mockedConfigurationObjectFactory = $this->getConfigurationObjectMockBuilder(ConfigurationObjectFactory::class)
             ->setMethods(['getConfigurationObjectMapper'])
             ->getMock();
 
         $mockedConfigurationObjectFactory->expects($this->any())
             ->method('getConfigurationObjectMapper')
-            ->will($this->returnValue($mockedConfigurationObjectMapper));
+            ->willReturn($mockedConfigurationObjectMapper);
 
         $reflectedClass = new \ReflectionClass(ConfigurationObjectFactory::class);
         $objectManagerProperty = $reflectedClass->getProperty('instance');
@@ -261,94 +204,44 @@ trait ConfigurationObjectUnitTestUtility
      * Returns a mocked instance of the Extbase `ObjectManager`. Will allow the
      * main function `get()` to work properly during the tests.
      *
-     * @return ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject
+     * @return ObjectManagerInterface|MockObject
      */
     private function getConfigurationObjectObjectManagerMock()
     {
-        /** @var \PHPUnit_Framework_MockObject_MockObject $mockObjectManager */
+        /** @var MockObject $mockObjectManager */
         $mockObjectManager = $this->getConfigurationObjectMockBuilder(ObjectManagerInterface::class)
             ->getMock();
         $mockObjectManager->expects($this->any())
             ->method('get')
-            ->will(
-                $this->returnCallback(
-                    function () {
-                        $arguments = func_get_args();
-                        $className = array_shift($arguments);
+            ->willReturnCallback(
+                function () {
+                    $arguments = func_get_args();
+                    $className = array_shift($arguments);
 
-                        if (in_array(AbstractValidator::class, class_parents($className))) {
-                            /** @var  AbstractValidator|\PHPUnit_Framework_MockObject_MockObject $instance */
-                            $instance = $this->getConfigurationObjectMockBuilder($className)
-                                ->setMethods(['translateErrorMessage'])
-                                ->setConstructorArgs($arguments)
-                                ->getMock();
-                            $instance->expects($this->any())
-                                ->method('translateErrorMessage')
-                                ->will(
-                                    $this->returnCallback(
-                                        function ($key, $extension) {
-                                            return 'LLL:' . $extension . ':' . $key;
-                                        }
-                                    )
-                                );
-
-                            if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')
-                                && (
-                                    GenericObjectValidator::class === $className
-                                    || in_array(GenericObjectValidator::class, class_parents($className))
-                                )
-                            ) {
-                                /** @var ConfigurationManager|\PHPUnit_Framework_MockObject_MockObject $configurationManager */
-                                $configurationManager = $this->getConfigurationObjectMockBuilder(ConfigurationManager::class)
-                                    ->setMethods(['isFeatureEnabled'])
-                                    ->getMock();
-                                $configurationManager->method('isFeatureEnabled')
-                                    ->willReturn(true);
-
-                                $reflectedProperty = new \ReflectionProperty($configurationManager, 'objectManager');
-                                $reflectedProperty->setAccessible(true);
-                                $reflectedProperty->setValue($configurationManager, Core::get()->getObjectManager());
-
-                                /** @var EnvironmentService|\PHPUnit_Framework_MockObject_MockObject $environmentServiceMock */
-                                $environmentServiceMock = $this->getConfigurationObjectMockBuilder(EnvironmentService::class)
-                                    ->setMethods(['isEnvironmentInFrontendMode', 'isEnvironmentInBackendMode'])
-                                    ->getMock();
-                                $environmentServiceMock
-                                    ->method('isEnvironmentInFrontendMode')
-                                    ->willReturn(true);
-                                $environmentServiceMock
-                                    ->method('isEnvironmentInBackendMode')
-                                    ->willReturn(false);
-
-                                $reflectedProperty = new \ReflectionProperty($configurationManager, 'environmentService');
-                                $reflectedProperty->setAccessible(true);
-                                $reflectedProperty->setValue($configurationManager, $environmentServiceMock);
-
-                                $configurationManager->initializeObject();
-
-                                /** @var GenericObjectValidator $instance */
-                                $instance->injectConfigurationManager($configurationManager);
-                            }
-                        } else {
-                            $reflectionClass = new \ReflectionClass($className);
-                            if (empty($arguments)) {
-                                $instance = $reflectionClass->newInstance();
-                            } else {
-                                $instance = $reflectionClass->newInstanceArgs($arguments);
-                            }
-
-                            if (version_compare(VersionNumberUtility::getCurrentTypo3Version(), '7.6.0', '<')) {
-                                if ($className === ClassSchema::class) {
-                                    $reflectedProperty = new \ReflectionProperty($instance, 'typeHandlingService');
-                                    $reflectedProperty->setAccessible(true);
-                                    $reflectedProperty->setValue($instance, new TypeHandlingService());
+                    if (in_array(AbstractValidator::class, class_parents($className))) {
+                        /** @var  AbstractValidator|MockObject $instance */
+                        $instance = $this->getConfigurationObjectMockBuilder($className)
+                            ->setMethods(['translateErrorMessage'])
+                            ->setConstructorArgs($arguments)
+                            ->getMock();
+                        $instance->expects($this->any())
+                            ->method('translateErrorMessage')
+                            ->willReturnCallback(
+                                function ($key, $extension) {
+                                    return 'LLL:' . $extension . ':' . $key;
                                 }
-                            }
+                            );
+                    } else {
+                        $reflectionClass = new \ReflectionClass($className);
+                        if (empty($arguments)) {
+                            $instance = $reflectionClass->newInstance();
+                        } else {
+                            $instance = $reflectionClass->newInstanceArgs($arguments);
                         }
-
-                        return $instance;
                     }
-                )
+
+                    return $instance;
+                }
             );
 
         return $mockObjectManager;
@@ -358,7 +251,7 @@ trait ConfigurationObjectUnitTestUtility
      * Just a wrapper to have auto-completion.
      *
      * @param string $className
-     * @return \PHPUnit_Framework_MockObject_MockBuilder
+     * @return MockBuilder
      */
     private function getConfigurationObjectMockBuilder($className)
     {
